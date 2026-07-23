@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.omiyawaki.osrswiki.samsung-rtl-daily-credits</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/miyawaki/.local/bin/osrswiki-samsung-rtl-claim-credits</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/miyawaki</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>/Users/miyawaki</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>SAMSUNG_RTL_EVIDENCE_DIR</key>
+    <string>/Users/miyawaki/Library/Logs/osrswiki/samsung-rtl-daily-credits/evidence</string>
+    <key>SAMSUNG_RTL_DOWNLOAD_DIR</key>
+    <string>/Users/miyawaki/Library/Logs/osrswiki/samsung-rtl-daily-credits/downloads</string>
+  </dict>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>9</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/Users/miyawaki/Library/Logs/osrswiki/samsung-rtl-daily-credits/launchd.stdout.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/miyawaki/Library/Logs/osrswiki/samsung-rtl-daily-credits/launchd.stderr.log</string>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

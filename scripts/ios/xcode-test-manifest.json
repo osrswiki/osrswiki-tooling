@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "description": "Critical iOS XCTest classes that must remain present in broad no-selector result bundles, plus legacy diagnostics that should stay quarantined from active targets.",
+  "minimumTestCases": {
+    "osrswikiTests": 69,
+    "osrswikiUITests": 51
+  },
+  "requiredClasses": {
+    "osrswikiTests": [
+      "AgenticUnblockerImplementationTests",
+      "AndroidParityTimingTests",
+      "BackgroundGenerationStateTest",
+      "DefinitiveMapLibreIntegrationTest",
+      "ExpandedDeterministicStateTests",
+      "LocalHTTPResponseCacheTests",
+      "RuneScapeFontTests",
+      "SaveProcessDiagnosticTest",
+      "SearchHighlightingTests",
+      "SpecConformanceFixtureTests",
+      "TablePreviewRendererTest",
+      "TableRenderingTests",
+      "ThemeCachingTest",
+      "WebKitCrashReproductionTest"
+    ],
+    "osrswikiUITests": [
+      "AgenticAccessibilityContractUITests",
+      "AgenticUnblockerFollowupUITests",
+      "ExpandedAppSmokeUITests",
+      "NavigationAutomationTests",
+      "SavedPagesNavigationVerificationTest",
+      "SavedPagesUICleanupTest",
+      "SearchToMapNavigationTest",
+      "SpecConformanceUITests"
+    ]
+  },
+  "forbiddenClasses": {
+    "osrswikiTests": [
+      "AppLaunchPreloadingTest",
+      "AutonomousMapLibreTest",
+      "AutomatedClosedLoopValidationTests",
+      "ComprehensiveOfflineWorkflowTest",
+      "DirectTimelineTest",
+      "MockMapCacheTest",
+      "osrswikiTests",
+      "PreloadingStatusTest",
+      "RealWorldMapTest",
+      "ResourceDiscoveryAnalysisTest",
+      "TableScrollingTests",
+      "TimelineAnalysisTest"
+    ],
+    "osrswikiUITests": [
+      "BackButtonNavigationTest",
+      "CompareWithAndroidTest",
+      "DirectMapLibreZIndexTest",
+      "DirectZIndexTest",
+      "FinalLayoutVerificationTest",
+      "FontVerificationTest",
+      "ImageContainerTransparencyTest",
+      "LaunchAppFromHomeTest",
+      "NavigateToVarrockTest",
+      "SimpleNavigationTest",
+      "VarrockMapLibreTest",
+      "osrswikiUITestsLaunchTests"
+    ]
+  }
+}

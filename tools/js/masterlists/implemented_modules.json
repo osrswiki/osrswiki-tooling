@@ -1,0 +1,76 @@
+{
+  "modules": {
+    "gecharts": {
+      "wiki_names": [
+        "ext.gadget.GECharts"
+      ],
+      "app_files": [
+        "web/ge_charts_init.js"
+      ],
+      "implementation_type": "curated",
+      "implemented_date": "2025-08-15T04:00:28.063310+00:00",
+      "functionality": "Grand Exchange price charts"
+    },
+    "gecharts-core": {
+      "wiki_names": [
+        "ext.gadget.GECharts-core"
+      ],
+      "app_files": [],
+      "implementation_type": "curated",
+      "implemented_date": "2025-08-15T04:00:28.063332+00:00",
+      "functionality": "Core functionality for GE charts"
+    },
+    "tabber": {
+      "wiki_names": [
+        "ext.Tabber"
+      ],
+      "app_files": [],
+      "implementation_type": "curated",
+      "implemented_date": "2025-08-15T04:00:28.063347+00:00",
+      "functionality": "Tabbed interface for content sections"
+    },
+    "cite.ux-enhancements": {
+      "wiki_names": [
+        "ext.cite.ux-enhancements"
+      ],
+      "app_files": [
+        "web/mediawiki/page_modules.js"
+      ],
+      "implementation_type": "curated",
+      "implemented_date": "2025-08-15T04:00:28.063360+00:00",
+      "functionality": "Citation user experience enhancements"
+    },
+    "tooltips": {
+      "wiki_names": [
+        "ext.gadget.tooltips"
+      ],
+      "app_files": [],
+      "implementation_type": "curated",
+      "implemented_date": "2025-08-15T04:00:28.063371+00:00",
+      "functionality": "Functionality for ext.gadget.tooltips"
+    },
+    "switch_infobox": {
+      "wiki_names": [
+        "ext.gadget.switch-infobox"
+      ],
+      "app_files": [
+        "web/switch_infobox.js",
+        "web/infobox_switcher_bootstrap.js"
+      ],
+      "implementation_type": "custom_curated",
+      "implemented_date": "2025-08-15T04:00:28.063393+00:00",
+      "functionality": "Switchable infobox functionality"
+    },
+    "collapsible_content": {
+      "wiki_names": [
+        "jquery.makeCollapsible"
+      ],
+      "app_files": [
+        "web/collapsible_content.js"
+      ],
+      "implementation_type": "custom_curated",
+      "implemented_date": "2025-08-15T04:00:28.063403+00:00",
+      "functionality": "Collapsible content sections"
+    }
+  }
+}

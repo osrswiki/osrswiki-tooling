@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "contract_id": "osrs-non-surface-release-osx-arm64-v1",
+  "canonical_platform": {
+    "machine": "arm64",
+    "pixi_platform": "osx-arm64",
+    "sys_platform": "darwin"
+  },
+  "entrypoint": "map/build_osrs_non_surface_realms_locked.py",
+  "pixi": {
+    "cli_version": "0.72.2",
+    "environment": "default",
+    "executable_sha256": "7db157092bb598fffb1921fb57d178992eb4ed68da26697db1d19665a37eee72",
+    "lock_path": "pixi.lock",
+    "lock_sha256": "a0e87904d88da281cee49fcbab4f3d01f5d814798a994917a052a352e499dbf3",
+    "manifest_path": "pixi.toml",
+    "manifest_sha256": "327f691dc2fc62ca7b6779db0aafa75ce9c77b7f06d4beabfa08fb5bff739cec",
+    "project_name": "osrs-tools"
+  },
+  "installed_package_set": {
+    "canonical_record_count": 88,
+    "canonical_record_sha256": "cc5b1dcf10d0fc53926bc4423ff5f84e5f0d9c68f726354a47a1e478863a1928"
+  },
+  "runtime": {
+    "numpy_version": "2.0.2",
+    "pillow_version": "11.3.0",
+    "python_implementation": "CPython",
+    "python_version": "3.9.23",
+    "sqlite_version": "3.53.3",
+    "sqlite_version_number": 3053003,
+    "zlib_compile_version": "1.3.1",
+    "zlib_runtime_version": "1.3.2"
+  },
+  "selected_packages": {
+    "lcms2": {
+      "build": "hdfa7624_1",
+      "build_number": 1,
+      "name": "lcms2",
+      "sha256": "ccb5598fad3694e79bf54f0eb812e3b3c3dd63d1497e631f5978800eadb9bcc4",
+      "subdir": "osx-arm64",
+      "version": "2.19.1"
+    },
+    "libfreetype": {
+      "build": "hce30654_1",
+      "build_number": 1,
+      "name": "libfreetype",
+      "sha256": "d5637b01941c0fc8f5cbb1f170c238f4ee153b3c1708b9d50f4f1305438ff051",
+      "subdir": "osx-arm64",
+      "version": "2.14.3"
+    },
+    "libfreetype6": {
+      "build": "hdfa99f5_1",
+      "build_number": 1,
+      "name": "libfreetype6",
+      "sha256": "abbfffd8a8c776bb8b59a10c8247fc3aa6b17ba0051e9f6d199dca38479f214f",
+      "subdir": "osx-arm64",
+      "version": "2.14.3"
+    },
+    "libjpeg-turbo": {
+      "build": "h84a0fba_0",
+      "build_number": 0,
+      "name": "libjpeg-turbo",
+      "sha256": "e2b4fce7cf48705dc182a0aa6c478a47b16202aeb712242caf9c9ab6a19778fa",
+      "subdir": "osx-arm64",
+      "version": "3.2.0"
+    },
+    "libpng": {
+      "build": "h132b30e_0",
+      "build_number": 0,
+      "name": "libpng",
+      "sha256": "66eae34546df1f098a67064970c92aa14ae7a7505091889e00468294d2882c36",
+      "subdir": "osx-arm64",
+      "version": "1.6.58"
+    },
+    "libsqlite": {
+      "build": "h1b79a29_0",
+      "build_number": 0,
+      "name": "libsqlite",
+      "sha256": "a73a8acd97a6599fd6e561514db9f101ca7fd984cdc0cfd91ba74c8aa9dbe067",
+      "subdir": "osx-arm64",
+      "version": "3.53.3"
+    },
+    "libtiff": {
+      "build": "h282da08_0",
+      "build_number": 0,
+      "name": "libtiff",
+      "sha256": "253153cabf9469170e02b21a6bc9aa598048e7c34966b1103af52d27d2a708a4",
+      "subdir": "osx-arm64",
+      "version": "4.7.2"
+    },
+    "libwebp-base": {
+      "build": "h07db88b_0",
+      "build_number": 0,
+      "name": "libwebp-base",
+      "sha256": "a4de3f371bb7ada325e1f27a4ef7bcc81b2b6a330e46fac9c2f78ac0755ea3dd",
+      "subdir": "osx-arm64",
+      "version": "1.6.0"
+    },
+    "libzlib": {
+      "build": "h8088a28_2",
+      "build_number": 2,
+      "name": "libzlib",
+      "sha256": "361415a698514b19a852f5d1123c5da746d4642139904156ddfca7c922d23a05",
+      "subdir": "osx-arm64",
+      "version": "1.3.2"
+    },
+    "numpy": {
+      "build": "py39h3ba1154_1",
+      "build_number": 1,
+      "name": "numpy",
+      "sha256": "f5f4b8cad78dd961e763d7850c338004b57dd5fdad2a0bce7da25e2a9bad45cb",
+      "subdir": "osx-arm64",
+      "version": "2.0.2"
+    },
+    "openjpeg": {
+      "build": "hd9e9057_0",
+      "build_number": 0,
+      "name": "openjpeg",
+      "sha256": "60aca8b9f94d06b852b296c276b3cf0efba5a6eb9f25feb8708570d3a74f00e4",
+      "subdir": "osx-arm64",
+      "version": "2.5.4"
+    },
+    "pillow": {
+      "build": "py39hfea3036_0",
+      "build_number": 0,
+      "name": "pillow",
+      "sha256": "ff0de09b24b4cebb4162d3595a15549616f73187c13939e4eabb02b00b2cfa76",
+      "subdir": "osx-arm64",
+      "version": "11.3.0"
+    },
+    "python": {
+      "build": "h7139b31_0_cpython",
+      "build_number": 0,
+      "name": "python",
+      "sha256": "f0ef9e79987c524b25cb5245770890b568db568ae66edc7fd65ec60bccf3e3df",
+      "subdir": "osx-arm64",
+      "version": "3.9.23"
+    }
+  },
+  "serialization": {
+    "mbtiles": {
+      "journal_mode": "OFF",
+      "page_size": 4096,
+      "sqlite_file_header_version_number": 3053003,
+      "synchronous": "OFF",
+      "vacuum_after_commit": true
+    },
+    "png": {
+      "compress_level": 9,
+      "format": "PNG",
+      "optimize": false,
+      "resampling": "NEAREST"
+    }
+  }
+}

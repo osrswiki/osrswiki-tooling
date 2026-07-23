@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "name": "lumbridge-spawn-courtyard",
+  "description": "Default native map startup camera at the Lumbridge Castle spawn courtyard.",
+  "gameCoordinates": {
+    "x": 3222.0,
+    "y": 3218.0,
+    "plane": 0
+  },
+  "projection": {
+    "gameCoordScale": 4.0,
+    "gameMinX": 960.0,
+    "gameMaxX": 4224.0,
+    "gameMinY": 1216.0,
+    "gameMaxY": 12608.0,
+    "sourceImageWidth": 13056.0,
+    "sourceImageHeight": 45568.0,
+    "tileSize": 1024.0,
+    "maxZoom": 6,
+    "canvasSize": 65536.0
+  },
+  "mapLibre": {
+    "latitude": "-25.44327461230575",
+    "longitude": "-130.2978515625",
+    "zoom": "7.3414426741929"
+  }
+}

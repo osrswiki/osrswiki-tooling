@@ -1,0 +1,27 @@
+# The approved-spec metadata intentionally uses Markdown hard line breaks.
+docs/internal/non-surface-realms-approved-spec-2026-07-15.md whitespace=-blank-at-eol
+
+# Candidate 007 raw-evidence policy:
+# Preserve captured Android log/extraction bytes from the accepted Candidate 006
+# evidence bundle while keeping source and packet prose under normal whitespace gates.
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/logs/adb-devices-after-server-restart.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/logs/adb-devices-before-5566.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/logs/adb-devices-before.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/logs/prelaunch-pixel5-5558.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/logs/adb-devices-after-final-cleanup.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/logs/adb-devices-before-cleanup.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/logs/adb-devices-before.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/logs/adb-devices-booted-canonical.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/logs/adb-devices-booted.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/logs/logcat-01-after-launch.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/logs/logcat-after-interactions.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/analysis/control-state-extraction.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/logs/adb-devices-after-cleanup.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/logs/adb-devices-after-final-cleanup.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/logs/adb-devices-before.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/logs/adb-devices-booted.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/logs/logcat-01-after-launch.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/logs/logcat-after-interactions.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/logs/logcat-hit-tests.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/logs/logcat-visible-hit-tests.txt whitespace=-trailing-space,-blank-at-eof
+qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570/logs/logcat-after-launch.txt whitespace=-trailing-space,-blank-at-eof

@@ -1,0 +1,797 @@
+{
+  "version": 1,
+  "files": {
+    "AGENTS.md": {
+      "audience": "internal",
+      "description": "Agent directives and GUI testing policy for the OSRS Wiki source tree."
+    },
+    "platforms/android/app/src/main/java/com/omiyawaki/osrswiki/feedback/MIGRATION_INSTRUCTIONS.md": {
+      "audience": "internal",
+      "description": "Internal Android feedback migration note requiring secure Cloud Function submission and prohibiting direct GitHub API rollback."
+    },
+    "tools/map/readme.md": {
+      "audience": "internal",
+      "description": "Internal map asset generation toolchain guide for cache selection, dumping, slicing, syncing, and verification."
+    },
+    "scripts/ios/XCTest-GUIDE.md": {
+      "audience": "internal",
+      "description": "iOS testing workflow guidance for LLM agents working on the OSRS Wiki app."
+    },
+    "docs/superpowers/plans/2026-06-12-android-ui-ux-qa-fixes.md": {
+      "audience": "internal",
+      "description": "Internal ledger and verification plan for Android UI/UX QA fixes."
+    },
+    "docs/internal/app-functionality-spec.md": {
+      "audience": "internal",
+      "description": "Living internal app functionality spec for OSRS Wiki mobile app behavior, QA evidence, testing, debugging, and future agent work."
+    },
+    "docs/internal/non-surface-realms-approved-spec-2026-07-15.md": {
+      "audience": "internal",
+      "description": "Approved internal specification and acceptance contract for the standalone non-surface realm extraction pipeline and OSRS Underground Maps Android prototype."
+    },
+    "docs/internal/non-surface-realms-candidate-002-review-fix-spec-2026-07-15.md": {
+      "audience": "internal",
+      "description": "Binding internal Candidate 002 addendum covering portable release artifacts, endpoint-aware entrance links, and deterministic duplicate-realm presentation."
+    },
+    "docs/internal/non-surface-realms-candidate-003-review-fix-spec-2026-07-15.md": {
+      "audience": "internal",
+      "description": "Binding internal Candidate 003 addendum covering recursive portability, locked exact-byte builds, selector performance, and truthful long-identity layout."
+    },
+    "docs/internal/non-surface-realms-candidate-004-dialog-performance-fix-spec-2026-07-15.md": {
+      "audience": "internal",
+      "description": "Binding internal Candidate 004 addendum for phase-measured Surface Links dialog-open performance while preserving Candidate 003 contracts."
+    },
+    "docs/internal/non-surface-realms-candidate-005-code-review-fix-spec-2026-07-15.md": {
+      "audience": "internal",
+      "description": "Binding internal Candidate 005 addendum for raw ZIP/APK byte accounting, installed-source camera ownership, directional endpoint-side identity, and a shared display-aware zoom envelope."
+    },
+    "docs/internal/non-surface-realms-candidate-006-code-review-fix-spec-2026-07-16.md": {
+      "audience": "internal",
+      "description": "Binding internal Candidate 006 addendum for fail-closed payload-bearing ZIP directory members and evidence-backed accepted-member inspection accounting."
+    },
+    "docs/internal/android-expanded-test-environment.md": {
+      "audience": "internal",
+      "description": "Internal plan for expanding Android QA beyond the vanilla emulator and adb testing environment."
+    },
+    "docs/internal/ios-expanded-test-environment.md": {
+      "audience": "internal",
+      "description": "Internal guide for the expanded iOS QA environment, RC gate, deterministic tests, and simulator smokes."
+    },
+    "docs/internal/local-artifact-storage-policy.md": {
+      "audience": "internal",
+      "description": "Internal policy for routing OSRS Wiki worktrees, caches, and heavyweight QA artifacts outside File Provider with conservative retention and migration gates."
+    },
+    "docs/internal/local-artifact-manifest.schema.json": {
+      "audience": "internal",
+      "description": "Machine-readable schema for portable, host-qualified local artifact provenance manifests."
+    },
+    "scripts/ios/README-Navigation-Automation.md": {
+      "audience": "internal",
+      "description": "Internal guide for the iOS navigation automation scripts and their machine-local evidence routing."
+    },
+    "docs/internal/ui-screen-contracts.json": {
+      "audience": "internal",
+      "description": "Machine-readable iOS screen conformance contracts derived from the internal app functionality spec."
+    },
+    "docs/internal/qa/ios-exploratory/2026-06-15-report.md": {
+      "audience": "internal",
+      "description": "Internal exploratory QA report for iOS OSRS Wiki app frontend behavior and evidence gathered on 2026-06-15."
+    },
+    "docs/internal/qa/ios-exploratory/2026-06-15-unblocker-methods.md": {
+      "audience": "internal",
+      "description": "Internal iOS QA unblocker handoff with verified methods, failed methods, and blocker classifications for the 2026-06-15 exploratory QA session."
+    },
+    "docs/internal/qa/android-code-stability/2026-07-05-report.md": {
+      "audience": "internal",
+      "description": "Internal Android production-code stability review report covering fragile code paths, lifecycle hazards, resource contracts, and regression-test gaps."
+    },
+    "docs/internal/qa/android-and-07-release-guardrails-summary-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal AND-07 fixer summary for Android release lint, cleartext, map asset, and release validation guardrails."
+    },
+    "docs/internal/qa/android-exploratory/2026-06-16-report.md": {
+      "audience": "internal",
+      "description": "Internal Android exploratory QA synthesis report with coverage matrix, deduplicated findings, open areas, and stop/continue decision for the 2026-06-16 session."
+    },
+    "docs/internal/qa/android-exploratory/2026-06-16-evidence-manifest.json": {
+      "audience": "internal",
+      "description": "Internal manifest for Android exploratory QA continuation evidence roots, durable copied artifacts, limitations, and synthesis outputs for 2026-06-16."
+    },
+    "docs/internal/qa/android-exploratory/2026-06-16-progress-ledger.md": {
+      "audience": "internal",
+      "description": "Internal continuation-by-continuation Android exploratory QA progress ledger and gap-tracking handoff for 2026-06-16."
+    },
+    "docs/internal/qa/android-exploratory/2026-06-18-blocker-unblocker.md": {
+      "audience": "internal",
+      "description": "Internal Android QA blocker and unblocker handoff for remaining agentic Android exploration and regression gaps."
+    },
+    "docs/internal/qa/android-exploratory/2026-06-18-blocker-unblocker-evidence-manifest.json": {
+      "audience": "internal",
+      "description": "Internal manifest for Android QA blocker/unblocker evidence roots, local probes, source references, and classifications for 2026-06-18."
+    },
+    "docs/internal/qa/android-exploratory/2026-06-18-blocker-unblocker-followup-prompt.md": {
+      "audience": "internal",
+      "description": "Internal follow-up prompt for the next Android explorer or regression session after the 2026-06-18 blocker/unblocker handoff."
+    },
+    "docs/internal/qa/android-exploratory/2026-06-18-free-remote-device-options.md": {
+      "audience": "internal",
+      "description": "Internal Android QA scout report comparing free and no-cost-quota remote physical Android device options for connected instrumentation, real-device evidence, and TalkBack/accessibility gaps."
+    },
+    "docs/internal/qa/android-exploratory/2026-06-18-free-remote-device-options-evidence-manifest.json": {
+      "audience": "internal",
+      "description": "Internal evidence manifest for the Android remote device options scout, including local tooling probes, service blockers, sources, and quota accounting."
+    },
+    "docs/internal/qa/android-exploratory/2026-06-18-remote-device-unblock-operator-guide.md": {
+      "audience": "internal",
+      "description": "Internal operator handoff guide for clearing Android remote-device QA account and auth barriers before agent-run proof sessions."
+    },
+    "docs/internal/qa/ios-exploratory/2026-06-16-agentic-unblocker-followup.md": {
+      "audience": "internal",
+      "description": "Internal follow-up report defining simulator-only iOS QA paths, implementation evidence, and explorer gap closeout for remaining unblocker areas."
+    },
+    "docs/internal/qa/ios-exploratory/2026-06-16-evidence-manifest.json": {
+      "audience": "internal",
+      "description": "Internal manifest for iOS exploratory QA unblocker, closeout, and representative simulator evidence roots, runs, and artifacts for 2026-06-16."
+    },
+    "docs/internal/qa/ios-exploratory/2026-06-16-report.md": {
+      "audience": "internal",
+      "description": "Internal consolidated iOS exploratory QA closeout report for June 16 representative simulator evidence and remaining blocked areas."
+    },
+    "docs/internal/qa/ios-qa-fix-ledger.md": {
+      "audience": "internal",
+      "description": "Internal operating ledger for iOS QA issue reproduction, fixes, verification evidence, and blocker tracking."
+    },
+    "docs/internal/qa/ios-03-article-lifecycle-fix-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal IOS-03 fixer summary for article load lifecycle generation, readiness, navigation, history persistence, verification evidence, and residual risks."
+    },
+    "docs/internal/qa/ios-full-suite-blockers.md": {
+      "audience": "internal",
+      "description": "Internal operating ledger for broad iOS XCTest suite blockers, classifications, fixes, and verification evidence."
+    },
+    "docs/internal/qa/ios-full-suite-review.md": {
+      "audience": "internal",
+      "description": "Internal independent review of the iOS full-suite unblocker commit, quarantine scope, replacement coverage, verification evidence, and remaining test-quality risks."
+    },
+    "docs/internal/qa/ios-legacy-test-cleanup.md": {
+      "audience": "internal",
+      "description": "Internal ledger for iOS legacy XCTest diagnostic cleanup, quarantines, replacement coverage, suite guard policy, and verification evidence."
+    },
+    "docs/internal/qa/ios-code-stability/2026-07-05-report.md": {
+      "audience": "internal",
+      "description": "Internal iOS code stability review report covering offline cache, article WebView, map, search, saved pages, settings, feedback, donation, navigation, logging, and test gaps."
+    },
+    "docs/internal/qa/ios-code-stability/2026-07-05-ios-01-fix-summary.md": {
+      "audience": "internal",
+      "description": "Internal IOS-01 fix summary for offline saved-page cache keys, durable copied resources, proxy ownership, verification, and residual risk."
+    },
+    "docs/internal/qa/report-derived-fix-backlog-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal report-derived implementation backlog that decomposes the July 5, 2026 iOS and Android QA findings into bounded fixer lanes with verification and parallelization guidance."
+    },
+    "docs/internal/qa/ios-06-trust-boundaries-fix-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal IOS-06 fix summary for donation/payment and feedback privacy trust-boundary changes, verification evidence, and residual risks."
+    },
+    "docs/internal/qa/ios-08-search-home-diagnostics-summary-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal IOS-08 fix summary for search pagination, thumbnail networking, Home refresh deduplication, and diagnostic leakage boundaries."
+    },
+    "docs/internal/qa/and-02-webview-recovery-summary-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal AND-02 lane summary for Android article WebView recovery, resource loading, asset memory bounds, verification evidence, and residual risks."
+    },
+    "docs/internal/qa/and-04-saved-offline-summary-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal AND-04 Android saved/offline cache coherence fix summary with verification evidence, emulator limitation, and residual risk."
+    },
+    "docs/internal/qa/android-and-06-lifecycle-guardrails-summary-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal QA summary for Android AND-06 fragment, search paging, donation, and feedback lifecycle guardrail fixes and verification."
+    },
+    "docs/internal/qa/android-full-suite-blockers.md": {
+      "audience": "internal",
+      "description": "Internal operating ledger for Android full-suite blocker reproduction, fixes, tests, verification evidence, and deferrals."
+    },
+    "docs/internal/qa/physical-device-wireless.md": {
+      "audience": "internal",
+      "description": "Internal physical-device wireless QA guide for Android ADB and iOS devicectl setup, safety boundaries, and rediscovery."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/baseline/full-rc-test/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android full-suite baseline RC run and connected-test blocker."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/post-AFS-008-full-rc/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android full-suite RC run after the feedback form inset contract fix."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-001-false-offline-search/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android false-offline Search regression fix and emulator smoke."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-002-home-refresh-errors/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android Home offline error sanitization and manual recovery smoke."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-003-article-render-readiness/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android article WebView render-readiness contract fix and emulator smoke."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-004-contents-known-headings/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android Contents drawer heading extraction fix and emulator smoke."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-005-offline-saved-internal-link/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android offline saved internal-link feedback fix and emulator smoke."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-006-find-no-match-controls/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android Find in page no-match control-state fix and emulator smoke."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-007-feedback-fake-gateway/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android feedback fake submission gateway fix and connected test."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-009-saved-empty-search-copy/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android Saved empty and Saved search no-results copy fix."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-010-empty-search-history-clear/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android empty Search History Clear history action fix and emulator smoke."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-011-home-accessibility/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android Home carousel and Popular pages accessibility fix."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-012-map-contracts/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android Map inset, floor-control, and raster-marker accessibility contract fix."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-013-large-screen-contracts/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android large-screen sw800dp-class smoke and deferred tablet-adaptive design scope."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-012-013-follow-up/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android AFS-012/013 marker contract and tablet guardrail follow-up."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-014-accessibility-contracts/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android local accessibility hierarchy contracts and deferred TalkBack spoken-output proof."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-014-talkback-follow-up/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android TalkBack local probing, deterministic accessibility traversal contracts, and remaining true spoken-output limit."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-015-performance-evidence-bundle/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android standard performance and QA evidence bundle covering screenshot, UI hierarchy, logcat, focus, gfxinfo, and framestats."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-016-donate-billing-affordances/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android Donate billing-unavailable affordance fix and connected-test verification."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-017-voice-search-contracts/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android deterministic voice search state, error, transcript, and entrypoint contract coverage."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-017-voice-provider-followup/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android live speech recognizer/provider follow-up, emulator audio blockers, and provider-state coverage limits."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-018-external-handoff-contracts/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android external handoff intent contracts and third-party onboarding deferral."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-018-external-handoff-followup/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android external handoff follow-up covering About fallback mitigation, intent contracts, failed isolated-emulator setup, and remaining third-party limits."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/AFS-019-navigation-backstack-contracts/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 Android article, tab, search, and secondary-screen navigation back-stack contracts."
+    },
+    "qa-evidence/android-full-suite/2026-07-04/final-full-rc/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary generated by the July 4 Android final full RC gate."
+    },
+    "qa-evidence/ios-current-testing-capability/2026-07-03-blocked-capability-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 iOS blocked capability refresh covering VoiceOver, offline, device, and simulator-control probes."
+    },
+    "qa-evidence/ios-bottom-bar-visibility/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 4 iOS bottom bar visibility investigation, fix, and focused verification."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-app-accessibility-final-artifact-pass/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 BrowserStack App Accessibility and App Live final artifact pass."
+    },
+    "qa-evidence/ios-current-testing-capability/2026-07-03-goal-continuation-rc-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 iOS goal-continuation RC refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-goal-continuation-provider-state-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android provider state refresh covering BrowserStack, TestMu, Firebase, ADB, and APK artifact checks."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-android-local-build-stall-recovery/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for recovering the July 3 Android local build from stale generated resource output."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-app-live-recorded-retry/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 BrowserStack App Live recorded retry against the Android TalkBack provider artifact gap."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-android-device-streaming-current-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android Device Streaming account and zero-quota readiness refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-current-local-test-lanes-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 local Android unit, packaging, launch, and connected instrumentation refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-standard-evidence-bundle-script/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 standard Android QA evidence bundle script refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-testmu-current-state-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 BrowserStack and TestMu current provider state refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-local-fixture-and-rotation-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android local fixture and rotation-helper refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browser-url-smoke-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android external-browser URL smoke harness refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-local-emulator-startup-diagnosis/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 local Android emulator startup diagnosis."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browser-url-smoke-combined-runtime/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android external-browser URL smoke combined runtime proof."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-short-screenreader-session/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 BrowserStack App Live short Android Screen Reader focus proof."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-local-rotation-runtime-proof/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android local rotation-helper runtime proof."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-testmu-firebase-current-provider-scan/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 BrowserStack, App Testing, and Firebase current provider scan."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-user-ready-short-screenreader-session/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 user-ready BrowserStack Screen Reader and Firebase account-boundary refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-current-provider-apk-prep/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android provider APK prep and BrowserStack/TestMu/Firebase state refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-firebase-account-boundary-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Firebase account-boundary refresh covering gcloud account access, Test Lab catalog visibility, and ADB state."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-local-service-smokes-current-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 local Android billing and speech service smoke refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-expanded-env-connected-current-refresh/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 full connected Android expanded environment refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-app-live-current-artifact-readiness/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 BrowserStack App Live current Android Screen Reader artifact readiness attempt."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-current-android-helper-sanity/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android helper script syntax and interface sanity pass."
+    },
+    "qa-evidence/ios-current-testing-capability/2026-07-03-current-rc-refresh-after-provider-scan/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 iOS full RC refresh after the Android provider scan."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-talkback-pixel7-live/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 BrowserStack App Live Pixel 7 Pro Android TalkBack provider screenshot and Logcat pass."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-talkback-pixel8-verbose-logcat/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 BrowserStack App Live Pixel 8 Android TalkBack verbose Logcat pass."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-testmu-screen-reader-quota-recheck/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 TestMu/LambdaTest Screen Reader-capable device exhausted-session recheck."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-local-helper-current-readiness/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android helper current-readiness recheck."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-current-capability-refresh-after-helper-handoff/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 Android capability refresh after the helper handoff."
+    },
+    "qa-evidence/ios-current-testing-capability/2026-07-03-current-rc-refresh-after-android-capability/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 iOS full RC refresh after the Android capability refresh."
+    },
+    "qa-evidence/android-exploratory/2026-07-03-browserstack-screenreader-artifact-continuation/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the July 3 BrowserStack, TestMu, App Accessibility, Firebase, and Android Device Streaming state refresh."
+    },
+    "docs/internal/qa/ios-frontend-stability/2026-07-05-report.md": {
+      "audience": "internal",
+      "description": "Internal iOS frontend stress and stability QA report for the July 5, 2026 black-box simulator exploration."
+    },
+    "docs/internal/qa/ios-05-ui-test-hygiene-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal IOS-05 fixer summary for iOS XCTest target membership, zero-test guard verification, DerivedData hygiene, and residual suite risks."
+    },
+    "qa-evidence/ios-frontend-stability/2026-07-05/progress-ledger.md": {
+      "audience": "internal",
+      "description": "Internal progress ledger for the July 5, 2026 iOS frontend stability stress exploration."
+    },
+    "qa-evidence/ios-frontend-stability/2026-07-05/evidence-manifest.md": {
+      "audience": "internal",
+      "description": "Internal evidence manifest for the July 5, 2026 iOS frontend stability stress exploration."
+    },
+    "docs/internal/qa/android-frontend-stability/2026-07-05-report.md": {
+      "audience": "internal",
+      "description": "Internal Android frontend stress and stability report for the 2026-07-05 black-box emulator exploration."
+    },
+    "docs/internal/qa/android-frontend-stability/2026-07-05-evidence-manifest.json": {
+      "audience": "internal",
+      "description": "Internal evidence manifest for the 2026-07-05 Android frontend stress and stability exploration."
+    },
+    "docs/internal/qa/android-fixes/AND-01-room-migration-startup-safety-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal AND-01 fixer summary for Android Room migration startup safety, data policy, verification, and residual risks."
+    },
+    "qa-evidence/android-frontend-stability/2026-07-05/text/progress-ledger.md": {
+      "audience": "internal",
+      "description": "Internal progress ledger for the 2026-07-05 Android frontend stress and stability exploration."
+    },
+    "qa-evidence/android-frontend-stability/2026-07-05/text/evidence-summary.md": {
+      "audience": "internal",
+      "description": "Internal compact evidence summary for the 2026-07-05 Android frontend stress and stability exploration."
+    },
+    "docs/internal/qa/android-and-03-map-lifecycle-summary.md": {
+      "audience": "internal",
+      "description": "Internal closeout summary for the AND-03 Android map preloader, MBTiles fallback, and MapView lifecycle fix."
+    },
+    "docs/internal/qa/android-and-05-preview-diagnostics-summary-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal fix summary and verification record for Android AND-05 preview generation and production diagnostic probe cleanup."
+    },
+    "docs/internal/project-organization-cleanup-proposal-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal project organization cleanup proposal covering umbrella, source, sessions, evidence, cache, deployment, and script path boundaries."
+    },
+    "docs/internal/repository-layout.md": {
+      "audience": "internal",
+      "description": "Internal repository layout glossary covering umbrella workspace, main checkout, sessions, cache, QA evidence, keys, deployment repos, and path-discovery scripts."
+    },
+    "docs/internal/umbrella-inventory-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Read-only internal inventory of confusing umbrella-level skeleton files and non-Git session folders observed during project organization cleanup implementation."
+    },
+    "docs/internal/legacy-session-notes/ios-saved-pages-architecture-analysis-offline-implementation.md": {
+      "audience": "internal",
+      "description": "Archived internal historical note moved out of AGENTS.md covering an old iOS saved-pages offline architecture investigation."
+    },
+    "qa-evidence/ios-recent-news-tile-visual/2026-07-05/text/comparison-summary.md": {
+      "audience": "internal",
+      "description": "Internal visual comparison summary for the July 5, 2026 iOS Recent Updates tile height regression investigation and fix."
+    },
+    "docs/internal/qa/article-aesthetic-merge-followups-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal follow-up note for merged iOS and Android article-rendering aesthetic fixes, deferred iOS P3 polish, Android native emulator blocker, and local verification caveats."
+    },
+    "docs/internal/qa/ios-article-aesthetic-audit-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal iOS article-rendering aesthetic audit report with sampling math, paired app/web evidence, prioritized findings, limitations, and bounded fixer-lane recommendations."
+    },
+    "docs/internal/qa/android-article-aesthetic-audit-2026-07-05.md": {
+      "audience": "internal",
+      "description": "Internal Android article rendering aesthetic audit report for the July 5, 2026 CSS-surrogate and mobile-web comparison pass."
+    },
+    "qa-evidence/article-aesthetic-feedback-followup-2026-07-05/manifest.md": {
+      "audience": "internal",
+      "description": "Internal evidence manifest for the article-rendering aesthetic feedback follow-up implementation and verification."
+    },
+    "docs/internal/qa/ios-article-aesthetic-reaudit-2026-07-06.md": {
+      "audience": "internal",
+      "description": "Internal iOS article rendering aesthetic re-audit report with 10x sampling, simulator/WebKit evidence, and no-defer fixer lanes."
+    },
+    "qa-evidence/ios-article-aesthetic-reaudit-2026-07-06/evidence-index.md": {
+      "audience": "internal",
+      "description": "Internal evidence index for the July 6, 2026 iOS article rendering aesthetic re-audit."
+    },
+    "docs/internal/qa/android-article-aesthetic-reaudit-2026-07-06.md": {
+      "audience": "internal",
+      "description": "Internal Android article rendering aesthetic reaudit report with stratified sample evidence, native emulator captures, WebView surrogate/mobile-web comparison, findings, and no-defer fixer lanes."
+    },
+    "qa-evidence/android-article-aesthetic-reaudit-2026-07-06/sample-summary.md": {
+      "audience": "internal",
+      "description": "Internal sample summary for the July 6, 2026 Android article rendering aesthetic reaudit, including article count source, sampling math, strata, and focused rechecks."
+    },
+    "qa-evidence/android-article-aesthetic-reaudit-2026-07-06/analysis/evidence-index.md": {
+      "audience": "internal",
+      "description": "Internal evidence index for the July 6, 2026 Android article rendering aesthetic reaudit archive."
+    },
+    "docs/internal/qa/article-aesthetic-reaudit-fixer-queue-2026-07-06.md": {
+      "audience": "internal",
+      "description": "Internal no-defer fixer dispatch queue synthesized from the July 6, 2026 iOS and Android article aesthetic re-audit reports."
+    },
+    "qa-evidence/android-article-aesthetic-fix-and-art-06-2026-07-06/summary.md": {
+      "audience": "internal",
+      "description": "Internal AND-ART-06 Android large-article ANR fix summary with root cause, implementation scope, render budget, emulator evidence, and verification results."
+    },
+    "qa-evidence/android-article-aesthetic-fix-and-art-06-2026-07-06/manifest.json": {
+      "audience": "internal",
+      "description": "Internal machine-readable evidence manifest for the AND-ART-06 Android large-article ANR fix."
+    },
+    "qa-evidence/android-article-aesthetic-fix-and-art-08-2026-07-06/manifest.md": {
+      "audience": "internal",
+      "description": "Internal AND-ART-08 fix evidence manifest and verification summary"
+    },
+    "qa-evidence/android-article-aesthetic-fix-and-art-08-2026-07-06/baseline/pre-fix-collapse-baseline.md": {
+      "audience": "internal",
+      "description": "Internal pre-fix collapse-control baseline summary"
+    },
+    "qa-evidence/android-article-aesthetic-fix-and-art-08-2026-07-06/analysis/and-art-08-collapse-metrics.md": {
+      "audience": "internal",
+      "description": "Internal after-fix collapse metric summary generated by Android QA harness"
+    },
+    "qa-evidence/ios-article-switch-infobox-header-labels-2026-07-06/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the iOS switch-infobox collapsible header label derivation fix and simulator verification."
+    },
+    "qa-evidence/ios-article-skill-page-table-media-hierarchy-2026-07-06/manifest.md": {
+      "audience": "internal",
+      "description": "Internal evidence manifest for the iOS skill page table and media hierarchy fix."
+    },
+    "docs/internal/qa/article-aesthetic-final-evidence-report-2026-07-08.md": {
+      "audience": "internal",
+      "description": "Internal final evidence and cleanup report for the July 2026 no-defer article aesthetic fix loop."
+    },
+    "qa-evidence/ios-news-card-height-consistency-2026-07-08/before/android-source-metrics.txt": {
+      "audience": "internal",
+      "description": "Internal Android source/layout metric reference for the iOS recent news card height consistency fix."
+    },
+    "qa-evidence/ios-news-card-height-consistency-2026-07-08/manifest.json": {
+      "audience": "internal",
+      "description": "Internal machine-readable evidence manifest for the iOS recent news card height consistency fix."
+    },
+    "qa-evidence/ios-news-card-height-consistency-2026-07-08/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the iOS recent news card height consistency fix."
+    },
+    "qa-evidence/ios-internal-wiki-link-routing-2026-07-08/manifest.md": {
+      "audience": "internal",
+      "description": "Internal evidence manifest for the iOS internal OSRS Wiki article link-routing fix."
+    },
+    "docs/internal/qa/android-random-link-routing-audit-2026-07-08.md": {
+      "audience": "internal",
+      "description": "Internal Android random OSRS Wiki link-routing audit report with 10,250-sample manifest, deterministic Android route replay, findings, and emulator limitation evidence."
+    },
+    "docs/internal/qa/android-deep-navigation-stack-audit-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal Android deep navigation stack audit report covering forced Blood Moon and random 100-deep stack attempts, exact reverse-order evidence, crash findings, and fixer-lane recommendations."
+    },
+    "docs/internal/qa/android-deep-navigation-stack-fix-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal Android deep navigation stack fix report covering root cause, product changes, regression tests, emulator evidence, verification, and full-audit runtime limit."
+    },
+    "docs/internal/qa/android-human-exploratory-qa-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal blocked Android human exploratory QA report covering clean smoke coverage, emulator contamination, blocker evidence, and remaining 12-hour exploratory gaps."
+    },
+    "qa-evidence/android-deep-navigation-stack-audit-2026-07-09/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the Android deep navigation stack audit runs, coverage counts, crash findings, and raw artifact locations."
+    },
+    "qa-evidence/android-random-link-routing-audit-2026-07-08/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the Android random OSRS Wiki link-routing audit, including manifest contents, route replay evidence, and emulator startup/dropout logs."
+    },
+    "qa-evidence/android-linkhandler-routing-policy-2026-07-08/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the Android LinkHandler random-link routing policy fix and 10,250-sample replay verification."
+    },
+    "qa-evidence/android-linkhandler-routing-policy-2026-07-08/manifest.json": {
+      "audience": "internal",
+      "description": "Internal machine-readable evidence manifest for the Android LinkHandler random-link routing policy fix."
+    },
+    "docs/internal/qa/ios-random-link-routing-audit-2026-07-08.md": {
+      "audience": "internal",
+      "description": "Internal report for the July 8, 2026 iOS random OSRS Wiki link-routing audit across 10,000 sampled navigations."
+    },
+    "qa-evidence/ios-random-link-routing-audit-2026-07-08/manifest.md": {
+      "audience": "internal",
+      "description": "Internal evidence manifest for the July 8, 2026 iOS random OSRS Wiki link-routing audit."
+    },
+    "qa-evidence/ios-app-assets-namespace-routing-2026-07-08/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the IOS-RLR-001 iOS app-assets File, Media, and Special namespace routing fix."
+    },
+    "qa-evidence/ios-app-assets-namespace-routing-2026-07-08/manifest.json": {
+      "audience": "internal",
+      "description": "Internal machine-readable evidence manifest for the IOS-RLR-001 iOS app-assets namespace routing fix."
+    },
+    "docs/internal/qa/link-routing-final-evidence-report-2026-07-08.md": {
+      "audience": "internal",
+      "description": "Internal final evidence report for the iOS and Android OSRS Wiki link-routing audit and fix workflow."
+    },
+    "qa-evidence/link-routing-final-evidence-report-2026-07-08/manifest.json": {
+      "audience": "internal",
+      "description": "Internal machine-readable evidence manifest for the final OSRS Wiki link-routing audit and fix workflow report."
+    },
+    "qa-evidence/settings-static-preview-icons-2026-07-09/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for replacing dynamic settings preview rendering with generated static preview assets."
+    },
+    "qa-evidence/settings-static-preview-icons-2026-07-09/manifest.json": {
+      "audience": "internal",
+      "description": "Internal machine-readable evidence manifest for the generated static settings preview asset fix."
+    },
+    "qa-evidence/settings-static-preview-icons-2026-07-09/asset-dimensions.txt": {
+      "audience": "internal",
+      "description": "Internal raw dimension evidence for generated iOS and Android settings preview assets."
+    },
+    "qa-evidence/settings-app-rendered-preview-icons-2026-07-09/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for app-rendered static settings preview assets generated from simulator and app rendering paths."
+    },
+    "qa-evidence/settings-app-rendered-preview-icons-2026-07-09/manifest.json": {
+      "audience": "internal",
+      "description": "Internal machine-readable evidence manifest for app-rendered static settings preview assets."
+    },
+    "qa-evidence/settings-app-rendered-preview-icons-2026-07-09/asset-dimensions.txt": {
+      "audience": "internal",
+      "description": "Internal raw dimension evidence for app-rendered iOS and Android settings preview assets."
+    },
+    "docs/internal/qa/android-collapsible-table-gap-audit-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal Android collapsible-table gap audit report covering the Blood Moon questdetails trigger, 10,826 distinct random rendered pages, findings, evidence, and fixer-lane recommendations."
+    },
+    "docs/internal/internal-deploy.md": {
+      "audience": "internal",
+      "description": "Internal deployment workflow guide defining deploy internally as Google Play internal testing plus TestFlight and documenting the shared command, local credential templates, and evidence path."
+    },
+    "qa-evidence/beta-distribution/20260709-041829-internal-android/android-summary.txt": {
+      "audience": "internal",
+      "description": "Internal key-value evidence summary for the July 9, 2026 Google Play internal testing upload."
+    },
+    "qa-evidence/beta-distribution/20260709-042344-internal-ios/ios-summary.txt": {
+      "audience": "internal",
+      "description": "Internal key-value evidence summary for the July 9, 2026 TestFlight build 3 upload and processing result."
+    },
+    "qa-evidence/internal-deploy/20260709-043530-ios-build4/ios-summary.txt": {
+      "audience": "internal",
+      "description": "Internal key-value evidence summary for the July 9, 2026 TestFlight build 4 internal testing upload."
+    },
+    "docs/internal/qa/maplibre-symbol-investigation-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal root-cause report for the July 9, 2026 MapLibre iOS TestFlight dSYM upload warning."
+    },
+    "qa-evidence/maplibre-symbol-investigation-2026-07-09/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the MapLibre iOS TestFlight dSYM upload warning investigation."
+    },
+    "qa-evidence/maplibre-dsym-injection-2026-07-09/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the MapLibre iOS dSYM injection deploy-script follow-up."
+    },
+    "qa-evidence/maplibre-dsym-injection-2026-07-09/manifest.json": {
+      "audience": "internal",
+      "description": "Internal machine-readable evidence manifest for the MapLibre iOS dSYM injection deploy-script follow-up."
+    },
+    "docs/superpowers/plans/2026-07-09-ios-collapsible-table-gap-audit.md": {
+      "audience": "internal",
+      "description": "Internal implementation plan for the iOS collapsible table gap audit harness, sampling run, report, and verification."
+    },
+    "docs/internal/qa/ios-collapsible-table-gap-audit-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal iOS collapsible table gap audit report covering Blood Moon reproduction, 10,000-page rendered scan criteria, findings, evidence, and fixer-lane recommendations."
+    },
+    "qa-evidence/ios-collapsible-table-gap-audit-2026-07-09/evidence-index.md": {
+      "audience": "internal",
+      "description": "Internal evidence index for the July 9, 2026 iOS collapsible table gap audit artifacts, scan results, screenshots, DOM excerpts, and test summary."
+    },
+    "qa-evidence/shared-collapsible-table-gap-fix-2026-07-09/summary.md": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the shared Android and iOS collapsible table gap fix covering questdetails and explicit mw-collapsible tables."
+    },
+    "qa-evidence/shared-collapsible-table-gap-fix-2026-07-09/manifest.json": {
+      "audience": "internal",
+      "description": "Internal machine-readable evidence manifest for the shared collapsible table gap fix evidence bundle."
+    },
+    "docs/internal/qa/ios-deep-navigation-stack-audit-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Audit report for iOS deep navigation stack reverse-order verification."
+    },
+    "docs/internal/qa/ios-deep-navigation-fixture-fix-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal iOS deep navigation fixture fix and re-audit report covering the deterministic app-owned 10,000-start x 100-layer stack verification."
+    },
+    "docs/internal/qa/android-deep-navigation-harness-parity-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal Android deep navigation harness parity report covering the deterministic DEBUG/test-gated 10,000-start x 100-layer native-stack fixture proof and rendered smoke coverage."
+    },
+    "docs/internal/qa/android-human-exploratory-qa-rerun-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Private Android human exploratory QA rerun blocked report and evidence summary for Osamu and agents."
+    },
+    "docs/internal/qa/android-external-handoff-recovery-qa-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal Android external handoff and recovery QA report covering app-to-Chrome return behavior, emulator health, product findings, and harness gaps."
+    },
+    "qa-evidence/android-webview-external-link-harness-2026-07-09/recovery-2026-07-10-valid-port/recovery-summary.txt": {
+      "audience": "internal",
+      "description": "Internal evidence summary for the Android WebView external-link harness recovery, valid-port emulator retry, live WebView activation, and Chrome handoff proof."
+    },
+    "docs/internal/qa/ios-human-exploratory-qa-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal 12-hour iOS Simulator human exploratory QA report covering manual findings, long soak coverage, evidence paths, and final validation."
+    },
+    "docs/internal/qa/android-human-exploratory-qa-soak-2026-07-09.md": {
+      "audience": "internal",
+      "description": "Internal Android 12-hour human exploratory QA soak report and evidence index for Osamu and agents"
+    },
+    "docs/internal/qa/android-clue-scroll-search-qa-2026-07-10.md": {
+      "audience": "internal",
+      "description": "Internal Android Clue scroll exact-title search ranking and accessibility QA report with emulator evidence and classification."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/summary.md": {
+      "audience": "internal",
+      "description": "Internal final evidence summary for the Android semantic map prototype standalone APK E2E clipping fix and retest lane."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/monitor-ledger.json": {
+      "audience": "internal",
+      "description": "Internal monitor ledger for the Android semantic map prototype standalone APK E2E unblocker handoff, reviewer finding, and clipping-fix retest."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/artifact-index.txt": {
+      "audience": "internal",
+      "description": "Internal artifact index for the Android semantic map prototype standalone APK E2E build, runtime, clipping-fix screenshot, UI dump, cleanup, and log evidence."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/analysis/control-state-extraction.txt": {
+      "audience": "internal",
+      "description": "Internal extracted UI hierarchy evidence for semantic map prototype standalone control states and bounds."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/analysis/runtime-log-summary.txt": {
+      "audience": "internal",
+      "description": "Internal runtime log summary for the semantic map prototype standalone activity launch and MapLibre attachment evidence."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-recovery/analysis/screenshot-checksums.txt": {
+      "audience": "internal",
+      "description": "Internal screenshot metadata and checksum evidence for the semantic map prototype standalone E2E run."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/analysis/control-state-extraction.txt": {
+      "audience": "internal",
+      "description": "Internal extracted UI hierarchy evidence for semantic map prototype standalone clipping-fix control states and bounds."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/analysis/screenshot-checksums.txt": {
+      "audience": "internal",
+      "description": "Internal screenshot checksum evidence for the semantic map prototype standalone clipping-fix E2E retest."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/runtime-5570-clipping-fix/analysis/screenshot-dimensions.txt": {
+      "audience": "internal",
+      "description": "Internal screenshot dimension evidence for the semantic map prototype standalone clipping-fix E2E retest."
+    },
+    "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/logs/final-git-status.txt": {
+      "audience": "internal",
+      "description": "Internal final git status, diff stat, and changed-file snapshot for the semantic map prototype standalone clipping-fix lane."
+    }
+  }
+}

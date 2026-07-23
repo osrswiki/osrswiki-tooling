@@ -1,0 +1,6 @@
+# Copy to ~/.config/osrswiki/android-signing.properties and fill in real values.
+# Never commit populated signing properties or keystores.
+storeFile=/Users/miyawaki/Documents/Develop/osrswiki/keys/android-keystore.jks
+storePassword=REPLACE_WITH_KEYSTORE_PASSWORD
+keyAlias=REPLACE_WITH_KEY_ALIAS
+keyPassword=REPLACE_WITH_KEY_PASSWORD

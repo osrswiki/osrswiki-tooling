@@ -61,7 +61,7 @@ else
 fi
 
 # Check for contamination: worktrees inside main repo
-INTERNAL_WORKTREES=$(find . -maxdepth 1 -type d \( -name "claude-*" -o -name "codex-*" \) ! -path "./.git/*" || true)
+INTERNAL_WORKTREES=$(find . -maxdepth 1 -type d \( -name "claude-*" -o -name "codex-*" -o -name "job-*" -o -name "agent-*" \) ! -path "./.git/*" || true)
 if [[ -n "$INTERNAL_WORKTREES" ]]; then
     health_issue "Worktrees found inside main repository:"
     echo "$INTERNAL_WORKTREES" | sed 's/^/  /'
@@ -151,7 +151,7 @@ if [[ -n "$SESSIONS_DIR" && -d "$SESSIONS_DIR" ]]; then
     health_success "Session directory exists at $SESSIONS_DIR"
 
     # Check session directory contents
-    SESSION_COUNT=$(find "$SESSIONS_DIR" -maxdepth 1 -type d \( -name "claude-*" -o -name "codex-*" \) | wc -l)
+    SESSION_COUNT=$(find "$SESSIONS_DIR" -maxdepth 1 -type d \( -name "claude-*" -o -name "codex-*" -o -name "job-*" -o -name "agent-*" \) | wc -l)
     echo "  → Contains $SESSION_COUNT session directories"
 else
     health_warning "Verified machine-local session directory not found"

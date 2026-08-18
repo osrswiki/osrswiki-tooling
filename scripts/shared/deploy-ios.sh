@@ -108,20 +108,7 @@ echo "-------------------------------"
 
 print_info "Checking repository health..."
 if ! "$GIT_ROOT/scripts/shared/validate-repository-health.sh"; then
-    print_warning " Repository health issues detected"
-    echo "Continue anyway? (y/N)"
-    if [[ -t 0 ]]; then
-        # Interactive mode - ask user
-        read -r response
-        if [[ ! "$response" =~ ^[Yy]$ ]]; then
-            print_error "Deployment cancelled by user"
-            exit 1
-        fi
-    else
-        # Non-interactive mode - proceed automatically
-        print_warning " Running non-interactively - proceeding with deployment"
-        response="y"
-    fi
+    print_warning "Repository health issues detected; continuing with warning (no prompt)."
 fi
 
 # Phase 4: Setup deployment environment

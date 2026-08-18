@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "source_package": "explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z",
+  "source_package_identity": {
+    "runtime_manifest_sha256": "ad65bfb911dd164b40b6d3cb4cef89daa276fbb9aaf53550db19b72c1fbeb9ba",
+    "sha256sums_sha256": "3c7eef565df6d87b868d76486ba58ebc7978441f88be0a0528ca8324d416ae6d"
+  },
+  "copied_members": [
+    {
+      "derived_path": "config/explorer-v4-config.json",
+      "source_path": "config/explorer-v4-config.json",
+      "sha256": "43b5c5c75a3ab3b912e80cb22bdecc5f3186604ebf360cf40a1c0e7d04defe26"
+    },
+    {
+      "derived_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-accepted-response-terminal-continuity-013-000810-0aceca978e2e.json",
+      "source_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-accepted-response-terminal-continuity-013-000810-0aceca978e2e.json",
+      "sha256": "0aceca978e2e953f74dfb88ecc7bad3a289cefe931a907da7090640b293fb169"
+    },
+    {
+      "derived_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-first-useful-commit-012-000810-1bed6d60ccba.json",
+      "source_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-first-useful-commit-012-000810-1bed6d60ccba.json",
+      "sha256": "1bed6d60ccbaa31118268884f92d563f431b755796e8e57f99673d4adda5a3e4"
+    },
+    {
+      "derived_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-inject-after_broker_response-020-000810-a452d17c0634.json",
+      "source_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-inject-after_broker_response-020-000810-a452d17c0634.json",
+      "sha256": "a452d17c063466a31a84d316f9993d3e270a16231a5d537b8d84de97ec669bf7"
+    },
+    {
+      "derived_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-predecessor-match-010-000810-0d8444228032.json",
+      "source_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-predecessor-match-010-000810-0d8444228032.json",
+      "sha256": "0d8444228032deb5c92debe77dbc7de8dda408eed012756489618994b640fc8a"
+    },
+    {
+      "derived_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-rollover-lease-1-014-000810-3e7edda43d75.json",
+      "source_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-rollover-lease-1-014-000810-3e7edda43d75.json",
+      "sha256": "3e7edda43d756cbe28630b09a5dda2d06d59ea66e33f6fa444cbf56397161d57"
+    },
+    {
+      "derived_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-rollover-lease-2-015-000811-ba1796b0944a.json",
+      "source_path": "fixtures/controller-status/ACCEPTED_COMMIT_TERMINAL_STATE-offline-rollover-lease-2-015-000811-ba1796b0944a.json",
+      "sha256": "ba1796b0944aceeb367d7884c3a4c565151259cb2e601c35edfeecbb529de573"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-accepted-response-terminal-continuity-013.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-accepted-response-terminal-continuity-013.json",
+      "sha256": "70b5895c7a974df77e6ae2db8893354a467581b89b6d6e261fe5997927b0e88c"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-already-logged-in-003.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-already-logged-in-003.json",
+      "sha256": "088107b30b33cb7a741fe94340116a9412872c86f48cda14f4db6962cfaa3396"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-context-absent-004.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-context-absent-004.json",
+      "sha256": "4db3fa2138767fde44626b3b76a965291f8dba921e9e40294d75df3bfda53a23"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-context-duplicate-005.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-context-duplicate-005.json",
+      "sha256": "e2f2c4ed34f224a0682a706bd006e210b26a210addc657229caadad920f13470"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-context-low-margin-006.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-context-low-margin-006.json",
+      "sha256": "0f7e7ba07ba9cb45853ae22f5d2e55fc32038fa1f3cb5e602856fcf4be379fcb"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-credential-ambiguity-007.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-credential-ambiguity-007.json",
+      "sha256": "99609ee619089df37a0c996610275d95ad07f329b139c2db3a58da530dec984e"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-exact-two-click-001.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-exact-two-click-001.json",
+      "sha256": "b502bb16d21359cc20eb6c1546f0202c3254ee14a2a926c0c8bb2b8ca962f0f2"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-failed-transition-after-orb-009.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-failed-transition-after-orb-009.json",
+      "sha256": "68a62c83415c8601815aca0b4b8fc94e2c17037d41482813fc3eb66f29c63fdb"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-first-useful-commit-012.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-first-useful-commit-012.json",
+      "sha256": "1f1bff814853449daff67838873186beb13385f703472a4f510c9c943a7c4129"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-after_broker_response-020.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-after_broker_response-020.json",
+      "sha256": "7d60a40f2951af7d380fe23e45a82daec3f4386067574495db3d7fc8289780d7"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-after_menu_click-018.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-after_menu_click-018.json",
+      "sha256": "0acf1ba638fe8e8690964bc3e4f2b1f6913ea06bc3878bcbabe45385bdb014d1"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-after_observation-016.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-after_observation-016.json",
+      "sha256": "545e62deba4132fb7906a4365087e9cd3e8a0c8a5d65e0ab67c5ff99adbec3a3"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-after_right_click-017.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-after_right_click-017.json",
+      "sha256": "36ad82311a24d529d9d5ab64d1f8a074b5707c605dc03403769a322f86adebff"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-before_broker_request-019.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-inject-before_broker_request-019.json",
+      "sha256": "c9e34e773e90de71b07fe401a1e0f76a19c89d2ba1319d6d4783d9080c5471ba"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-logged-out-recovery-002.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-logged-out-recovery-002.json",
+      "sha256": "d56518d29fe6f756356f176722f412469eda923db3011585707e957480e23bec"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-predecessor-match-010.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-predecessor-match-010.json",
+      "sha256": "f8d7e439b83525484f0039264d0fca4c9641af645316045ff4bb851f789c5e4b"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-predecessor-mismatch-011.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-predecessor-mismatch-011.json",
+      "sha256": "50b158c93f10fbb585951e212d3deff5e504f74e90ed4ae63d429f7b2e7a824c"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-rollover-lease-1-014.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-rollover-lease-1-014.json",
+      "sha256": "955b0c581c129cb71f1e1617a93660700ae3332b251eb55a9fda82a808c1f160"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-rollover-lease-2-015.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-rollover-lease-2-015.json",
+      "sha256": "418bc67f4f54e26abdbd768426ccf2365faff5b12f0b62d92cef230b2c4212ff"
+    },
+    {
+      "derived_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-stale-digest-after-orb-008.json",
+      "source_path": "fixtures/controller-status/CONTROLLER_FINALIZATION-offline-stale-digest-after-orb-008.json",
+      "sha256": "38e6ca9bab699244c39a1a875b775274745e01d013586b3c83350ef6b1af5f17"
+    },
+    {
+      "derived_path": "fixtures/controller-status/ROLLOVER_READY-offline-rollover-lease-1-014.json",
+      "source_path": "fixtures/controller-status/ROLLOVER_READY-offline-rollover-lease-1-014.json",
+      "sha256": "3ddf543b7659efa83eaafb2d09990f7109f83b27dd1f47d554be828e918fd6f7"
+    },
+    {
+      "derived_path": "fixtures/controller-status/SUCCESSOR_LAUNCH_STARTED-offline-rollover-lease-1-014.json",
+      "source_path": "fixtures/controller-status/SUCCESSOR_LAUNCH_STARTED-offline-rollover-lease-1-014.json",
+      "sha256": "c507cea8933c3f37a730a70ca37881fd75109d2d617c3cf40bcea8f20d21c13a"
+    },
+    {
+      "derived_path": "source/execution-lifecycle.mjs",
+      "source_path": "src/execution-lifecycle.mjs",
+      "sha256": "e9f59c419a14c71ea11424c9e9af3661c92e239329027641ac43fc949a62b918"
+    },
+    {
+      "derived_path": "source/explorer-v4-runtime.mjs",
+      "source_path": "src/explorer-v4-runtime.mjs",
+      "sha256": "01610ade25003398f6eb42233c7e06f0cbc5034226bd4fc41116a2496e48733f"
+    },
+    {
+      "derived_path": "templates/ancient-cavern-closed.png",
+      "source_path": "templates/ancient-cavern-closed.png",
+      "sha256": "6b642797aaaa8251de3565a5a168c472edd05f1c797978cbcd2400be7c3c9b2c"
+    },
+    {
+      "derived_path": "templates/context-menu-open-map.jpeg",
+      "source_path": "templates/context-menu-open-map.jpeg",
+      "sha256": "77dcb20e845b7cb67182693e05341af98c7390b81246580f9f5f09944ac5c41e"
+    },
+    {
+      "derived_path": "templates/gielinor-surface-closed.png",
+      "source_path": "templates/gielinor-surface-closed.png",
+      "sha256": "6070fbee847636d80604a4b0b0c1c071875a908801f9ea6f8aab2189d866753c"
+    },
+    {
+      "derived_path": "templates/recovery-click-to-play.jpeg",
+      "source_path": "templates/recovery-click-to-play.jpeg",
+      "sha256": "3f643ddbc8dc9557e3da358bf42ce345312dda00a7dd44e3e7340babc0d6c3ad"
+    },
+    {
+      "derived_path": "templates/recovery-connecting.jpeg",
+      "source_path": "templates/recovery-connecting.jpeg",
+      "sha256": "59b13a108a230a958154cdcbfb900366576fe76a396412f9c9b63d3e01933193"
+    },
+    {
+      "derived_path": "templates/recovery-gameplay-no-map.jpeg",
+      "source_path": "templates/recovery-gameplay-no-map.jpeg",
+      "sha256": "a11457b0409b21fe2aa29302287dfa21590a0e4e938252fac954e7ccccedb4e8"
+    },
+    {
+      "derived_path": "templates/recovery-steam-sign-in.jpeg",
+      "source_path": "templates/recovery-steam-sign-in.jpeg",
+      "sha256": "01c5544265b5c472edc0fe121b747708e29ab8ea182932f2e5b3fad7c4c2ccea"
+    },
+    {
+      "derived_path": "templates/recovery-try-again.jpeg",
+      "source_path": "templates/recovery-try-again.jpeg",
+      "sha256": "2426bc2af03c6f64abefd65de3c7c6440d5abf76cf187d56ed7ba9189b7f625b"
+    },
+    {
+      "derived_path": "templates/surface-selector-open.jpeg",
+      "source_path": "templates/surface-selector-open.jpeg",
+      "sha256": "3588a160b1c98f72fdcfd206bda9ddf7adef1951132828e0ddddcf2709014e47"
+    },
+    {
+      "derived_path": "worklist/explorer-v4-worklist.json",
+      "source_path": "worklist/explorer-v4-worklist.json",
+      "sha256": "e6144caae1a6ddf19c48508132d52b7126f77091159c200956c63b9259542a31"
+    }
+  ],
+  "runtime_derivation": {
+    "source_path": "source/explorer-v4-runtime.mjs",
+    "source_sha256": "01610ade25003398f6eb42233c7e06f0cbc5034226bd4fc41116a2496e48733f",
+    "derived_path": "runtime/explorer-v4-runtime.mjs",
+    "derived_sha256": "04108b44233026b2457d9f12ecb3c65b0881dca347b3d6d4b43e664dd5b94266",
+    "transformations": [
+      "replace ChatGPT-bundled sharp absolute import with package-local sharp@0.35.3",
+      "block VipsForeignLoadNsgif, VipsForeignLoadTiff, and VipsForeignLoadVips per GHSA-f88m-g3jw-g9cj"
+    ],
+    "other_source_changes": 0
+  }
+}

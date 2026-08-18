@@ -1,0 +1,1 @@
+{"deadline_ms":15000,"exact_predecessor":{"commit_sha256":"939c6d24c4524773505621227f0043295935da013eb06f4a3217ab6a4a928ee1","sequence":810},"immutable":true,"launch_gap_ms":5,"launch_started_at_ms":1785477159799,"predecessor_ready_at_ms":1785477159794,"record_type":"OFFLINE_SUCCESSOR_LAUNCH_STARTED","schema_version":1}

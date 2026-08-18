@@ -71,7 +71,7 @@ generate_merge_message() {
     
     # Auto-generate based on branch name and changes
     local topic platform_indicator
-    topic=$(echo "$feature_branch" | sed -E 's/^(claude|codex)\/[0-9]{8}-[0-9]{6}-//')
+    topic=$(echo "$feature_branch" | sed -E 's/^(claude|codex|job)\/[0-9]{8}-[0-9]{6}-//')
     
     # Detect platform from changed files
     local changed_files
@@ -280,8 +280,8 @@ main() {
         exit 1
     fi
     
-    repo_root=$(echo "$context_output" | grep "REPO_ROOT=" | cut -d'=' -f2)
-    primary_repo_root=$(echo "$context_output" | grep "PRIMARY_REPO_ROOT=" | cut -d'=' -f2)
+    repo_root=$(echo "$context_output" | grep "^REPO_ROOT=" | cut -d'=' -f2)
+    primary_repo_root=$(echo "$context_output" | grep "^PRIMARY_REPO_ROOT=" | cut -d'=' -f2)
     
     echo -e "${GREEN}✅ Repository detected:${NC}"
     echo "   Git repository: $repo_root"

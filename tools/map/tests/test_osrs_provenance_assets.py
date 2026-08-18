@@ -316,6 +316,138 @@ class osrsProvenanceAssetTests(unittest.TestCase):
         self.assertEqual(0, rendered[0][1].plane)
         self.assertEqual(2, int(rendered[0][1].mask.sum()))
 
+    def test_upper_floor_seed_only_pixels_remain_owned_but_transparent(self):
+        source = np.array([[[10, 20, 30], [40, 50, 60]]], dtype=np.uint8)
+        owners = np.array([[1, 1]], dtype=np.uint16)
+        coverage = np.array([[False, True]], dtype=np.bool_)
+        ledger = {
+            "projection": {"game_coord_scale": 1},
+            "image": {"rendered_plane": 1},
+            "codebook": [
+                {
+                    "code": 1,
+                    "kind": "native_composite",
+                    "realm_file_id": 36,
+                    "source_region_id": None,
+                    "source_plane": 1,
+                    "source_to_display_dx": 0,
+                    "source_to_display_dy": 0,
+                }
+            ],
+        }
+        streaming = {
+            "owner_counts": [
+                {
+                    "code": 1,
+                    "total_pixels": 2,
+                    "content_bearing_pixels": 2,
+                    "pixel_bounds": [0, 0, 2, 1],
+                }
+            ]
+        }
+        rendered = list(
+            osrs_iter_rendered_provenance_realms(
+                source,
+                owners,
+                osrsProjection(0, 1, 1, 2, 1),
+                osrs_parse_provenance_components(ledger, streaming),
+                [{"file_id": 36, "safe_name": "upper", "is_surface": False}],
+                coverage_mask=coverage,
+            )
+        )[0][1]
+        self.assertEqual(2, rendered.ownership_pixel_count)
+        self.assertEqual(1, rendered.display_pixel_count)
+        self.assertEqual(1, rendered.transparent_owned_pixel_count)
+        self.assertTrue(rendered.ownership_mask[0, 0])
+        self.assertFalse(rendered.mask[0, 0])
+        self.assertEqual(0, rendered.rgba[0, 0, 3])
+        self.assertEqual(255, rendered.rgba[0, 1, 3])
+
+    def test_actual_exact_black_write_is_visible_when_coverage_is_present(self):
+        source = np.array([[[0, 0, 0], [70, 80, 90]]], dtype=np.uint8)
+        owners = np.array([[1, 1]], dtype=np.uint16)
+        coverage = np.array([[True, False]], dtype=np.bool_)
+        ledger = {
+            "projection": {"game_coord_scale": 1},
+            "image": {"rendered_plane": 2},
+            "codebook": [
+                {
+                    "code": 1,
+                    "kind": "native_composite",
+                    "realm_file_id": 36,
+                    "source_region_id": None,
+                    "source_plane": 2,
+                    "source_to_display_dx": 0,
+                    "source_to_display_dy": 0,
+                }
+            ],
+        }
+        streaming = {
+            "owner_counts": [
+                {
+                    "code": 1,
+                    "total_pixels": 2,
+                    "content_bearing_pixels": 1,
+                    "pixel_bounds": [0, 0, 2, 1],
+                }
+            ]
+        }
+        rendered = list(
+            osrs_iter_rendered_provenance_realms(
+                source,
+                owners,
+                osrsProjection(0, 1, 1, 2, 1),
+                osrs_parse_provenance_components(ledger, streaming),
+                [{"file_id": 36, "safe_name": "black", "is_surface": False}],
+                coverage_mask=coverage,
+            )
+        )[0][1]
+        self.assertEqual(1, rendered.display_pixel_count)
+        self.assertEqual(1, rendered.visible_exact_black_pixel_count)
+        self.assertTrue(rendered.mask[0, 0])
+        self.assertEqual([0, 0, 0, 255], rendered.rgba[0, 0].tolist())
+
+    def test_coverage_without_final_owner_fails_closed(self):
+        source = np.array([[[10, 20, 30], [40, 50, 60]]], dtype=np.uint8)
+        owners = np.array([[0, 1]], dtype=np.uint16)
+        coverage = np.array([[True, True]], dtype=np.bool_)
+        ledger = {
+            "projection": {"game_coord_scale": 1},
+            "image": {"rendered_plane": 1},
+            "codebook": [
+                {
+                    "code": 1,
+                    "kind": "native_composite",
+                    "realm_file_id": 36,
+                    "source_region_id": None,
+                    "source_plane": 1,
+                    "source_to_display_dx": 0,
+                    "source_to_display_dy": 0,
+                }
+            ],
+        }
+        streaming = {
+            "owner_counts": [
+                {
+                    "code": 1,
+                    "total_pixels": 1,
+                    "content_bearing_pixels": 1,
+                    "pixel_bounds": [1, 0, 2, 1],
+                }
+            ]
+        }
+        with self.assertRaisesRegex(osrsPipelineError, "without a final owner"):
+            list(
+                osrs_iter_rendered_provenance_realms(
+                    source,
+                    owners,
+                    osrsProjection(0, 1, 1, 2, 1),
+                    osrs_parse_provenance_components(ledger, streaming),
+                    [{"file_id": 36, "safe_name": "gap", "is_surface": False}],
+                    coverage_mask=coverage,
+                )
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

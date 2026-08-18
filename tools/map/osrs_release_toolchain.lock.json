@@ -146,10 +146,11 @@
       "vacuum_after_commit": true
     },
     "png": {
-      "compress_level": 9,
+      "compress_level_order": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
       "format": "PNG",
       "optimize": false,
-      "resampling": "NEAREST"
+      "resampling": "NEAREST",
+      "selection": "first_public_path_portable_encoding"
     }
   }
 }

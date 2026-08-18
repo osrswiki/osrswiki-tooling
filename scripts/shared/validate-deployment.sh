@@ -248,7 +248,7 @@ if [[ -n "$SESSION_FILES" ]]; then
 fi
 
 # Check for worktree directories that shouldn't be there
-WORKTREE_DIRS=$(find . -maxdepth 1 -type d \( -name "claude-*" -o -name "codex-*" \) | grep -v "/.git/" || true)
+WORKTREE_DIRS=$(find . -maxdepth 1 -type d \( -name "claude-*" -o -name "codex-*" -o -name "job-*" -o -name "agent-*" \) | grep -v "/.git/" || true)
 if [[ -n "$WORKTREE_DIRS" ]]; then
     validation_error "Found worktree directories in main repository:"
     echo "$WORKTREE_DIRS" | sed 's/^/  /'

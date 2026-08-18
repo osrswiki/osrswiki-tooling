@@ -68,7 +68,7 @@ echo ""
 SESSIONS_DIR=$(get_sessions_dir 2>/dev/null || echo "")
 ACTIVE_SESSIONS=()
 if [[ -n "$SESSIONS_DIR" && -d "$SESSIONS_DIR" ]]; then
-    ACTIVE_SESSIONS=($(find "$SESSIONS_DIR" -maxdepth 1 -type d \( -name "claude-*" -o -name "codex-*" \) -exec basename {} \; 2>/dev/null || true))
+    ACTIVE_SESSIONS=($(find "$SESSIONS_DIR" -maxdepth 1 -type d \( -name "claude-*" -o -name "codex-*" -o -name "job-*" -o -name "agent-*" \) -exec basename {} \; 2>/dev/null || true))
 fi
 
 echo -e "${BLUE}🌿 Active worktree sessions: ${#ACTIVE_SESSIONS[@]}${NC}"

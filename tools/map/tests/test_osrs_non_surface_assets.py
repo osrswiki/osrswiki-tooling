@@ -13,10 +13,14 @@ MAP_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(MAP_DIR))
 
 from osrs_non_surface_assets import (  # noqa: E402
+    osrs_assert_mbtiles_alpha_matches_mask,
     osrs_build_manifest_records,
+    osrs_boundary_provenance_report,
     osrs_definition_planes,
     osrs_reconcile_intermap_links,
     osrs_manifest_schema,
+    osrs_shared_realm_canvas_layout,
+    osrs_shared_realm_canvas_size,
     osrs_release_relative_path,
     osrs_render_native_realm,
     osrs_render_wiki_view,
@@ -70,6 +74,9 @@ class osrsNonSurfaceAssetTests(unittest.TestCase):
             "assets"
         ]["items"]
         self.assertIn("sqlite_version_number", asset_schema["required"])
+        self.assertIn("ownership_mask_path", asset_schema["required"])
+        self.assertIn("transparent_owned_pixel_count", asset_schema["required"])
+        self.assertIn("visible_exact_black_pixel_count", asset_schema["required"])
         expected = (
             sqlite3.sqlite_version_info[0] * 1_000_000
             + sqlite3.sqlite_version_info[1] * 1_000
@@ -133,6 +140,28 @@ class osrsNonSurfaceAssetTests(unittest.TestCase):
         )
         self.assertEqual(2, rendered.plane)
 
+    def test_upper_wiki_view_uses_coverage_for_display_alpha(self):
+        source = np.array(
+            [
+                [[0, 0, 0], [10, 20, 30]],
+                [[40, 50, 60], [70, 80, 90]],
+            ],
+            dtype=np.uint8,
+        )
+        coverage = np.array([[True, False], [False, True]], dtype=np.bool_)
+        rendered = osrs_render_wiki_view(
+            source,
+            osrsProjection(0, 2, 1, 2, 2),
+            osrsRect(0, 0, 2, 2),
+            plane=2,
+            coverage_mask=coverage,
+        )
+        self.assertEqual(4, rendered.ownership_pixel_count)
+        self.assertEqual(2, rendered.display_pixel_count)
+        self.assertEqual(2, rendered.transparent_owned_pixel_count)
+        self.assertEqual(1, rendered.visible_exact_black_pixel_count)
+        self.assertEqual([[255, 0], [0, 255]], rendered.rgba[..., 3].tolist())
+
     def test_plane_inventory_is_not_forced_to_zero(self):
         definition = _definition(
             8,
@@ -178,6 +207,165 @@ class osrsNonSurfaceAssetTests(unittest.TestCase):
                 self.assertGreater(
                     database.execute("SELECT COUNT(*) FROM tiles").fetchone()[0], 0
                 )
+            osrs_assert_mbtiles_alpha_matches_mask(
+                first,
+                rgba[..., 3] > 0,
+                one,
+            )
+            with self.assertRaisesRegex(Exception, "does not match"):
+                wrong_mask = np.ones((3, 5), dtype=np.bool_)
+                osrs_assert_mbtiles_alpha_matches_mask(first, wrong_mask, one)
+
+    def test_mbtiles_bounds_use_alpha_content_extent_not_rendered_rectangle(self):
+        rgba = np.zeros((6, 8, 4), dtype=np.uint8)
+        rgba[2:5, 3:7] = (10, 20, 30, 255)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "content.mbtiles"
+            result = osrs_write_mbtiles(rgba, path, "Content", tile_size=8)
+            self.assertEqual([3, 2, 7, 5], result["content_pixel_bounds"])
+            self.assertEqual(-45.0, result["content_latlon_bounds"][0])
+            self.assertAlmostEqual(-40.980, result["content_latlon_bounds"][1], places=3)
+            self.assertEqual(135.0, result["content_latlon_bounds"][2])
+            self.assertAlmostEqual(66.513, result["content_latlon_bounds"][3], places=3)
+            with sqlite3.connect(path) as database:
+                metadata = dict(database.execute("SELECT name, value FROM metadata"))
+            self.assertEqual("3,2,7,5", metadata["osrs_content_pixel_bounds"])
+            self.assertEqual("8", metadata["osrs_canvas_size"])
+            self.assertTrue(metadata["osrs_content_bounds"].startswith("-45,-40.979898"))
+            self.assertEqual(metadata["osrs_content_bounds"], metadata["bounds"])
+            self.assertEqual(
+                "finite-content-envelope; four-sided-center-edge-overbound; horizontal-wrap-disabled",
+                metadata["osrs_wrap_policy"],
+            )
+
+    def test_mbtiles_canvas_origin_shifts_pixels_without_changing_native_rgba(self):
+        rgba = np.zeros((3, 5, 4), dtype=np.uint8)
+        rgba[1:3, 1:4] = (10, 20, 30, 255)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "shifted.mbtiles"
+            result = osrs_write_mbtiles(
+                rgba,
+                path,
+                "Shifted",
+                tile_size=4,
+                canvas_size=16,
+                canvas_origin=(5, 6),
+            )
+            self.assertEqual([5, 6], result["canvas_origin"])
+            self.assertEqual([6, 7, 9, 9], result["content_pixel_bounds"])
+            with sqlite3.connect(path) as database:
+                metadata = dict(database.execute("SELECT name, value FROM metadata"))
+            self.assertEqual("5,6", metadata["osrs_canvas_origin_pixels"])
+            osrs_assert_mbtiles_alpha_matches_mask(path, rgba[..., 3] > 0, result)
+
+    def test_shared_realm_canvas_is_common_and_has_four_sided_padding(self):
+        geometry = [
+            {
+                "plane": 0,
+                "width": 512,
+                "height": 356,
+                "content_pixel_bounds": [0, 0, 512, 356],
+            },
+            {
+                "plane": 2,
+                "width": 512,
+                "height": 708,
+                "content_pixel_bounds": [0, 0, 512, 708],
+            },
+        ]
+        self.assertEqual(
+            4096,
+            osrs_shared_realm_canvas_size(geometry, is_surface=False),
+        )
+        self.assertEqual(
+            4096,
+            osrs_shared_realm_canvas_size(geometry, is_surface=True),
+        )
+        wide = [dict(geometry[0], width=1024, content_pixel_bounds=[0, 0, 1024, 356])]
+        self.assertEqual(
+            4096,
+            osrs_shared_realm_canvas_size(wide, is_surface=False),
+        )
+        self.assertEqual(
+            4096,
+            osrs_shared_realm_canvas_size(wide, is_surface=True),
+        )
+        self.assertEqual(
+            {
+                "canvas_size": 4096,
+                "origin_x": 1792,
+                "origin_y": 1694,
+                "rendered_width": 512,
+                "rendered_height": 708,
+            },
+            osrs_shared_realm_canvas_layout(geometry, is_surface=False),
+        )
+
+    def test_boundary_provenance_report_declares_finite_no_wrap_policy(self):
+        report = osrs_boundary_provenance_report(
+            [
+                {
+                    "id": "realm-a",
+                    "canonical_name": "Realm A",
+                    "assets": [
+                        {
+                            "plane": 0,
+                            "mbtiles_path": "assets/realm-a/plane-0.mbtiles",
+                            "canvas_size": 4096,
+                            "content_pixel_bounds": [2046, 2045, 2050, 2050],
+                            "content_latlon_bounds": [
+                                -0.17578125,
+                                -0.17578097424708533,
+                                0.17578125,
+                                0.26367094433665017,
+                            ],
+                            "ownership_pixel_count": 20,
+                            "display_pixel_count": 18,
+                            "transparent_owned_pixel_count": 2,
+                            "content_bearing_pixel_count": 18,
+                            "source_bounds": [],
+                            "display_bounds": {},
+                        }
+                    ],
+                }
+            ]
+        )
+        self.assertEqual(
+            "finite-content-envelope; four-sided-center-edge-overbound; horizontal-wrap-disabled; common-source-pixel-default-scale",
+            report["policy"],
+        )
+        self.assertEqual(1, report["asset_count"])
+        self.assertFalse(report["entries"][0]["horizontal_wrap_enabled"])
+        self.assertFalse(report["entries"][0]["full_width_canvas"])
+        self.assertFalse(report["entries"][0]["dateline_adjacent"])
+        self.assertEqual(
+            "-0.17578125,-0.175780974247085,0.17578125,0.26367094433665",
+            report["entries"][0]["source_mbtiles_metadata"]["bounds"],
+        )
+        self.assertEqual(
+            [
+                -0.17578125,
+                -0.17578097424708533,
+                0.17578125,
+                0.26367094433665017,
+            ],
+            report["entries"][0]["mbtiles_declared_bounds"],
+        )
+        self.assertEqual(4096, report["entries"][0]["shared_realm_canvas_size"])
+        self.assertEqual(4092, report["entries"][0]["realm_horizontal_padding_pixels"])
+        self.assertEqual(4091, report["entries"][0]["realm_vertical_padding_pixels"])
+        self.assertTrue(report["entries"][0]["vertical_padding_at_least_content_height"])
+        self.assertTrue(
+            report["entries"][0]["default_camera"]["common_source_pixel_scale_supported"]
+        )
+        self.assertEqual(
+            1011,
+            report["entries"][0]["default_camera"]["required_edge_padding_pixels"],
+        )
+        self.assertEqual(
+            4096 * 4096 - 18,
+            report["entries"][0]["alpha_accounting"]["transparent_canvas_pixel_count"],
+        )
 
     def test_manifest_discovers_non_underground_instance_and_custom_view(self):
         inventory = {

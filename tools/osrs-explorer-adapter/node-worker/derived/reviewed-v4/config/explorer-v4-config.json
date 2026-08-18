@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "record_type": "EXPLORER_V4_RUNTIME_CONFIG",
+  "run_family": "online-explorer-continuous-v4cr4-20260731T022656Z",
+  "explorer_generation_id": "explorer-v4cr4-20260731T022656Z",
+  "source_version": "4.008.0",
+  "execution_model": "EXECUTION_CONTEXT_OWNED_BOUNDED_SINGLE_UI_CONTEXT_LEASE_CHAIN",
+  "ownership": {
+    "runtime_task_class": "UI_CAPTURE_ONLY",
+    "journal_write_authority": "BROKER_ONLY",
+    "pipeline_steward_authority": false,
+    "validator_authority": false,
+    "canonical_map_coverage_mutation_authority": false
+  },
+  "thread_binding_policy": "ACTIVATION_RECORD_MUST_BIND_FUTURE_REVIEWED_EXPLORER_THREAD",
+  "activation_nonce": "v4cr4-finalization-quiescence-011",
+  "activation_validity": {
+    "kind": "STATE_VALID_IMMUTABLE_UNTIL_REVOKED_OR_SUPERSEDED",
+    "wall_clock_age_expiry_ms": null,
+    "exclusive_launch_claim_required": true,
+    "authoritative_monitor_ledger_readback_count": 1
+  },
+  "requested_frontend_timeout_ms": 300000,
+  "self_rollover_target_ms": 270000,
+  "hard_rollover_maximum_ms": 280000,
+  "successor_launch_deadline_ms": 15000,
+  "successor_first_commit_deadline_ms": 120000,
+  "no_background_promise_after_return": true,
+  "controller_global_name": "osrsExplorerV4CR4Gen20260731T022656ZController",
+  "idempotency_namespace": "osrs-explorer-v4cr4-20260731T022656Z",
+  "offline_harness_in_live_launcher_forbidden": true,
+  "canonical_zoom_ladder_percent": [
+    37.5,
+    50,
+    75,
+    100,
+    200
+  ],
+  "novelty": {
+    "content_crop": {
+      "left": 4,
+      "top": 70,
+      "width": 470,
+      "height": 560
+    },
+    "pre_post_mean_abs_minimum": 2.5,
+    "same_family_mean_abs_minimum": 2.5,
+    "delivered_displacement_minimum_cells": 2,
+    "new_extent_mean_abs_minimum": 2
+  },
+  "scheduler": {
+    "maximum_black_or_noop_outcomes_per_family": 2,
+    "pivot_seconds_without_useful_commit": 45,
+    "warning_seconds_without_useful_commit": 60,
+    "actionable_seconds_without_useful_commit": 120
+  },
+  "paths": {
+    "package_root": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z",
+    "artifact_root": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-launcher-reservation-correction-013-20260731/future-runtime/online-explorer-continuous-v4cr4-20260731T022656Z",
+    "batch_root": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-launcher-reservation-correction-013-20260731/future-runtime/online-explorer-continuous-v4cr4-20260731T022656Z/work/live-capture-active/online-live-v4cr4-20260731T022656Z",
+    "status_root": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-launcher-reservation-correction-013-20260731/future-runtime/online-explorer-continuous-v4cr4-20260731T022656Z/status/runtime-v4cr4-20260731T022656Z",
+    "authority_root": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-launcher-reservation-correction-013-20260731/future-runtime/online-explorer-continuous-v4cr4-20260731T022656Z/authority/runtime-v4cr4-20260731T022656Z",
+    "journal_root": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/online-explorer-continuous-v2/journal/continuous-frame-journal-v2",
+    "stage_root": "/private/tmp/osrs-explorer-v4cr4-20260731T022656Z-lr013-stage",
+    "spool_root": "/private/tmp/osrs-explorer-v4cr4-20260731T022656Z-lr013-broker-spool",
+    "broker_socket": "/private/tmp/osrs-explorer-v4cr4-20260731T022656Z-lr013-broker.sock",
+    "finalizer_socket": "/private/tmp/osrs-explorer-v4cr4-20260731T022656Z-lr013-finalizer.sock"
+  },
+  "exact_predecessor": {
+    "sequence": 809,
+    "commit_sha256": "928549c376a0abb9445afe0cc18bddb0d0aaf4e5a80200691aada0744348612d"
+  },
+  "journal_access_policy": {
+    "only_writer": "osrs-capture-broker-v4",
+    "operation": "EXACT_PREDECESSOR_COMPARE_AND_SWAP_APPEND_ONLY",
+    "first_permitted_sequence": 810,
+    "prior_file_rewrite_forbidden": true
+  },
+  "policy_records": {
+    "correction_005": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-program-migration-20260723/cutovers/capture-runtime-v4-execution-context-20260728T043500Z/CAPTURE_RUNTIME_V4_POLICY_CORRECTION_005.json",
+      "sha256": "36efe7f2e902df51ec02f0043012e609be3d298ad78f94ed25cd189a30b38927"
+    },
+    "correction_006": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-program-migration-20260723/cutovers/capture-runtime-v4-coverage-integrity-20260728T043800Z/CAPTURE_RUNTIME_V4_POLICY_CORRECTION_006.json",
+      "sha256": "43196c789469e314c19a0d2e32534b9c468c684a4c51e0747c4d6aa86b44c953"
+    },
+    "correction_007": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-program-migration-20260723/cutovers/capture-runtime-v4-bounded-leases-20260728T044430Z/CAPTURE_RUNTIME_V4_POLICY_CORRECTION_007.json",
+      "sha256": "f5b94cd03d2cba666d570b893fd7f85f37df92744f9a8886297a1afb5c118853"
+    },
+    "correction_008": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-program-migration-20260723/cutovers/capture-runtime-v4-controlled-drain-20260728T045821Z/CAPTURE_RUNTIME_V4_POLICY_CORRECTION_008.json",
+      "sha256": "fa246b99e3986f9474b72bac26e9be3e76c833f406e323bb25107aca0aca7324"
+    },
+    "correction_009": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-program-migration-20260723/cutovers/capture-runtime-v4-broker-protocol-20260728T051534Z/CAPTURE_RUNTIME_V4_POLICY_CORRECTION_009.json",
+      "sha256": "54e163ce35ed1d6686327311e6adf2ab627d20de3e43b56ca471334bc084e424"
+    },
+    "correction_010": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-program-migration-20260723/cutovers/capture-runtime-v4-stop-term-cont-20260728T054330Z/CAPTURE_RUNTIME_V4_POLICY_CORRECTION_010.json",
+      "sha256": "a202f91535260c7f2a72d1f32a382312d37d85778cba7785128897f03e1d9063"
+    },
+    "correction_011": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-program-migration-20260723/cutovers/capture-runtime-v4-atomic-recovery-20260728T055416Z/CAPTURE_RUNTIME_V4_POLICY_CORRECTION_011.json",
+      "sha256": "673552e5547b4d0693c90c326b064483def3221e7ec0196b6f6a71397dd9ebf4"
+    },
+    "correction_012": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-program-migration-20260723/cutovers/capture-runtime-v4-atomic-recovery-r2-20260728T060841Z/CAPTURE_RUNTIME_V4_POLICY_CORRECTION_012.json",
+      "sha256": "296d9494c77f34bcfe0cdfd326285729b7fbe0d1f03e5abb90bcbc25d352145a"
+    }
+  },
+  "broker": {
+    "protocol": "osrs-capture-broker-v4",
+    "implementation_path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4rr-identity-binding-correction-005/packages/capture-broker-v4rr-identity-binding-correction-005-20260728T104500Z/capture_burst_broker_v4.py",
+    "implementation_sha256": "4dcad641d2da772556e78538c9d1cbc2adc43e51706f55c0f132e6fbf06a7ee5",
+    "journal_helper_path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4rr-identity-binding-correction-005/packages/capture-broker-v4rr-identity-binding-correction-005-20260728T104500Z/capture_journal_v3.py",
+    "journal_helper_sha256": "9a612a8fc9bcefee4f27206a9c5b98e5a308fc683af027761e080deb80233b33",
+    "capability_manifest_path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4rr-identity-binding-correction-005/packages/capture-broker-v4rr-identity-binding-correction-005-20260728T104500Z/CAPTURE_BROKER_V4_CAPABILITY_PACKAGE.json",
+    "capability_manifest_sha256": "5f6bb5035319ba58e2b55a695dfb06db51c338f2309a877043fcdd42e6b49a07",
+    "sha256sums_path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4rr-identity-binding-correction-005/packages/capture-broker-v4rr-identity-binding-correction-005-20260728T104500Z/SHA256SUMS",
+    "sha256sums_sha256": "0cdfa8827bd39066f7597316bb50d428bd33e906a916db13bcf52222017426ed"
+  },
+  "templates": {
+    "gielinor_surface_closed": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/gielinor-surface-closed.png",
+      "sha256": "6070fbee847636d80604a4b0b0c1c071875a908801f9ea6f8aab2189d866753c"
+    },
+    "ancient_cavern_closed": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/ancient-cavern-closed.png",
+      "sha256": "6b642797aaaa8251de3565a5a168c472edd05f1c797978cbcd2400be7c3c9b2c"
+    },
+    "surface_selector_open": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/surface-selector-open.jpeg",
+      "sha256": "3588a160b1c98f72fdcfd206bda9ddf7adef1951132828e0ddddcf2709014e47"
+    },
+    "context_menu_open_map": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/context-menu-open-map.jpeg",
+      "sha256": "77dcb20e845b7cb67182693e05341af98c7390b81246580f9f5f09944ac5c41e"
+    },
+    "floating_world_map_item": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/context-menu-open-map.jpeg",
+      "sha256": "77dcb20e845b7cb67182693e05341af98c7390b81246580f9f5f09944ac5c41e",
+      "reference_bbox": {
+        "left": 634,
+        "top": 197,
+        "right": 705,
+        "bottom": 214
+      },
+      "search_region": {
+        "left": 610,
+        "top": 175,
+        "right": 740,
+        "bottom": 240
+      }
+    },
+    "recovery_try_again": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/recovery-try-again.jpeg",
+      "sha256": "2426bc2af03c6f64abefd65de3c7c6440d5abf76cf187d56ed7ba9189b7f625b"
+    },
+    "recovery_steam_sign_in": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/recovery-steam-sign-in.jpeg",
+      "sha256": "01c5544265b5c472edc0fe121b747708e29ab8ea182932f2e5b3fad7c4c2ccea"
+    },
+    "recovery_connecting": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/recovery-connecting.jpeg",
+      "sha256": "59b13a108a230a958154cdcbfb900366576fe76a396412f9c9b63d3e01933193"
+    },
+    "recovery_click_to_play": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/recovery-click-to-play.jpeg",
+      "sha256": "3f643ddbc8dc9557e3da358bf42ce345312dda00a7dd44e3e7340babc0d6c3ad"
+    },
+    "recovery_gameplay_no_map": {
+      "path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/templates/recovery-gameplay-no-map.jpeg",
+      "sha256": "a11457b0409b21fe2aa29302287dfa21590a0e4e938252fac954e7ccccedb4e8"
+    }
+  },
+  "surface_options": {
+    "Gielinor Surface": {
+      "reference_box": {
+        "left": 166,
+        "top": 533,
+        "right": 349,
+        "bottom": 552
+      }
+    },
+    "Ancient Cavern": {
+      "reference_box": {
+        "left": 166,
+        "top": 550,
+        "right": 349,
+        "bottom": 568
+      }
+    }
+  },
+  "worklist_path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-computer-use-binding-correction-017-20260731/packages/explorer-v4cr4-computer-use-binding-correction-017-20260731T054118Z/worklist/explorer-v4-worklist.json",
+  "root_execution_lifecycle": {
+    "production_exported_entrypoints_only": true,
+    "node_repl_with_suspended_timeout_required": true,
+    "active_context_required_before_claim": true,
+    "active_context_required_before_computer_use_initialization": true,
+    "caller_promise_race_is_not_cancellation": true,
+    "detached_global_lease_forbidden": true,
+    "one_abort_token_for_all_operations": true,
+    "tracked_descendants_required": true,
+    "unproven_descendant_fails_closed": true,
+    "transport_close_barrier_awaited": true,
+    "listener_callbacks_counted_through_drain": true,
+    "return_requires_measured_quiescence_and_finalizer_receipt": true
+  },
+  "finalizer": {
+    "protocol": "osrs-status-finalizer-v1",
+    "capability_id": "status-finalizer-v4cr4-20260731T022656Z-lr013",
+    "capability_manifest_path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-launcher-reservation-correction-013-20260731/packages/status-finalizer-v4cr4-launcher-reservation-correction-013-20260731T034522Z/STATUS_FINALIZER_CAPABILITY.json",
+    "capability_manifest_sha256": "356c0ff67dac67df32455eb8e7bf82511a4f3989eff5767990a264bd51075fe5",
+    "helper_path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-launcher-reservation-correction-013-20260731/packages/status-finalizer-v4cr4-launcher-reservation-correction-013-20260731T034522Z/status_finalizer_helper.py",
+    "helper_sha256": "f887b13afd4e5e4f3830be74858e05b8b58cd36a87461ca23381377e940c76c9",
+    "package_manifest_path": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-launcher-reservation-correction-013-20260731/packages/status-finalizer-v4cr4-launcher-reservation-correction-013-20260731T034522Z/STATUS_FINALIZER_PACKAGE.json",
+    "package_manifest_sha256": "a808bbb9709b61f7cbf67d46903c56022662ed14637a262444d1456026f6b585",
+    "fixed_target_root": "/Users/miyawaki/Developer/osrswiki-local-artifacts/artifacts/active/osrs-map-explorer-v4cr4-launcher-reservation-correction-013-20260731/future-runtime/online-explorer-continuous-v4cr4-20260731T022656Z/status/runtime-v4cr4-20260731T022656Z",
+    "socket_path": "/private/tmp/osrs-explorer-v4cr4-20260731T022656Z-lr013-finalizer.sock",
+    "record_type": "EXPLORER_V4_CONTROLLER_FINALIZATION",
+    "direct_node_repl_status_write_forbidden": true,
+    "arbitrary_client_path_forbidden": true,
+    "journal_authority": false,
+    "disconnect_fallback_required": true,
+    "original_channel_closed_before_reconciliation": true,
+    "all_error_paths_await_close_barrier": true,
+    "create_only_mode": "0444",
+    "fsync_and_exact_readback_required": true
+  }
+}

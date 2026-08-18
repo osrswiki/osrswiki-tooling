@@ -47,8 +47,11 @@
             "js/clipboard_bridge.js",
             "js/infobox_switcher_bootstrap.js",
             "js/switch_infobox.js",
+            "js/mobile_article_polish.js",
             "js/ge_charts_init.js",
-            "js/highcharts-stock.js"
+            "js/highcharts-stock.js",
+            "js/table_column_normalize.js",
+            "js/tabber_init.js"
           ],
           "target_dir": "web",
           "description": "WebView-specific JavaScript files"
@@ -135,6 +138,7 @@
       "web/clipboard_bridge.js",
       "web/infobox_switcher_bootstrap.js",
       "web/switch_infobox.js",
+      "web/mobile_article_polish.js",
       "web/switch_infobox_styles.css",
       "web/ge_charts_init.js",
       "web/highcharts-stock.js",

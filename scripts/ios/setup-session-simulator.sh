@@ -51,7 +51,7 @@ fi
 
 echo "✅ iOS development tools found"
 
-BUNDLE_ID="$("$SCRIPT_DIR/get-bundle-id.sh" 2>/dev/null || echo "omiyawaki.osrswiki")"
+BUNDLE_ID="${BUNDLE_ID:-$("$SCRIPT_DIR/get-bundle-id.sh" 2>/dev/null || echo "omiyawaki.osrswiki")}"
 OWNER_ID="$(ios_lifecycle_owner_id)"
 
 reuse_loaded_session=false

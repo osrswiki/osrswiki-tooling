@@ -1,0 +1,611 @@
+{
+  "schema_version": 2,
+  "reviewed_frame": {
+    "width": 768,
+    "height": 839
+  },
+  "minimum_normalized_correlation": 0.72,
+  "minimum_correlation_separation": 0.08,
+  "surface_option_search_region": {
+    "left": 150,
+    "top": 500,
+    "right": 380,
+    "bottom": 700
+  },
+  "terminal_selector_entry": {
+    "expected": "Zanaris",
+    "observed": "Zanaris",
+    "confirmed": true,
+    "status": "reviewed"
+  },
+  "surface_selector_scrollbar": {
+    "coordinate_semantics": "LEFT_TOP_INCLUSIVE_RIGHT_BOTTOM_EXCLUSIVE",
+    "stop_tolerance_pixels": 0,
+    "reference_template": "surface-selector-scrollbar-top.png",
+    "reference_template_sha256": "ec5954cb4f8e842ef58f3558ddde810ef9ba3b719614a7a13afaafd544e35178",
+    "bottom_reference_template": "surface-selector-scrollbar-bottom.png",
+    "bottom_reference_template_sha256": "2435c7829d912d142eaee08fb28cc782308e7fd3835aec2b7b75d55517ae819b",
+    "search_region": {
+      "left": 330,
+      "top": 525,
+      "right": 365,
+      "bottom": 655
+    },
+    "up_button_reference_box": {
+      "left": 342,
+      "top": 529,
+      "right": 356,
+      "bottom": 543
+    },
+    "down_button_reference_box": {
+      "left": 342,
+      "top": 629,
+      "right": 356,
+      "bottom": 643
+    },
+    "track_reference_box": {
+      "left": 342,
+      "top": 543,
+      "right": 356,
+      "bottom": 629
+    },
+    "thumb_reference_size": {
+      "width": 14,
+      "height": 16
+    },
+    "top_stop_thumb_top_bounds": {
+      "minimum": 543,
+      "maximum": 543
+    },
+    "bottom_stop_thumb_top_bounds": {
+      "minimum": 613,
+      "maximum": 613
+    },
+    "top_stop_point": {
+      "x": 349,
+      "y": 543
+    },
+    "bottom_stop_point": {
+      "x": 349,
+      "y": 628
+    }
+  },
+  "surfaces": {
+    "Gielinor Surface": {
+      "closed_template": "../derived/reviewed-v4/templates/gielinor-surface-closed.png",
+      "closed_template_sha256": "6070fbee847636d80604a4b0b0c1c071875a908801f9ea6f8aab2189d866753c",
+      "option_reference_box": {
+        "left": 166,
+        "top": 533,
+        "right": 349,
+        "bottom": 552
+      },
+      "status": "reviewed"
+    },
+    "Ancient Cavern": {
+      "closed_template": "../derived/reviewed-v4/templates/ancient-cavern-closed.png",
+      "closed_template_sha256": "6b642797aaaa8251de3565a5a168c472edd05f1c797978cbcd2400be7c3c9b2c",
+      "option_reference_box": {
+        "left": 166,
+        "top": 550,
+        "right": 349,
+        "bottom": 568
+      },
+      "status": "reviewed"
+    },
+    "Ardent Ocean Underground": {
+      "closed_template": "native-realm-closed/02-ardent-ocean-underground.png",
+      "closed_template_sha256": "6bd5de8e490a9874296c8df01ac11a63518cde9f9e58f144f31c2b06e98b2c41",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Ardougne Underground": {
+      "closed_template": "ardougne-underground-closed.jpeg",
+      "closed_template_sha256": "ddb1b32ed453be04b8ecf98ce2ef164e58c99c0ab3d66f821fefd27d1eae08ca",
+      "option_reference_box": {
+        "left": 166,
+        "top": 584,
+        "right": 349,
+        "bottom": 602
+      },
+      "status": "reviewed"
+    },
+    "Asgarnia Ice Cave": {
+      "closed_template": "asgarnia-ice-cave-closed.png",
+      "closed_template_sha256": "39a499eab2d0f02185fb276ff698eed485463e2bb8682324a133c6b9cc6b5b9b",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      },
+      "option_reference_box": {
+        "left": 166,
+        "top": 601,
+        "right": 349,
+        "bottom": 619
+      },
+      "status": "reviewed"
+    },
+    "Braindeath Island": {
+      "closed_template": "native-realm-closed/05-braindeath-island.png",
+      "closed_template_sha256": "0abf5060b49625bb36680d680b9b761d3e2f936d0a04aeb6cf3678cdb4fdac36",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Cam Torum": {
+      "closed_template": "native-realm-closed/06-cam-torum.png",
+      "closed_template_sha256": "dc4b4c72142fb63a1ac509322d3ef212ab15a863ceadce83c6a34a0e9f02fdba",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Dorgesh-Kaan": {
+      "closed_template": "native-realm-closed/07-dorgeshkaan.png",
+      "closed_template_sha256": "c89420fd2c467c05dcc2ee1287c6cd7e97fe9c5b45b80d34c8ae0cd7e9c64fd6",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Dwarven Mines": {
+      "closed_template": "native-realm-closed/08-dwarven-mines.png",
+      "closed_template_sha256": "babb185b7e71ac3cc84d5479280021a24cacdc931cbab488ddbac5b7bb0aa36b",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Feldip Hills Underground": {
+      "closed_template": "native-realm-closed/09-feldip-underground.png",
+      "closed_template_sha256": "e020b2b68d82281ed40f6a88a9652aeab36ccba4d67c00d9d280cdee5eb80705",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Fossil Island Underground": {
+      "closed_template": "native-realm-closed/10-fossil-underground.png",
+      "closed_template_sha256": "62c704a76c16f09ffcf24d5339079f44427c44e0ebfb8168cd86d587136ea5b2",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Fremennik Slayer Cave": {
+      "closed_template": "native-realm-closed/11-slayer-cave.png",
+      "closed_template_sha256": "33d5dffbc9e0c6105f3579b3c1e670b4a31ad3d1c5d63b8335efa50ef870d223",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "God Wars Dungeon": {
+      "closed_template": "native-realm-closed/12-godwars.png",
+      "closed_template_sha256": "244826dabb84d0b32773c727ab6393fb3e40c351e6ae7fb6f86a81ff4c067e95",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Kebos Underground": {
+      "closed_template": "native-realm-closed/13-kebos-underground.png",
+      "closed_template_sha256": "a0a0d0c0a91cba0020f301db8c36e119150f529193bf1cf51f1c9663e42c68d3",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Keldagrim": {
+      "closed_template": "native-realm-closed/14-keldagrim.png",
+      "closed_template_sha256": "a0f9f12df87ffab8fbf16f3009856269222de815366e55a158a096aea01c5f2b",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Kharidian Desert Underground": {
+      "closed_template": "native-realm-closed/15-desert-underground.png",
+      "closed_template_sha256": "0d57f9a4e68a305da177b0d55b3a3ac8ce41b4bb80ef7fb757c4f2f80a653c9d",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Kourend Underground": {
+      "closed_template": "native-realm-closed/16-kourend-underground.png",
+      "closed_template_sha256": "65a9efb05e9f7ae3237fb956f7a160c39661c42296e9d619258f41a099108e5f",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Lair of Tarn Razorlor": {
+      "closed_template": "native-realm-closed/17-undead-dungeon.png",
+      "closed_template_sha256": "a81ac2ba736fff9e6d3c15fb8dce0d3764f84de96d1776a62b4ff8b363220642",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "LMS Desert Island": {
+      "closed_template": "native-realm-closed/18-br-default.png",
+      "closed_template_sha256": "207c719f1c4fa848b8823bcaedf9490076d7102d6c11f3914589f097a5ee8eac",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "LMS Wild Varrock": {
+      "closed_template": "native-realm-closed/19-br-dark-varrock.png",
+      "closed_template_sha256": "71039efcfe7db99cd02ed09bd8ad331185e23e8cc728fdb078fc008f346eddb7",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Misthalin Underground": {
+      "closed_template": "native-realm-closed/20-misthalin-underground.png",
+      "closed_template_sha256": "76f126744a637c4166679057405a46a244b9d64539373b50cc0e5a55f067469e",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Mole Hole": {
+      "closed_template": "native-realm-closed/21-mole.png",
+      "closed_template_sha256": "be0582c0742e7feb4713561e376b3cd0a8a253c494f39cbe097e963cfdf527e7",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Mor Ul Rek": {
+      "closed_template": "native-realm-closed/22-tzhaar-area.png",
+      "closed_template_sha256": "4717e030dbab149734640f5579e5649dff6242749608c533e5febe4cc3d55232",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Morytania Underground": {
+      "closed_template": "native-realm-closed/23-morytania-underground.png",
+      "closed_template_sha256": "49c895f1a640af71d2a1d82c09acebc57274594fa2af481eb628c8551aad065e",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Mos Le'Harmless Cave": {
+      "closed_template": "native-realm-closed/24-mosleharmless-cave.png",
+      "closed_template_sha256": "8e8f7a596f0a38d8c58e13f91d27526366f5fd00a35e4e8414b37568e0b2fa9b",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Neypotzli": {
+      "closed_template": "native-realm-closed/25-neypotzli.png",
+      "closed_template_sha256": "f28c32a10e29773b03a9a2b8a80e0aed0a8b2628c5c3c9f598aadf481178abcf",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Northern Ocean Underground": {
+      "closed_template": "native-realm-closed/26-northern-ocean-underground.png",
+      "closed_template_sha256": "7c03855c3dd14c846dada06ecdc921da2180bb4b93d8cd68951e9ffa776b9b9b",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Ourania Altar": {
+      "closed_template": "native-realm-closed/27-ourania.png",
+      "closed_template_sha256": "2445b801ef101a04d659da592d3f9c30789d85391845ccb7d6f765c9c5fee58f",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Prifddinas": {
+      "closed_template": "native-realm-closed/28-prifddinas.png",
+      "closed_template_sha256": "2d1a0c40924b3ac9b118f1f0eb7a75807ec72a3cb8422489f0beff65e6d1208e",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Prifddinas Grand Library": {
+      "closed_template": "native-realm-closed/29-grand-library.png",
+      "closed_template_sha256": "be25abfe1a558018d27ba6111cf661667680cf516981ee76d71d63eed30739fc",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Prifddinas Underground": {
+      "closed_template": "native-realm-closed/30-prifddinas-underground.png",
+      "closed_template_sha256": "de7ee1621daab52f71989c6c616a1e5ef554a2b979390fd558185192d06bd059",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Ruins of Camdozaal": {
+      "closed_template": "native-realm-closed/31-camdozaal.png",
+      "closed_template_sha256": "cac6de341bd2da5151104e7450364d9527a71471ee990d95eadcc7fa460a2246",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Shrouded Ocean Underground": {
+      "closed_template": "native-realm-closed/32-shrouded-ocean-underground.png",
+      "closed_template_sha256": "1ec6e6f33a1ad7aca58f6ff2e63e2a24e6601b41686650cf204eb36fbb303858",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Stronghold of Security": {
+      "closed_template": "native-realm-closed/33-sos.png",
+      "closed_template_sha256": "d64d7d8de11f5666f7cf6c43b7060d71106fc820bbfaa1edb726b0ceb1e53a20",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Stronghold Underground": {
+      "closed_template": "native-realm-closed/34-stronghold-underground.png",
+      "closed_template_sha256": "03d925df56d59be6df0e809460b4b6d13f169b73bf08fafad51e9e5095b927ad",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Sunset Ocean Underground": {
+      "closed_template": "native-realm-closed/35-sunset-ocean-underground.png",
+      "closed_template_sha256": "c2a64d6fdb059bdad7e318be1d8de3457775261bbccda7c15f37b4e1630703f4",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Taverley Underground": {
+      "closed_template": "native-realm-closed/36-taverley-underground.png",
+      "closed_template_sha256": "d416134e6ac951a479a170f92556b9c3f45b1d0308bc6fe9ea70e50cd34d8b68",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "The Abyss": {
+      "closed_template": "native-realm-closed/37-the-abyss.png",
+      "closed_template_sha256": "b18a872c920eeb44eb1719d9d160fc9936e34fc7d32b395f8d009df93f1e3175",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Tolna's Rift": {
+      "closed_template": "native-realm-closed/38-tolna.png",
+      "closed_template_sha256": "77a57a3ea262dae334dce85cb187c43dd2d3ff5cf3d1ef8d605a563ded9bc233",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Troll Stronghold": {
+      "closed_template": "native-realm-closed/39-troll-stronghold.png",
+      "closed_template_sha256": "e44a90a77181a2945d55dfc87004cbd70b1a05392e901874c936da54eb64264a",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Unquiet Ocean Underground": {
+      "closed_template": "native-realm-closed/40-unquiet-ocean-underground.png",
+      "closed_template_sha256": "a4c6522e0b321cafa18b5dbd2d4d2a558f4cee661067ebb0cf6f987bbd9bfd27",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Varlamore Underground": {
+      "closed_template": "native-realm-closed/41-varlamore-underground.png",
+      "closed_template_sha256": "176abd8386241e387ccb1077a988f57c3ea02cc0997f6693bd2f2bed8c60dd03",
+      "status": "reviewed-live-selector-inventory-20260812",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      }
+    },
+    "Waterbirth Dungeon": {
+      "closed_template": "native-realm-closed/42-waterbirth.png",
+      "closed_template_sha256": "64849d8bc27421567b4da8236d8d1581c43b3df3ce03391d229cac9c7ed11f44",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      },
+      "status": "reviewed-live-selector-inventory-20260812"
+    },
+    "Western Ocean Underground": {
+      "closed_template": "native-realm-closed/43-western-ocean-underground.png",
+      "closed_template_sha256": "884d10e9541b3d5f9de0c1aba4f581db179c2e3b94e6e3f4ab08bfba0e5683c9",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      },
+      "status": "reviewed-live-selector-inventory-20260812"
+    },
+    "Wilderness Dungeons": {
+      "closed_template": "native-realm-closed/44-wilderness-dungeons.png",
+      "closed_template_sha256": "236cbe6494561e55d265d0a945ebcecbc4d20e8db7f2b1001a0ec0a6e75fda90",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      },
+      "status": "reviewed-live-selector-inventory-20260812"
+    },
+    "Yanille Underground": {
+      "closed_template": "native-realm-closed/45-yanille-underground.png",
+      "closed_template_sha256": "4fee019d4a204cbc8f4c1a48e0bfe4e5e10f5ae4ac23a6890e1dec2805e95f17",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      },
+      "status": "reviewed-live-selector-inventory-20260812"
+    },
+    "Zanaris": {
+      "closed_template": "zanaris-closed.png",
+      "closed_template_sha256": "d1bc98eb6999776d7e46f370a2d73406dbebdf49910bb1f57cc5ec6a15c9d336",
+      "closed_reference_box": {
+        "left": 180,
+        "top": 647,
+        "right": 332,
+        "bottom": 665
+      },
+      "selector_open_template": "surface-selector-scrollbar-bottom.png",
+      "selector_open_template_sha256": "2435c7829d912d142eaee08fb28cc782308e7fd3835aec2b7b75d55517ae819b",
+      "option_reference_box": {
+        "left": 215,
+        "top": 624,
+        "right": 292,
+        "bottom": 640
+      },
+      "selector_navigation": {
+        "mode": "scrollbar_drag",
+        "anchor": "bottom",
+        "maximum_drags": 1
+      },
+      "status": "reviewed"
+    }
+  }
+}

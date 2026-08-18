@@ -1,0 +1,16 @@
+{
+  "name": "@osrswiki/explorer-adapter-worker",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=26.0.0 <27"
+  },
+  "scripts": {
+    "readiness": "node scripts/osrs-readiness.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "sharp": "0.35.3"
+  }
+}

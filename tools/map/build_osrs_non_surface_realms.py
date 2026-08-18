@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -15,13 +16,16 @@ from jsonschema import Draft202012Validator
 from PIL import Image
 
 from osrs_non_surface_assets import (
+    osrs_assert_mbtiles_alpha_matches_mask,
     osrs_asset_stem,
+    osrs_boundary_provenance_report,
     osrs_build_manifest_records,
     osrs_manifest_schema,
     osrs_reconcile_intermap_links,
     osrs_release_relative_path,
     osrs_render_wiki_view,
     osrs_save_mask_png,
+    osrs_shared_realm_canvas_layout,
     osrs_sha256_file,
     osrs_validate_manifest,
     osrs_write_mbtiles,
@@ -90,6 +94,7 @@ def osrs_build_release(
     prior = _osrs_read_json(args.prior_manifest) if args.prior_manifest else None
     if prior is not None and not isinstance(prior, Mapping):
         raise osrsPipelineError("prior manifest must be an object")
+    prior_asset_planes = _osrs_prior_asset_planes_by_realm(prior)
     raw_definitions = inventory.get("definitions")
     if not isinstance(raw_definitions, list):
         raise osrsPipelineError("inventory.definitions must be an array")
@@ -196,53 +201,69 @@ def osrs_build_release(
         realm_id: [] for realm_id in records_by_id
     }
 
-    for plane, state in sorted(plane_states.items()):
-        with (
-            Image.open(state["source_path"]) as source_image,
-            Image.open(state["provenance_path"]) as owner_image,
-        ):
-            source_rgb = np.asarray(source_image)
-            owner_codes = np.asarray(owner_image)
-            for realm_id, rendered in osrs_iter_rendered_provenance_realms(
-                source_rgb,
-                owner_codes,
-                projection,
-                state["components"],
-                definitions,
-                special_region_index,
-            ):
-                if not _osrs_rendered_has_content(rendered):
-                    continue
-                record = records_by_id.get(realm_id)
-                if record is None:
-                    raise osrsPipelineError(
-                        f"provenance produced unpublished realm {realm_id}"
-                    )
-                assets_by_realm[realm_id].append(
-                    _osrs_write_rendered_asset(
-                        rendered, record, assets_dir, masks_dir, output
-                    )
-                )
+    rendered_geometry_by_realm: dict[str, list[dict[str, Any]]] = {
+        realm_id: [] for realm_id in records_by_id
+    }
+    for realm_id, record, rendered in _osrs_iter_release_rendered_assets(
+        plane_states=plane_states,
+        projection=projection,
+        definitions=definitions,
+        special_region_index=special_region_index,
+        records=records,
+        records_by_id=records_by_id,
+        wiki_by_id=wiki_by_id,
+        prior_asset_planes=prior_asset_planes,
+    ):
+        coordinates = np.argwhere(np.asarray(rendered.mask))
+        if coordinates.size == 0:
+            raise osrsPipelineError(
+                f"rendered geometry unexpectedly blank: {realm_id} floor {rendered.plane}"
+            )
+        min_y, min_x = coordinates.min(axis=0)
+        max_y, max_x = coordinates.max(axis=0)
+        rendered_geometry_by_realm[realm_id].append(
+            {
+                "plane": int(rendered.plane),
+                "width": int(rendered.rgba.shape[1]),
+                "height": int(rendered.rgba.shape[0]),
+                "content_pixel_bounds": [
+                    int(min_x),
+                    int(min_y),
+                    int(max_x) + 1,
+                    int(max_y) + 1,
+                ],
+            }
+        )
 
-            for record in records:
-                map_id = record.get("map_id")
-                if (
-                    record["group"] != "other_maps"
-                    or map_id is None
-                    or int(map_id) < 10000
-                ):
-                    continue
-                wiki = wiki_by_id[int(map_id)]
-                rendered = osrs_render_wiki_view(
-                    source_rgb, projection, _osrs_wiki_bounds(wiki), plane=plane
-                )
-                if not _osrs_rendered_has_content(rendered):
-                    continue
-                assets_by_realm[str(record["id"])].append(
-                    _osrs_write_rendered_asset(
-                        rendered, record, assets_dir, masks_dir, output
-                    )
-                )
+    canvas_layout_by_realm = {
+        realm_id: osrs_shared_realm_canvas_layout(
+            geometry,
+            is_surface=bool(records_by_id[realm_id].get("is_surface", False)),
+        )
+        for realm_id, geometry in rendered_geometry_by_realm.items()
+        if geometry
+    }
+
+    for realm_id, record, rendered in _osrs_iter_release_rendered_assets(
+        plane_states=plane_states,
+        projection=projection,
+        definitions=definitions,
+        special_region_index=special_region_index,
+        records=records,
+        records_by_id=records_by_id,
+        wiki_by_id=wiki_by_id,
+        prior_asset_planes=prior_asset_planes,
+    ):
+        assets_by_realm[realm_id].append(
+            _osrs_write_rendered_asset(
+                rendered,
+                record,
+                assets_dir,
+                masks_dir,
+                output,
+                canvas_layout=canvas_layout_by_realm[realm_id],
+            )
+        )
 
     inventory_sha = osrs_sha256_file(args.inventory)
     basemaps_sha = osrs_sha256_file(args.basemaps)
@@ -266,18 +287,6 @@ def osrs_build_release(
     excluded_ids = {value["id"] for value in excluded_blank_wiki_views}
     if excluded_ids:
         records = [record for record in records if str(record["id"]) not in excluded_ids]
-    osrs_write_json(
-        reports_dir / "wiki-view-publication.json",
-        {
-            "schema_version": OSRS_SCHEMA_VERSION,
-            "published_structured_wiki_view_count": sum(
-                record["group"] == "other_maps" and record.get("map_id") is not None
-                for record in records
-            ),
-            "excluded_blank_views": excluded_blank_wiki_views,
-            "checks": {"all_published_views_nonblank": True},
-        },
-    )
     for record in records:
         realm_id = str(record["id"])
         assets = sorted(
@@ -300,14 +309,132 @@ def osrs_build_release(
             "renderer_provenance_by_rendered_plane": provenance_revisions,
         }
 
-    osrs_preserve_previous_aliases(prior, records)
-    release_diff = osrs_release_diff(prior, records)
-
+    # Source conservation is intentionally broader than product publication. Validate every
+    # authoritative cache owner and Wiki-defined source view before removing noncanonical runtime
+    # records; the evidence remains available without shipping those 1,047 user-defined/special
+    # map entries or their raster payloads in either app.
+    accounting_records = records
     validation = _osrs_asset_validation(
-        records, accounting_json, components_by_plane
+        accounting_records, accounting_json, components_by_plane
     )
     validation_path = reports_dir / "realm-asset-validation.json"
     validation_sha = osrs_write_json(validation_path, validation)
+
+    excluded_runtime_records = [
+        record for record in accounting_records if record["group"] not in {"surface", "realms"}
+    ]
+    records = [
+        record for record in accounting_records if record["group"] in {"surface", "realms"}
+    ]
+    expected_runtime_realm_count = sum(
+        record["group"] in {"surface", "realms"} for record in accounting_records
+    )
+    expected_surface_count = sum(
+        record["group"] == "surface" for record in accounting_records
+    )
+    if (
+        len(records) != expected_runtime_realm_count
+        or sum(record["group"] == "surface" for record in records) != expected_surface_count
+    ):
+        raise osrsPipelineError(
+            "canonical runtime publication must preserve every source surface and named native realm"
+        )
+    runtime_exclusion_report = {
+        "schema_version": OSRS_SCHEMA_VERSION,
+        "policy": "surface-plus-named-native-cache-realms-only",
+        "published_groups": ["surface", "realms"],
+        "published_realm_count": len(records),
+        "excluded_realm_count": len(excluded_runtime_records),
+        "excluded_group_counts": {
+            group: sum(record["group"] == group for record in excluded_runtime_records)
+            for group in sorted({str(record["group"]) for record in excluded_runtime_records})
+        },
+        "excluded_records": [
+            {
+                "id": str(record["id"]),
+                "canonical_name": str(record["canonical_name"]),
+                "group": str(record["group"]),
+                "map_id": record.get("map_id"),
+                "asset_sha256": [
+                    str(asset["mbtiles_sha256"])
+                    for asset in sorted(record.get("assets", []), key=lambda value: value["plane"])
+                ],
+            }
+            for record in excluded_runtime_records
+        ],
+        "checks": {
+            "source_accounting_completed_before_exclusion": validation["checks"]["release_ready"],
+            "runtime_contains_only_canonical_groups": all(
+                record["group"] in {"surface", "realms"} for record in records
+            ),
+            "runtime_realm_count_matches_canonical_source": (
+                len(records) == expected_runtime_realm_count
+            ),
+        },
+    }
+    _osrs_assert_public_json(runtime_exclusion_report, "reports/runtime-publication-policy.json")
+    runtime_exclusion_path = reports_dir / "runtime-publication-policy.json"
+    runtime_exclusion_sha = osrs_write_json(
+        runtime_exclusion_path,
+        runtime_exclusion_report,
+    )
+    for record in excluded_runtime_records:
+        stem = osrs_asset_stem(str(record["id"]))
+        shutil.rmtree(assets_dir / stem, ignore_errors=True)
+        shutil.rmtree(masks_dir / stem, ignore_errors=True)
+    expected_asset_paths = {
+        str(asset["mbtiles_path"])
+        for record in records
+        for asset in record.get("assets", [])
+    }
+    expected_mask_paths = {
+        str(asset[path_key])
+        for record in records
+        for asset in record.get("assets", [])
+        for path_key in ("mask_path", "ownership_mask_path")
+    }
+    actual_asset_paths = {
+        osrs_release_relative_path(path, output)
+        for path in assets_dir.rglob("*.mbtiles")
+    }
+    actual_mask_paths = {
+        osrs_release_relative_path(path, output)
+        for path in masks_dir.rglob("*.png")
+    }
+    if actual_asset_paths != expected_asset_paths or actual_mask_paths != expected_mask_paths:
+        raise osrsPipelineError(
+            "runtime publication tree contains missing or noncanonical asset payloads"
+        )
+
+    osrs_write_json(
+        reports_dir / "wiki-view-publication.json",
+        {
+            "schema_version": OSRS_SCHEMA_VERSION,
+            "published_structured_wiki_view_count": 0,
+            "excluded_blank_views": excluded_blank_wiki_views,
+            "excluded_noncanonical_view_count": sum(
+                record["group"] == "other_maps" and record.get("map_id") is not None
+                for record in excluded_runtime_records
+            ),
+            "checks": {
+                "all_published_views_nonblank": True,
+                "no_wiki_authored_view_is_runtime_published": True,
+            },
+        },
+    )
+
+    osrs_preserve_previous_aliases(prior, records)
+    release_diff = osrs_release_diff(prior, records)
+
+    boundary_provenance = osrs_boundary_provenance_report(
+        records,
+        prior.get("realms", []) if isinstance(prior, Mapping) else (),
+    )
+    boundary_provenance_path = reports_dir / "boundary-provenance.json"
+    boundary_provenance_sha = osrs_write_json(
+        boundary_provenance_path,
+        boundary_provenance,
+    )
 
     selector_ids = [str(record["id"]) for record in records]
     manifest = {
@@ -347,6 +474,21 @@ def osrs_build_release(
                 "sha256": basemaps_sha,
             },
             "renderer_provenance_by_rendered_plane": provenance_revisions,
+            "boundary_provenance": {
+                "path": osrs_release_relative_path(boundary_provenance_path, output),
+                "sha256": boundary_provenance_sha,
+                "policy": (
+                    "finite-content-envelope; four-sided-center-edge-overbound; "
+                    "horizontal-wrap-disabled"
+                ),
+            },
+            "runtime_publication_policy": {
+                "path": osrs_release_relative_path(runtime_exclusion_path, output),
+                "sha256": runtime_exclusion_sha,
+                "policy": "surface-plus-named-native-cache-realms-only",
+                "published_realm_count": len(records),
+                "excluded_realm_count": len(excluded_runtime_records),
+            },
         },
         "accounting": accounting_json,
         "realms": records,
@@ -385,6 +527,14 @@ def osrs_build_release(
         "accounting_sha256": accounting_sha,
         "asset_validation_path": osrs_release_relative_path(validation_path, output),
         "asset_validation_sha256": validation_sha,
+        "boundary_provenance_path": osrs_release_relative_path(
+            boundary_provenance_path, output
+        ),
+        "boundary_provenance_sha256": boundary_provenance_sha,
+        "runtime_publication_policy_path": osrs_release_relative_path(
+            runtime_exclusion_path, output
+        ),
+        "runtime_publication_policy_sha256": runtime_exclusion_sha,
         "release_diff_path": osrs_release_relative_path(release_diff_path, output),
         "release_diff_sha256": release_diff_sha,
         "path_hygiene_path": osrs_release_relative_path(path_hygiene_path, output),
@@ -403,8 +553,12 @@ def osrs_build_release(
             record["group"] == "other_maps" and record.get("map_id") is not None
             for record in records
         ),
-        "cache_special_realm_count": len(special_records),
-        "asset_count": sum(len(value) for value in assets_by_realm.values()),
+        "cache_special_realm_count": sum(
+            str(record["id"]).startswith("cache-special-region:") for record in records
+        ),
+        "source_accounting_cache_special_realm_count": len(special_records),
+        "excluded_runtime_realm_count": len(excluded_runtime_records),
+        "asset_count": sum(len(record.get("assets", [])) for record in records),
         "unresolved_content_bearing_residual_pixels": 0,
     }
 
@@ -418,9 +572,10 @@ def _osrs_load_plane_state(
     release_root = reports_dir.parent
     source_path = (args.provenance_dir / f"img-{plane}.png").resolve()
     provenance_path = (args.provenance_dir / f"img-{plane}-provenance.png").resolve()
+    coverage_path = (args.provenance_dir / f"img-{plane}-provenance-coverage.png").resolve()
     ledger_path = (args.provenance_dir / f"img-{plane}-provenance.json").resolve()
     reference_source = (args.source_image_dir / f"img-{plane}.png").resolve()
-    for path in (source_path, provenance_path, ledger_path, reference_source):
+    for path in (source_path, provenance_path, coverage_path, ledger_path, reference_source):
         if not path.is_file():
             raise osrsPipelineError(f"missing rendered-floor provenance input: {path}")
     _osrs_verify_source_dimensions(source_path, projection)
@@ -442,6 +597,18 @@ def _osrs_load_plane_state(
     if ledger_plane != plane:
         raise osrsPipelineError(
             f"provenance ledger {ledger_path} declares rendered plane {ledger_plane}"
+        )
+    coverage_image = ledger.get("coverage_image")
+    if not isinstance(coverage_image, Mapping):
+        raise osrsPipelineError(f"provenance ledger {ledger_path} lacks coverage_image")
+    if (
+        coverage_image.get("path") != coverage_path.name
+        or coverage_image.get("width") != projection.width
+        or coverage_image.get("height") != projection.height
+        or coverage_image.get("rendered_plane") != plane
+    ):
+        raise osrsPipelineError(
+            f"provenance ledger {ledger_path} coverage_image does not match coverage raster"
         )
 
     streaming_path = reports_dir / f"source-accounting-plane-{plane}-streaming.json"
@@ -504,6 +671,7 @@ def _osrs_load_plane_state(
         "source_path": source_path,
         "reference_source_path": reference_source,
         "provenance_path": provenance_path,
+        "coverage_path": coverage_path,
         "ledger_path": ledger_path,
         "streaming_path": streaming_path,
         "ledger": ledger,
@@ -527,6 +695,11 @@ def _osrs_plane_input_record(
             "owner-codes.png"
         ),
         "provenance_sha256": osrs_sha256_file(state["provenance_path"]),
+        "coverage_path": (
+            f"input://renderer-provenance/plane-{int(state['rendered_plane'])}/"
+            "actual-write-coverage.png"
+        ),
+        "coverage_sha256": osrs_sha256_file(state["coverage_path"]),
         "ledger_path": (
             f"input://renderer-provenance/plane-{int(state['rendered_plane'])}/"
             "owner-ledger.json"
@@ -634,6 +807,72 @@ def _osrs_apply_provenance_geometry(
             record["accounting_pixel_count"] = 0
 
 
+def _osrs_load_coverage_mask(path: Path, projection: osrsProjection) -> np.ndarray:
+    if not path.is_file():
+        raise osrsPipelineError(f"missing actual-write coverage raster: {path}")
+    with Image.open(path) as image:
+        if image.size != (projection.width, projection.height):
+            raise osrsPipelineError(
+                f"coverage raster {path} has size {image.size}, expected "
+                f"{projection.width}x{projection.height}"
+            )
+        if image.mode == "1":
+            return np.asarray(image, dtype=np.bool_)
+        if len(image.getbands()) != 1:
+            raise osrsPipelineError(f"coverage raster must have one channel: {path}")
+        values = np.asarray(image)
+    if values.ndim != 2:
+        raise osrsPipelineError(f"coverage raster must be two-dimensional: {path}")
+    unique_values = set(int(value) for value in np.unique(values))
+    if not unique_values.issubset({0, 255}):
+        raise osrsPipelineError(
+            f"coverage raster must be binary 0/255 values, got {sorted(unique_values)[:8]}"
+        )
+    return values != 0
+
+
+def _osrs_validate_coverage_against_owner_and_ledger(
+    coverage: np.ndarray,
+    owner_codes: np.ndarray,
+    ledger: Mapping[str, Any],
+    plane: int,
+) -> None:
+    owners = np.asarray(owner_codes)
+    if coverage.shape != owners.shape or coverage.dtype != np.bool_:
+        raise osrsPipelineError(f"coverage raster floor {plane} does not match owner raster")
+    if owners.dtype.kind not in {"u", "i"}:
+        raise osrsPipelineError(f"owner raster floor {plane} is not an integer raster")
+    if np.any(coverage & (owners == 0)):
+        raise osrsPipelineError(f"coverage raster floor {plane} has writes without final owners")
+    coverage_encoding = ledger.get("coverage_encoding")
+    if not isinstance(coverage_encoding, Mapping):
+        raise osrsPipelineError(f"provenance ledger floor {plane} lacks coverage_encoding")
+    if (
+        coverage_encoding.get("sample_type") != "binary"
+        or coverage_encoding.get("zero_code") != 0
+        or coverage_encoding.get("write_code") != 1
+        or coverage_encoding.get("nonzero_semantics") != "actual_renderer_write"
+    ):
+        raise osrsPipelineError(f"provenance ledger floor {plane} coverage encoding is invalid")
+    statistics = ledger.get("statistics")
+    if not isinstance(statistics, Mapping):
+        raise osrsPipelineError(f"provenance ledger floor {plane} lacks statistics")
+    expected_coverage = statistics.get("actual_covered_pixel_count")
+    actual_writes = statistics.get("actual_write_count")
+    if not isinstance(expected_coverage, int) or isinstance(expected_coverage, bool):
+        raise osrsPipelineError(f"provenance ledger floor {plane} lacks covered-pixel count")
+    if not isinstance(actual_writes, int) or isinstance(actual_writes, bool):
+        raise osrsPipelineError(f"provenance ledger floor {plane} lacks actual write count")
+    observed_coverage = int(np.count_nonzero(coverage))
+    if observed_coverage != expected_coverage:
+        raise osrsPipelineError(
+            f"coverage raster floor {plane} count {observed_coverage} does not match "
+            f"ledger {expected_coverage}"
+        )
+    if observed_coverage > actual_writes:
+        raise osrsPipelineError(f"coverage raster floor {plane} has more pixels than writes")
+
+
 def _osrs_asset_validation(
     records: Sequence[Mapping[str, Any]],
     accounting: Mapping[str, Any],
@@ -660,6 +899,36 @@ def _osrs_asset_validation(
         )
     )
     assigned_asset_pixels = sum(int(asset["assigned_pixel_count"]) for asset in owner_assets)
+    ownership_asset_pixels = sum(
+        int(asset.get("ownership_pixel_count", asset["assigned_pixel_count"]))
+        for asset in owner_assets
+    )
+    all_assets = [asset for record in records for asset in record.get("assets", [])]
+    total_display_pixels = sum(int(asset["display_pixel_count"]) for asset in all_assets)
+    total_ownership_pixels = sum(
+        int(asset.get("ownership_pixel_count", asset["assigned_pixel_count"]))
+        for asset in all_assets
+    )
+    total_transparent_owned_pixels = sum(
+        int(asset.get("transparent_owned_pixel_count", 0)) for asset in all_assets
+    )
+    total_visible_exact_black_pixels = sum(
+        int(asset.get("visible_exact_black_pixel_count", 0)) for asset in all_assets
+    )
+    all_asset_masks_consistent = all(
+        int(asset.get("ownership_pixel_count", asset["assigned_pixel_count"]))
+        >= int(asset["display_pixel_count"])
+        and int(asset.get("transparent_owned_pixel_count", 0))
+        == int(asset.get("ownership_pixel_count", asset["assigned_pixel_count"]))
+        - int(asset["display_pixel_count"])
+        for asset in all_assets
+    )
+    floor_zero_display_uses_complete_ownership = all(
+        int(asset["display_pixel_count"])
+        == int(asset.get("ownership_pixel_count", asset["assigned_pixel_count"]))
+        for asset in all_assets
+        if int(asset.get("plane", -1)) == 0
+    )
     special_region_ownership = osrs_special_region_accounting_report(
         records,
         components_by_plane,
@@ -676,6 +945,11 @@ def _osrs_asset_validation(
         "expected_owned_source_pixels": expected,
         "manifest_accounting_owner_pixels": owner_source_pixels,
         "floor_zero_owner_asset_assigned_pixels": assigned_asset_pixels,
+        "floor_zero_owner_asset_ownership_pixels": ownership_asset_pixels,
+        "total_asset_ownership_pixels": total_ownership_pixels,
+        "total_asset_display_pixels": total_display_pixels,
+        "total_transparent_owned_pixels": total_transparent_owned_pixels,
+        "total_visible_exact_black_pixels": total_visible_exact_black_pixels,
         "all_assets_nonblank": all(
             asset.get("nonblank") is True
             for record in records
@@ -686,11 +960,21 @@ def _osrs_asset_validation(
         "cache_special_region_ownership": special_region_ownership,
         "checks": {
             "manifest_owner_sum_matches_source_accounting": owner_source_pixels == expected,
-            "asset_pixel_sum_matches_source_accounting": assigned_asset_pixels == expected,
+            "asset_pixel_sum_matches_source_accounting": (
+                assigned_asset_pixels == expected
+                and ownership_asset_pixels == expected
+            ),
+            "asset_ownership_display_counts_consistent": all_asset_masks_consistent,
+            "floor_zero_display_uses_complete_ownership": (
+                floor_zero_display_uses_complete_ownership
+            ),
             "special_region_ownership_exact_and_unmerged": special_region_ready,
             "release_ready": (
                 owner_source_pixels == expected
                 and assigned_asset_pixels == expected
+                and ownership_asset_pixels == expected
+                and all_asset_masks_consistent
+                and floor_zero_display_uses_complete_ownership
                 and special_region_ready
             ),
         },
@@ -703,12 +987,88 @@ def _osrs_asset_validation(
     return result
 
 
+def _osrs_iter_release_rendered_assets(
+    *,
+    plane_states: Mapping[int, Mapping[str, Any]],
+    projection: osrsProjection,
+    definitions: Sequence[Mapping[str, Any]],
+    special_region_index: Mapping[str, Any],
+    records: Sequence[Mapping[str, Any]],
+    records_by_id: Mapping[str, Mapping[str, Any]],
+    wiki_by_id: Mapping[int, Mapping[str, Any]],
+    prior_asset_planes: Mapping[str, set[int]],
+):
+    """Yield the deterministic release assets for both geometry and write passes."""
+
+    for plane, state in sorted(plane_states.items()):
+        with (
+            Image.open(state["source_path"]) as source_image,
+            Image.open(state["provenance_path"]) as owner_image,
+        ):
+            source_rgb = np.asarray(source_image)
+            owner_codes = np.asarray(owner_image)
+            coverage_mask = _osrs_load_coverage_mask(
+                state["coverage_path"], projection
+            )
+            _osrs_validate_coverage_against_owner_and_ledger(
+                coverage_mask, owner_codes, state["ledger"], plane
+            )
+            for realm_id, rendered in osrs_iter_rendered_provenance_realms(
+                source_rgb,
+                owner_codes,
+                projection,
+                state["components"],
+                definitions,
+                special_region_index,
+                coverage_mask=coverage_mask,
+            ):
+                if not _osrs_rendered_has_content(rendered):
+                    continue
+                if not _osrs_prior_allows_asset_plane(
+                    prior_asset_planes, realm_id, plane
+                ):
+                    continue
+                record = records_by_id.get(realm_id)
+                if record is None:
+                    raise osrsPipelineError(
+                        f"provenance produced unpublished realm {realm_id}"
+                    )
+                yield realm_id, record, rendered
+
+            for record in records:
+                map_id = record.get("map_id")
+                if (
+                    record["group"] != "other_maps"
+                    or map_id is None
+                    or int(map_id) < 10000
+                ):
+                    continue
+                wiki = wiki_by_id[int(map_id)]
+                rendered = osrs_render_wiki_view(
+                    source_rgb,
+                    projection,
+                    _osrs_wiki_bounds(wiki),
+                    plane=plane,
+                    coverage_mask=coverage_mask,
+                )
+                if not _osrs_rendered_has_content(rendered):
+                    continue
+                realm_id = str(record["id"])
+                if not _osrs_prior_allows_asset_plane(
+                    prior_asset_planes, realm_id, plane
+                ):
+                    continue
+                yield realm_id, record, rendered
+
+
 def _osrs_write_rendered_asset(
     rendered: Any,
     record: Mapping[str, Any],
     assets_dir: Path,
     masks_dir: Path,
     release_root: Path,
+    *,
+    canvas_layout: Mapping[str, int],
 ) -> dict[str, Any]:
     stem = osrs_asset_stem(str(record["id"]))
     plane = int(rendered.plane)
@@ -716,25 +1076,64 @@ def _osrs_write_rendered_asset(
     realm_mask_dir = masks_dir / stem
     mbtiles_path = realm_asset_dir / f"plane-{plane}.mbtiles"
     mask_path = realm_mask_dir / f"plane-{plane}.png"
+    ownership_mask_path = realm_mask_dir / f"plane-{plane}-ownership.png"
+    display_mask = np.asarray(rendered.mask)
+    ownership_mask = (
+        np.asarray(rendered.ownership_mask)
+        if getattr(rendered, "ownership_mask", None) is not None
+        else display_mask
+    )
+    if display_mask.shape != ownership_mask.shape:
+        raise osrsPipelineError(
+            f"asset mask dimensions disagree for {record['id']} floor {plane}"
+        )
+    if display_mask.dtype != np.bool_ or ownership_mask.dtype != np.bool_:
+        raise osrsPipelineError(
+            f"asset masks must be boolean for {record['id']} floor {plane}"
+        )
+    if np.any(display_mask & ~ownership_mask):
+        raise osrsPipelineError(
+            f"display mask exceeds ownership mask for {record['id']} floor {plane}"
+        )
     mbtiles = osrs_write_mbtiles(
         rendered.rgba,
         mbtiles_path,
         f"{record['canonical_name']} - Floor {plane}",
+        canvas_size=int(canvas_layout["canvas_size"]),
+        canvas_origin=(
+            int(canvas_layout["origin_x"]),
+            int(canvas_layout["origin_y"]),
+        ),
         release_root=release_root,
     )
-    mask_sha = osrs_save_mask_png(rendered.mask, mask_path)
-    display_pixels = int(np.count_nonzero(rendered.mask))
+    osrs_assert_mbtiles_alpha_matches_mask(mbtiles_path, display_mask, mbtiles)
+    mask_sha = osrs_save_mask_png(display_mask, mask_path)
+    ownership_mask_sha = osrs_save_mask_png(ownership_mask, ownership_mask_path)
+    display_pixels = int(np.count_nonzero(display_mask))
+    ownership_pixels = int(np.count_nonzero(ownership_mask))
+    transparent_owned_pixels = ownership_pixels - display_pixels
     assigned = int(rendered.assigned_source_pixel_count)
     collision_count = int(rendered.identical_rgb_display_collision_count)
-    if assigned != display_pixels + collision_count:
+    if assigned != ownership_pixels + collision_count:
         raise osrsPipelineError(
-            f"asset source/display accounting mismatch for {record['id']} floor {plane}: "
-            f"assigned={assigned}, display={display_pixels}, collisions={collision_count}"
+            f"asset source/ownership accounting mismatch for {record['id']} floor {plane}: "
+            f"assigned={assigned}, ownership={ownership_pixels}, collisions={collision_count}"
+        )
+    if transparent_owned_pixels < 0:
+        raise osrsPipelineError(
+            f"asset has more display pixels than owned pixels for {record['id']} floor {plane}"
+        )
+    if plane == 0 and transparent_owned_pixels != 0:
+        raise osrsPipelineError(
+            f"floor 0 display alpha must match ownership for {record['id']}"
         )
     content = int(
         np.count_nonzero(
-            rendered.mask & np.any(rendered.rgba[..., :3] != 0, axis=2)
+            display_mask & np.any(rendered.rgba[..., :3] != 0, axis=2)
         )
+    )
+    visible_black = int(
+        np.count_nonzero(display_mask & np.all(rendered.rgba[..., :3] == 0, axis=2))
     )
     return {
         "plane": plane,
@@ -743,25 +1142,67 @@ def _osrs_write_rendered_asset(
         "mbtiles_bytes": mbtiles["bytes"],
         "mask_path": osrs_release_relative_path(mask_path, release_root),
         "mask_sha256": mask_sha,
+        "ownership_mask_path": osrs_release_relative_path(
+            ownership_mask_path, release_root
+        ),
+        "ownership_mask_sha256": ownership_mask_sha,
         "width": int(rendered.rgba.shape[1]),
         "height": int(rendered.rgba.shape[0]),
         "assigned_pixel_count": assigned,
+        "ownership_pixel_count": ownership_pixels,
         "display_pixel_count": display_pixels,
+        "transparent_owned_pixel_count": transparent_owned_pixels,
+        "visible_exact_black_pixel_count": visible_black,
         "identical_rgb_display_collision_count": collision_count,
-        "layout_components": list(rendered.layout_components),
+        "layout_components": _osrs_shift_layout_components(
+            rendered.layout_components,
+            dx=int(canvas_layout["origin_x"]),
+            dy=int(canvas_layout["origin_y"]),
+        ),
         "content_bearing_pixel_count": content,
-        "nonblank": bool(content),
+        "nonblank": display_pixels > 0,
         "tile_size": mbtiles["tile_size"],
         "min_zoom": mbtiles["min_zoom"],
         "max_zoom": mbtiles["max_zoom"],
         "tile_count": mbtiles["tile_count"],
         "sqlite_version_number": mbtiles["sqlite_version_number"],
         "canvas_size": mbtiles["canvas_size"],
+        "canvas_origin": mbtiles["canvas_origin"],
         "content_pixel_bounds": mbtiles["content_pixel_bounds"],
         "content_latlon_bounds": mbtiles["content_latlon_bounds"],
         "source_bounds": [rect.to_json() for rect in rendered.source_bounds],
         "display_bounds": rendered.display_bounds.to_json(),
     }
+
+
+def _osrs_shift_layout_components(
+    components: Sequence[Mapping[str, Any]],
+    *,
+    dx: int,
+    dy: int,
+) -> list[dict[str, Any]]:
+    """Translate one realm's source-to-display accounting into its shared canvas."""
+
+    shifted: list[dict[str, Any]] = []
+    for component in components:
+        row = dict(component)
+        bounds = component.get("asset_pixel_bounds")
+        if not isinstance(bounds, Mapping):
+            raise osrsPipelineError("layout component lacks asset pixel bounds")
+        row["asset_pixel_bounds"] = {
+            "min_x": int(bounds["min_x"]) + dx,
+            "min_y": int(bounds["min_y"]) + dy,
+            "max_x": int(bounds["max_x"]) + dx,
+            "max_y": int(bounds["max_y"]) + dy,
+        }
+        row["source_to_display_dx_pixels"] = (
+            int(component.get("source_to_display_dx_pixels", 0)) + dx
+        )
+        row["source_to_display_dy_pixels"] = (
+            int(component.get("source_to_display_dy_pixels", 0)) + dy
+        )
+        shifted.append(row)
+    return shifted
 
 
 def _osrs_verify_source_dimensions(path: Path, projection: osrsProjection) -> None:
@@ -775,9 +1216,7 @@ def _osrs_verify_source_dimensions(path: Path, projection: osrsProjection) -> No
 
 
 def _osrs_rendered_has_content(rendered: Any) -> bool:
-    return bool(
-        np.any(rendered.mask & np.any(rendered.rgba[..., :3] != 0, axis=2))
-    )
+    return bool(np.any(rendered.mask))
 
 
 def _osrs_wiki_bounds(value: Mapping[str, Any]) -> osrsRect:
@@ -845,6 +1284,53 @@ def _osrs_mapping(value: Any, field: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise osrsPipelineError(f"{field} must be an object")
     return value
+
+
+def _osrs_prior_asset_planes_by_realm(
+    prior: Mapping[str, Any] | None,
+) -> dict[str, set[int]] | None:
+    if prior is None:
+        return None
+    realms = prior.get("realms")
+    if not isinstance(realms, list):
+        raise osrsPipelineError("prior manifest realms[] must be an array")
+    result: dict[str, set[int]] = {}
+    for index, value in enumerate(realms):
+        realm = _osrs_mapping(value, f"prior.realms[{index}]")
+        realm_id = str(realm.get("id", "")).strip()
+        if not realm_id:
+            raise osrsPipelineError(f"prior.realms[{index}].id is required")
+        assets = realm.get("assets")
+        if not isinstance(assets, list):
+            raise osrsPipelineError(f"prior realm {realm_id} assets[] must be an array")
+        planes: set[int] = set()
+        for asset_index, asset_value in enumerate(assets):
+            asset = _osrs_mapping(
+                asset_value, f"prior realm {realm_id} assets[{asset_index}]"
+            )
+            plane = asset.get("plane")
+            if not isinstance(plane, int) or plane < 0 or plane > 3:
+                raise osrsPipelineError(
+                    f"prior realm {realm_id} asset plane is malformed"
+                )
+            if plane in planes:
+                raise osrsPipelineError(
+                    f"prior realm {realm_id} declares duplicate plane {plane}"
+                )
+            planes.add(plane)
+        result[realm_id] = planes
+    return result
+
+
+def _osrs_prior_allows_asset_plane(
+    prior_asset_planes: dict[str, set[int]] | None,
+    realm_id: str,
+    plane: int,
+) -> bool:
+    if prior_asset_planes is None:
+        return True
+    planes = prior_asset_planes.get(str(realm_id))
+    return planes is not None and plane in planes
 
 
 def _osrs_read_json(path: Path | None) -> Any:

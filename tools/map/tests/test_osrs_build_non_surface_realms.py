@@ -12,7 +12,14 @@ from PIL import Image
 MAP_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(MAP_DIR))
 
-from build_osrs_non_surface_realms import osrs_build_release  # noqa: E402
+from build_osrs_non_surface_realms import (  # noqa: E402
+    _osrs_load_coverage_mask,
+    _osrs_prior_allows_asset_plane,
+    _osrs_prior_asset_planes_by_realm,
+    _osrs_validate_coverage_against_owner_and_ledger,
+    osrs_build_release,
+)
+from osrs_non_surface_realms import osrsPipelineError, osrsProjection  # noqa: E402
 from osrs_public_path_hygiene import (  # noqa: E402
     osrs_assert_public_json_portable,
     osrs_validate_public_release_tree,
@@ -59,6 +66,62 @@ def _osrs_definition(file_id, safe_name, name, is_surface, piece):
 
 
 class osrsReleasePathReproducibilityTests(unittest.TestCase):
+    def test_prior_manifest_plane_set_blocks_silent_floor_growth(self):
+        prior = {
+            "realms": [
+                {
+                    "id": "other-map-10079",
+                    "assets": [{"plane": 1}, {"plane": 2}, {"plane": 3}],
+                }
+            ]
+        }
+        planes = _osrs_prior_asset_planes_by_realm(prior)
+        self.assertFalse(
+            _osrs_prior_allows_asset_plane(planes, "other-map-10079", 0)
+        )
+        self.assertTrue(
+            _osrs_prior_allows_asset_plane(planes, "other-map-10079", 2)
+        )
+        self.assertFalse(
+            _osrs_prior_allows_asset_plane(planes, "new-realm", 0)
+        )
+
+        with self.assertRaisesRegex(osrsPipelineError, "duplicate plane"):
+            _osrs_prior_asset_planes_by_realm(
+                {"realms": [{"id": "bad", "assets": [{"plane": 1}, {"plane": 1}]}]}
+            )
+
+    def test_malformed_coverage_fails_closed_before_release_assets(self):
+        with tempfile.TemporaryDirectory() as directory:
+            coverage_path = Path(directory) / "coverage.png"
+            Image.fromarray(np.array([[0, 128]], dtype=np.uint8)).save(coverage_path)
+            with self.assertRaisesRegex(osrsPipelineError, "binary"):
+                _osrs_load_coverage_mask(
+                    coverage_path, osrsProjection(0, 1, 1, 2, 1)
+                )
+
+            good_path = Path(directory) / "good-coverage.png"
+            Image.fromarray(np.array([[0, 255]], dtype=np.uint8)).save(good_path)
+            coverage = _osrs_load_coverage_mask(
+                good_path, osrsProjection(0, 1, 1, 2, 1)
+            )
+            ledger = {
+                "coverage_encoding": {
+                    "sample_type": "binary",
+                    "zero_code": 0,
+                    "write_code": 1,
+                    "nonzero_semantics": "actual_renderer_write",
+                },
+                "statistics": {
+                    "actual_write_count": 1,
+                    "actual_covered_pixel_count": 1,
+                },
+            }
+            with self.assertRaisesRegex(osrsPipelineError, "without final owners"):
+                _osrs_validate_coverage_against_owner_and_ledger(
+                    coverage, np.array([[0, 0]], dtype=np.uint16), ledger, 1
+                )
+
     def test_distinct_output_directories_emit_byte_identical_manifests_and_accounting(self):
         with tempfile.TemporaryDirectory() as directory:
             fixture = Path(directory) / "fixture"
@@ -75,6 +138,9 @@ class osrsReleasePathReproducibilityTests(unittest.TestCase):
             source.save(provenance_dir / "img-0.png")
             Image.fromarray(np.array([[1, 2]], dtype=np.uint16)).save(
                 provenance_dir / "img-0-provenance.png"
+            )
+            Image.fromarray(np.array([[255, 255]], dtype=np.uint8)).save(
+                provenance_dir / "img-0-provenance-coverage.png"
             )
 
             surface_piece = _osrs_piece(0, (0, 0, 1, 1), (0, 0, 1, 1))
@@ -137,9 +203,27 @@ class osrsReleasePathReproducibilityTests(unittest.TestCase):
                 "schema_version": 1,
                 "generator": "test fixture",
                 "encoding": {"mode": "uint16_last_writer"},
+                "coverage_encoding": {
+                    "format": "png",
+                    "channel": "bitmap",
+                    "sample_type": "binary",
+                    "zero_code": 0,
+                    "write_code": 1,
+                    "nonzero_semantics": "actual_renderer_write",
+                },
                 "image": {"rendered_plane": 0},
+                "coverage_image": {
+                    "path": "img-0-provenance-coverage.png",
+                    "width": 2,
+                    "height": 1,
+                    "rendered_plane": 0,
+                },
                 "projection": {"game_coord_scale": 1},
-                "statistics": {"cross_owner_overwrites": []},
+                "statistics": {
+                    "actual_write_count": 2,
+                    "actual_covered_pixel_count": 2,
+                    "cross_owner_overwrites": [],
+                },
                 "invariants": {"fixture": True},
                 "codebook": [
                     {
@@ -343,6 +427,12 @@ output.write_text(json.dumps(value, sort_keys=True), encoding='utf-8')
                         "streaming_accounting_path"
                     ],
                 )
+                self.assertEqual(
+                    "input://renderer-provenance/plane-0/actual-write-coverage.png",
+                    manifest["inputs"]["renderer_provenance_by_rendered_plane"]["0"][
+                        "coverage_path"
+                    ],
+                )
                 for realm in manifest["realms"]:
                     self.assertEqual(
                         streaming_path,
@@ -355,6 +445,16 @@ output.write_text(json.dumps(value, sort_keys=True), encoding='utf-8')
                         self.assertEqual("assets", PurePosixPath(asset["mbtiles_path"]).parts[0])
                         self.assertFalse(PurePosixPath(asset["mask_path"]).is_absolute())
                         self.assertEqual("masks", PurePosixPath(asset["mask_path"]).parts[0])
+                        self.assertFalse(PurePosixPath(asset["ownership_mask_path"]).is_absolute())
+                        self.assertEqual(
+                            "masks",
+                            PurePosixPath(asset["ownership_mask_path"]).parts[0],
+                        )
+                        self.assertEqual(
+                            asset["ownership_pixel_count"],
+                            asset["display_pixel_count"],
+                        )
+                        self.assertEqual(0, asset["transparent_owned_pixel_count"])
             self.assertEqual(
                 {
                     "manifest_path": "underground-realms.json",
@@ -448,6 +548,9 @@ output.write_text(json.dumps(value, sort_keys=True), encoding='utf-8')
             Image.fromarray(np.array([[1, 2]], dtype=np.uint16)).save(
                 provenance_dir / "img-0-provenance.png"
             )
+            Image.fromarray(np.array([[255, 255]], dtype=np.uint8)).save(
+                provenance_dir / "img-0-provenance-coverage.png"
+            )
 
             surface_piece = _osrs_piece(0, (0, 0, 1, 1), (0, 0, 1, 1))
             inventory = fixture / "inventory.json"
@@ -497,9 +600,27 @@ output.write_text(json.dumps(value, sort_keys=True), encoding='utf-8')
                     "schema_version": 1,
                     "generator": "test fixture",
                     "encoding": {"mode": "uint16_last_writer"},
+                    "coverage_encoding": {
+                        "format": "png",
+                        "channel": "bitmap",
+                        "sample_type": "binary",
+                        "zero_code": 0,
+                        "write_code": 1,
+                        "nonzero_semantics": "actual_renderer_write",
+                    },
                     "image": {"rendered_plane": 0},
+                    "coverage_image": {
+                        "path": "img-0-provenance-coverage.png",
+                        "width": 2,
+                        "height": 1,
+                        "rendered_plane": 0,
+                    },
                     "projection": {"game_coord_scale": 1},
-                    "statistics": {"cross_owner_overwrites": []},
+                    "statistics": {
+                        "actual_write_count": 2,
+                        "actual_covered_pixel_count": 2,
+                        "cross_owner_overwrites": [],
+                    },
                     "invariants": {"fixture": True},
                     "codebook": [
                         {
@@ -577,18 +698,23 @@ output.write_text(json.dumps(value, sort_keys=True), encoding='utf-8')
                     accounting_only=False,
                 )
             )
-            self.assertEqual(1, result["cache_special_realm_count"])
+            self.assertEqual(0, result["cache_special_realm_count"])
+            self.assertEqual(1, result["source_accounting_cache_special_realm_count"])
+            self.assertEqual(1, result["excluded_runtime_realm_count"])
             manifest = json.loads((output / "underground-realms.json").read_text())
-            special = next(
-                realm
-                for realm in manifest["realms"]
-                if realm["id"] == "cache-special-region:1-2"
+            self.assertEqual(
+                ["surface-gielinor"],
+                [realm["id"] for realm in manifest["realms"]],
             )
-            self.assertEqual("Cache region 1, 2", special["canonical_name"])
-            self.assertEqual([], special["candidate_wiki_map_ids"])
-            self.assertEqual([258], special["cache_region_ids"])
-            self.assertEqual(1, special["accounting_pixel_count"])
-            self.assertIn(special["id"], manifest["selector"]["entry_ids"])
+            self.assertEqual(["surface-gielinor"], manifest["selector"]["entry_ids"])
+            policy = json.loads(
+                (output / "reports/runtime-publication-policy.json").read_text()
+            )
+            self.assertEqual(1, policy["excluded_realm_count"])
+            self.assertEqual(
+                ["cache-special-region:1-2"],
+                [record["id"] for record in policy["excluded_records"]],
+            )
             validation = json.loads(
                 (output / "reports/realm-asset-validation.json").read_text()
             )["cache_special_region_ownership"]

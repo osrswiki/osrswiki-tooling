@@ -1,6 +1,8 @@
+import ast
 import base64
 import gzip
 import hashlib
+import inspect
 import io
 import json
 import struct
@@ -15,7 +17,12 @@ from pathlib import Path
 MAP_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(MAP_DIR))
 
+import osrs_public_path_hygiene as hygiene  # noqa: E402
 from osrs_public_path_hygiene import (  # noqa: E402
+    _osrs_archive_descriptor_only_host_path_kinds,
+    _osrs_archive_host_path_kinds,
+    _osrsArchiveHostPathScanContext,
+    osrs_assert_public_binary_portable,
     osrs_assert_public_json_portable,
     osrs_find_host_absolute_paths,
     osrs_portabilize_source_snapshot,
@@ -29,6 +36,11 @@ from osrs_public_path_hygiene import (  # noqa: E402
 
 
 class osrsPublicPathHygieneTests(unittest.TestCase):
+    def test_single_binary_payload_uses_release_printable_island_rules(self):
+        osrs_assert_public_binary_portable(b"\x00portable-payload\xff", "fixture.bin")
+        with self.assertRaisesRegex(osrsPublicPathError, "host_home_reference"):
+            osrs_assert_public_binary_portable(b"\x00~/Users/build/output\x00", "fixture.bin")
+
     @staticmethod
     def _write_archive(path, member, value):
         with zipfile.ZipFile(
@@ -83,6 +95,54 @@ class osrsPublicPathHygieneTests(unittest.TestCase):
         central_offset = struct.unpack_from("<I", data, eocd + 16)[0]
         struct.pack_into("<I", data, eocd + 16, central_offset + len(local_extra))
         return bytes(data)
+
+    @staticmethod
+    def _scan_tilde_probe(root, value, context, label):
+        if context == "artifact-closure-text":
+            (root / "payload.txt").write_bytes(
+                b"retained evidence token: " + value + b"\n"
+            )
+            return osrs_validate_public_artifact_closure(root)
+        if context == "release-text":
+            (root / "res" / "raw").mkdir(parents=True)
+            (root / "res" / "raw" / "payload.txt").write_bytes(
+                b"retained release token: " + value + b"\n"
+            )
+            return osrs_validate_public_release_tree(root)
+        if context == "public-json":
+            (root / "manifest.json").write_text(
+                json.dumps({"value": value.decode("ascii")}),
+                encoding="utf-8",
+            )
+            return osrs_validate_public_json_tree(root)
+
+        apk = root / f"{label}-{context}.apk"
+        with zipfile.ZipFile(apk, "w") as archive:
+            if context == "binary-content":
+                archive.writestr("classes.dex", b"portable-prefix\0" + value + b"\0")
+            elif context == "binary-content-punct":
+                archive.writestr("classes.dex", b"portable(" + value + b")\0")
+            elif context == "binary-content-spaces":
+                archive.writestr("classes.dex", b"portable " + value + b" suffix\0")
+            elif context == "binary-content-utf16le":
+                archive.writestr("classes.dex", b"\0" + value.decode("ascii").encode("utf-16le") + b"\0")
+            elif context == "nested-binary-content":
+                archive.writestr(
+                    "assets/nested.zip",
+                    osrsPublicPathHygieneTests._nested_zip_bytes(
+                        "classes.dex", b"portable-prefix\0" + value + b"\0"
+                    ),
+                )
+            elif context == "text-content":
+                archive.writestr(
+                    "assets/evidence.txt",
+                    b"retained evidence token: " + value + b"\n",
+                )
+            elif context == "member-name":
+                archive.writestr(value.decode("ascii"), b"portable")
+            else:
+                raise AssertionError(f"unknown tilde probe context: {context}")
+        return osrs_validate_public_archive(apk)
 
     @staticmethod
     def _zip_with_apk_signing_block(value):
@@ -348,6 +408,925 @@ class osrsPublicPathHygieneTests(unittest.TestCase):
             report = osrs_validate_public_archive(apk)
             self.assertEqual(3, report["scanned_artifact_count"])
             self.assertEqual(0, report["findings_count"])
+
+    def test_descriptor_only_provenance_allows_complete_java_descriptors_only(self):
+        descriptor_forms = [
+            "~Ljava/util/List;",
+            "~Lcom/example/Foo;",
+            "~Ljava/util/List<Ljava/lang/String;>;",
+            "~Lcom/example/Outer$Inner;",
+            "~Ljava/util/Map<Ljava/lang/String;Ljava/util/List<Lcom/example/Outer$Inner;>;>;",
+        ]
+        for value in descriptor_forms:
+            with self.subTest(value=value, context="descriptor-only"):
+                self.assertEqual((), _osrs_archive_descriptor_only_host_path_kinds(value))
+
+        non_home_descriptor = "~Lcom/example/Outer$Inner;"
+        for context in (
+            _osrsArchiveHostPathScanContext.SEMANTIC_TEXT,
+            _osrsArchiveHostPathScanContext.ARCHIVE_MEMBER_NAME,
+            _osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND,
+        ):
+            with self.subTest(value=non_home_descriptor, context=context):
+                self.assertEqual(
+                    (),
+                    _osrs_archive_host_path_kinds(non_home_descriptor, context=context),
+                )
+
+    def test_generic_binary_scan_rejects_ambiguous_descriptor_home_tokens(self):
+        ambiguous_forms = [
+            b"~Ljava/util/List;",
+            b"~LS\\N",
+            b"~Lab/cd",
+            b"~LQ/R",
+            b"~Labc/Def",
+        ]
+        for index, value in enumerate(ambiguous_forms):
+            with self.subTest(value=value, context="binary-content"):
+                with tempfile.TemporaryDirectory() as directory:
+                    with self.assertRaisesRegex(
+                        osrsPublicPathError, "host_home_reference"
+                    ):
+                        self._scan_tilde_probe(
+                            Path(directory),
+                            value,
+                            "binary-content",
+                            f"generic-binary-ambiguous-descriptor-{index}",
+                        )
+
+    def test_ambiguous_descriptor_home_tokens_require_descriptor_only_provenance(self):
+        ambiguous_descriptors = [
+            "~Ljava/util/List;",
+            "~Lcom/example/Foo;",
+            "~LocalBuilder/project;",
+            "~Lrunner/work/project;",
+            "~Luser/project;",
+        ]
+        generic_contexts = (
+            _osrsArchiveHostPathScanContext.SEMANTIC_TEXT,
+            _osrsArchiveHostPathScanContext.ARCHIVE_MEMBER_NAME,
+            _osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND,
+        )
+        for value in ambiguous_descriptors:
+            for context in generic_contexts:
+                with self.subTest(value=value, context=context):
+                    self.assertEqual(
+                        ("host_home_reference",),
+                        _osrs_archive_host_path_kinds(value, context=context),
+                    )
+            with self.subTest(value=value, context="descriptor-only"):
+                self.assertEqual((), _osrs_archive_descriptor_only_host_path_kinds(value))
+
+    def test_compact_tilde_noise_requires_explicit_binary_island_context(self):
+        compact_noise = [
+            b"~/x",
+            b"~/A",
+            b"~/1",
+            b"~/x;",
+            b"~/x,",
+            b"~Labc",
+            b"~LQ",
+            b"~Labc123",
+        ]
+        semantic_contexts = (
+            _osrsArchiveHostPathScanContext.SEMANTIC_TEXT,
+            _osrsArchiveHostPathScanContext.ARCHIVE_MEMBER_NAME,
+        )
+        for value in compact_noise:
+            text = value.decode("ascii")
+            for context in semantic_contexts:
+                with self.subTest(value=value, context=context):
+                    expected = (
+                        ("host_home_reference",) if text.startswith("~/") else ()
+                    )
+                    self.assertEqual(expected, _osrs_archive_host_path_kinds(text, context=context))
+            with self.subTest(value=value, context="binary-island"):
+                self.assertEqual(
+                    (),
+                    _osrs_archive_host_path_kinds(
+                        text,
+                        context=_osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND,
+                    ),
+                )
+
+        l_prefixed_home_candidates = [
+            b"~Lab/cd",
+            b"~LS/N",
+            b"~Labc/Def",
+            b"~Lq/r",
+        ]
+        for value in l_prefixed_home_candidates:
+            text = value.decode("ascii")
+            for context in (
+                *semantic_contexts,
+                _osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND,
+            ):
+                with self.subTest(value=value, context=context):
+                    self.assertEqual(
+                        ("host_home_reference",),
+                        _osrs_archive_host_path_kinds(text, context=context),
+                    )
+
+    def test_semantic_entrypoints_cannot_use_binary_tilde_noise_context(self):
+        tree = ast.parse(inspect.getsource(hygiene))
+        binary_context_callers = set()
+        descriptor_only_context_callers = set()
+
+        class Visitor(ast.NodeVisitor):
+            def __init__(self):
+                self.current_function = None
+
+            def visit_FunctionDef(self, node):
+                previous = self.current_function
+                self.current_function = node.name
+                self.generic_visit(node)
+                self.current_function = previous
+
+            def visit_Call(self, node):
+                for keyword in node.keywords:
+                    if keyword.arg != "context":
+                        continue
+                    value = keyword.value
+                    if (
+                        isinstance(value, ast.Attribute)
+                        and value.attr == "BINARY_PRINTABLE_ISLAND"
+                    ):
+                        binary_context_callers.add(self.current_function)
+                    if (
+                        isinstance(value, ast.Attribute)
+                        and value.attr == "DESCRIPTOR_ONLY_JAVA_DALVIK_OBJECT"
+                    ):
+                        descriptor_only_context_callers.add(self.current_function)
+                self.generic_visit(node)
+
+            def visit_Attribute(self, node):
+                if node.attr == "BINARY_PRINTABLE_ISLAND":
+                    binary_context_callers.add(self.current_function)
+                if node.attr == "DESCRIPTOR_ONLY_JAVA_DALVIK_OBJECT":
+                    descriptor_only_context_callers.add(self.current_function)
+                self.generic_visit(node)
+
+        Visitor().visit(tree)
+        self.assertEqual(
+            {
+                "_osrs_archive_compact_tilde_noise_allowed",
+                "_osrs_scan_binary_tilde_home_bytes",
+                "_osrs_scan_printable_bytes",
+            },
+            binary_context_callers,
+        )
+        self.assertEqual(
+            {
+                "_osrs_archive_descriptor_only_host_path_kinds",
+                "_osrs_archive_host_path_kinds",
+            },
+            descriptor_only_context_callers,
+        )
+
+    def test_contextual_tilde_home_reviewer_matrix_rejects_semantic_contexts(self):
+        cases = {
+            "short-home-x": b"~/x",
+            "short-home-A": b"~/A",
+            "short-home-1": b"~/1",
+            "short-home-x-semicolon": b"~/x;",
+            "short-home-x-comma": b"~/x,",
+            "tilde-Lab-cd": b"~Lab/cd",
+            "tilde-LS-N": b"~LS/N",
+            "tilde-Labc-Def": b"~Labc/Def",
+            "tilde-Lq-r": b"~Lq/r",
+            "descriptor-space-adjacent-Lab-cd": b"~Ljava/lang/String; ~Lab/cd",
+        }
+        for label, value in cases.items():
+            for context in ("text-content", "member-name", "artifact-closure-text"):
+                with self.subTest(label=label, context=context):
+                    with tempfile.TemporaryDirectory() as directory:
+                        with self.assertRaisesRegex(
+                            osrsPublicPathError, "host_home_reference"
+                        ):
+                            self._scan_tilde_probe(
+                                Path(directory),
+                                value,
+                                context,
+                                label,
+                            )
+        binary_noise = {
+            "short-home-x": b"~/x",
+            "short-home-A": b"~/A",
+            "short-home-1": b"~/1",
+        }
+        for label, value in binary_noise.items():
+            with self.subTest(label=label, context="binary-content"):
+                with tempfile.TemporaryDirectory() as directory:
+                    report = self._scan_tilde_probe(
+                        Path(directory),
+                        value,
+                        "binary-content",
+                        label,
+                    )
+                self.assertEqual(0, report["findings_count"])
+
+        l_prefixed_binary_home_candidates = {
+            "tilde-Lab-cd": b"~Lab/cd",
+            "tilde-LS-N": b"~LS/N",
+            "tilde-Labc-Def": b"~Labc/Def",
+            "tilde-Lq-r": b"~Lq/r",
+        }
+        for label, value in l_prefixed_binary_home_candidates.items():
+            with self.subTest(label=label, context="binary-content"):
+                with tempfile.TemporaryDirectory() as directory:
+                    with self.assertRaisesRegex(
+                        osrsPublicPathError, "host_home_reference"
+                    ):
+                        self._scan_tilde_probe(
+                            Path(directory),
+                            value,
+                            "binary-content",
+                            label,
+                        )
+
+        semicolon_descriptor_ambiguous = {
+            "tilde-Lab-cd-semicolon": b"~Lab/cd;",
+            "tilde-LS-N-semicolon": b"~LS/N;",
+            "tilde-Labc-Def-semicolon": b"~Labc/Def;",
+            "tilde-Lq-r-semicolon": b"~Lq/r;",
+        }
+        for label, value in semicolon_descriptor_ambiguous.items():
+            with self.subTest(label=label, context="binary-content"):
+                with tempfile.TemporaryDirectory() as directory:
+                    with self.assertRaisesRegex(
+                        osrsPublicPathError, "host_home_reference"
+                    ):
+                        self._scan_tilde_probe(
+                            Path(directory),
+                            value,
+                            "binary-content",
+                            label,
+                        )
+
+    def test_archive_binary_scan_ignores_joined_dex_descriptor_stream(self):
+        descriptor_forms = [
+            b"~Ljava/util/List<Ljava/lang/String;>;",
+            b"~Ljava/util/Map<Ljava/lang/String;Ljava/util/List<Lcom/example/Outer$Inner;>;>;",
+            b"~LabcXYZ",
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            apk = Path(directory) / "dex-descriptor.apk"
+            with zipfile.ZipFile(apk, "w") as archive:
+                archive.writestr(
+                    "classes.dex",
+                    b"Lkotlin/collections/ArraysKt___ArraysJvmKt;"
+                    + b"\0".join(descriptor_forms)
+                    + b"\0",
+                )
+            report = osrs_validate_public_archive(apk)
+            self.assertEqual(1, report["scanned_artifact_count"])
+            self.assertEqual(0, report["findings_count"])
+
+    def test_archive_binary_scan_rejects_malformed_tilde_ljava_path_bypass_probes(self):
+        bad_values = [
+            b"~Ljava/project/release.json",
+            b"~Ljava/project/source.kt",
+            b"~Ljava/util/List",
+            b"~Ljava/util/List;/project/source.kt",
+            b"~Ljava/util/List;extra",
+            b"~Ljava%2Fproject%2Frelease.json",
+            b"~Ljava\\/project\\/source.kt",
+            b"~Ljava\\project\\source.kt",
+            b"~Ljava/lang/String;~/project",
+        ]
+        for index, value in enumerate(bad_values):
+            with self.subTest(value=value):
+                with tempfile.TemporaryDirectory() as directory:
+                    apk = Path(directory) / f"bad-descriptor-{index}.apk"
+                    with zipfile.ZipFile(apk, "w") as archive:
+                        archive.writestr("classes.dex", b"prefix\0" + value + b"\0")
+                    with self.assertRaises(osrsPublicPathError):
+                        osrs_validate_public_archive(apk)
+
+    def test_archive_scan_rejects_short_tilde_home_path_bypass_probes(self):
+        bad_values = {
+            "home_project": b"~/project",
+            "home_project_semicolon": b"~/project;",
+            "home_project_period": b"~/project.",
+            "home_project_comma": b"~/project,",
+            "home_project_colon": b"~/project:",
+            "home_project_bang": b"~/project!",
+            "home_project_question": b"~/project?",
+            "home_project_paren": b"~/project)",
+            "home_project_bracket": b"~/project]",
+            "home_project_brace": b"~/project}",
+            "home_project_angle": b"~/project>",
+            "tilde_user_project": b"~user/project",
+            "tilde_luser_project": b"~Luser/project",
+            "tilde_luser_project_semicolon": b"~Luser/project;",
+            "localbuilder_project": b"~LocalBuilder/project",
+            "localbuilder_project_semicolon": b"~LocalBuilder/project;",
+            "lrunner_work_project": b"~Lrunner/work/project",
+            "lrunner_work_project_semicolon": b"~Lrunner/work/project;",
+            "losamu_artifacts": b"~Losamu/Developer/osrswiki-local-artifacts",
+            "losamu_artifacts_semicolon": b"~Losamu/Developer/osrswiki-local-artifacts;",
+            "ljava_project": b"~Ljava/project",
+            "tilde_alice_code": b"~alice/Code",
+            "tilde_Alice_Code": b"~Alice/Code",
+            "tilde_ab_cd": b"~ab/cd",
+            "tilde_a_bb": b"~a/bb",
+            "tilde_A_BB": b"~A/BB",
+            "tilde_runner_X": b"~runner/X",
+            "tilde_u_Code": b"~u/Code",
+            "tilde_longUser_x": b"~longUser/x",
+            "tilde_User123_Ab": b"~User123/Ab",
+            "tilde_ab_cd_EF": b"~ab/cd/EF",
+            "tilde_abc_Def_semicolon": b"~abc/Def;",
+            "tilde_alice_Code_comma": b"~alice/Code,",
+            "descriptor_adjacent_home_path": b"~Ljava/lang/String;~/project",
+            "descriptor_nul_adjacent_home_path": b"~Ljava/lang/String;\0~/project",
+        }
+        contexts = (
+            "binary-content",
+            "text-content",
+            "member-name",
+            "artifact-closure-text",
+        )
+        for label, value in bad_values.items():
+            selected_contexts = contexts
+            if b"\0" in value:
+                selected_contexts = ("binary-content",)
+            for context in selected_contexts:
+                with self.subTest(value=value, context=context):
+                    with tempfile.TemporaryDirectory() as directory:
+                        with self.assertRaisesRegex(
+                            osrsPublicPathError, "host_home_reference"
+                        ):
+                            self._scan_tilde_probe(
+                                Path(directory),
+                                value,
+                                context,
+                                label,
+                            )
+
+    def test_archive_scan_rejects_adversarial_tilde_home_matrix(self):
+        users = (
+            b"ab",
+            b"alice",
+            b"Alice",
+            b"Builder",
+            b"User123",
+            b"runner",
+            b"Luser",
+            b"Lrunner",
+            b"LocalBuilder",
+        )
+        components = (
+            b"x",
+            b"A",
+            b"1",
+            b"cd",
+            b"Code",
+            b"b",
+            b"B",
+            b"project",
+            b"Work",
+        )
+        suffixes = (b"", b";", b".", b",", b":", b"!", b"?", b")", b"]", b"}")
+        for user in users:
+            for component in components:
+                for suffix in suffixes:
+                    value = b"~" + user + b"/" + component + suffix
+                    for context in (
+                        "binary-content",
+                        "text-content",
+                        "member-name",
+                        "artifact-closure-text",
+                    ):
+                        with self.subTest(value=value, context=context):
+                            with tempfile.TemporaryDirectory() as directory:
+                                with self.assertRaisesRegex(
+                                    osrsPublicPathError, "host_home_reference"
+                                ):
+                                    self._scan_tilde_probe(
+                                        Path(directory),
+                                        value,
+                                        context,
+                                        "adversarial-tilde-home",
+                                    )
+
+    def test_archive_scan_rejects_context_cross_product_tilde_home_matrix(self):
+        home_components = (b"x", b"A", b"1", b"z9", b"Code", b"project")
+        tilde_users = (b"a", b"ab", b"A", b"User1", b"Lq", b"Lab", b"LS", b"Labc")
+        tilde_components = (b"x", b"A", b"1", b"r", b"N", b"Def", b"cd")
+        delimiters = (b"", b";", b",", b".", b")")
+        contexts = (
+            "text-content",
+            "member-name",
+            "artifact-closure-text",
+        )
+        values = []
+        for component in home_components:
+            for delimiter in delimiters:
+                values.append(b"~/" + component + delimiter)
+        for user in tilde_users:
+            for component in tilde_components:
+                for delimiter in delimiters:
+                    values.append(b"~" + user + b"/" + component + delimiter)
+        values.extend(
+            [
+                b"~Ljava/lang/String; ~/x",
+                b"~Ljava/lang/String; ~Lab/cd",
+                b"~Ljava/lang/String;~Lq/r",
+            ]
+        )
+        for value in values:
+            for context in contexts:
+                with self.subTest(value=value, context=context):
+                    with tempfile.TemporaryDirectory() as directory:
+                        with self.assertRaisesRegex(
+                            osrsPublicPathError, "host_home_reference"
+                        ):
+                            self._scan_tilde_probe(
+                                Path(directory),
+                                value,
+                                context,
+                                "context-cross-product",
+                            )
+
+    def test_archive_scan_rejects_l_prefixed_semicolon_paths_in_binary_context(self):
+        users = (b"Lq", b"Lab", b"LS", b"Labc", b"Luser", b"Lrunner", b"LocalBuilder")
+        component_sets = (
+            (b"x",),
+            (b"cd",),
+            (b"project",),
+            (b"work", b"project"),
+            (b"Developer", b"osrswiki-local-artifacts"),
+        )
+        for user in users:
+            for components in component_sets:
+                value = b"~" + user + b"/" + b"/".join(components) + b";"
+                with self.subTest(value=value, context="binary-content"):
+                    with tempfile.TemporaryDirectory() as directory:
+                        with self.assertRaisesRegex(
+                            osrsPublicPathError, "host_home_reference"
+                        ):
+                            self._scan_tilde_probe(
+                                Path(directory),
+                                value,
+                                "binary-content",
+                                "l-prefixed-semicolon-path",
+                            )
+
+    def test_archive_binary_scan_rejects_short_delimited_tilde_user_paths(self):
+        for user in (b"u", b"A", b"a"):
+            for component in (b"x", b"A", b"1"):
+                value = b"~" + user + b"/" + component
+                with self.subTest(value=value):
+                    with tempfile.TemporaryDirectory() as directory:
+                        with self.assertRaisesRegex(
+                            osrsPublicPathError, "host_home_reference"
+                        ):
+                            self._scan_tilde_probe(
+                                Path(directory),
+                                value,
+                                "binary-content",
+                                "short-delimited-tilde-user",
+                            )
+
+    def test_archive_scan_rejects_descriptor_adjacent_home_without_swallowing_it(self):
+        bad_values = [
+            b"~Ljava/lang/String; ~/project",
+            b"~Ljava/lang/String;\t~alice/Code",
+            b"~Ljava/lang/String;\0~ab/cd",
+        ]
+        for index, value in enumerate(bad_values):
+            for context in ("binary-content", "text-content"):
+                if b"\0" in value and context != "binary-content":
+                    continue
+                with self.subTest(value=value, context=context):
+                    with tempfile.TemporaryDirectory() as directory:
+                        with self.assertRaisesRegex(
+                            osrsPublicPathError, "host_home_reference"
+                        ):
+                            self._scan_tilde_probe(
+                                Path(directory),
+                                value,
+                                context,
+                                f"descriptor-adjacent-home-{index}",
+                            )
+
+    def test_semicolon_adjacent_tilde_home_reviewer_probes_reject_all_entrypoints(self):
+        probes = {
+            "localbuilder_semicolon_suffix": b"~LocalBuilder/project;/more",
+            "luser_semicolon_suffix": b"~Luser/project;/more",
+            "luser_semicolon_adjacent_home": b"~Luser/project;~/other",
+            "lrunner_internal_semicolon": b"~Lrunner/work;project/more",
+        }
+        direct_contexts = (
+            _osrsArchiveHostPathScanContext.SEMANTIC_TEXT,
+            _osrsArchiveHostPathScanContext.ARCHIVE_MEMBER_NAME,
+            _osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND,
+        )
+        scanner_entrypoints = (
+            "public-json",
+            "release-text",
+            "artifact-closure-text",
+            "text-content",
+            "member-name",
+            "binary-content",
+            "binary-content-punct",
+            "binary-content-spaces",
+            "binary-content-utf16le",
+            "nested-binary-content",
+        )
+        for label, value in probes.items():
+            text = value.decode("ascii")
+            for context in direct_contexts:
+                with self.subTest(label=label, context=context.value):
+                    self.assertEqual(
+                        ("host_home_reference",),
+                        _osrs_archive_host_path_kinds(text, context=context),
+                    )
+            with self.subTest(label=label, context="descriptor-only"):
+                self.assertEqual(
+                    ("host_home_reference",),
+                    _osrs_archive_descriptor_only_host_path_kinds(text),
+                )
+            with self.subTest(label=label, context="strict-public-json-value"):
+                with self.assertRaisesRegex(
+                    osrsPublicPathError, "host_home_reference"
+                ):
+                    osrs_assert_public_json_portable({"value": text})
+            for entrypoint in scanner_entrypoints:
+                with self.subTest(label=label, entrypoint=entrypoint):
+                    with tempfile.TemporaryDirectory() as directory:
+                        with self.assertRaisesRegex(
+                            osrsPublicPathError, "host_home_reference"
+                        ):
+                            self._scan_tilde_probe(
+                                Path(directory),
+                                value,
+                                entrypoint,
+                                f"r7-semicolon-{label}",
+                            )
+
+    def test_semicolon_before_tilde_home_is_a_token_boundary_in_all_entrypoints(self):
+        probes = {
+            "semantic_prefix_home": b"prefix;~/project",
+            "semantic_prefix_user": b"prefix;~alice/Code",
+            "descriptor_home": b"~Lcom/example/Outer$Inner;~/project",
+            "generic_descriptor_home": b"~Ljava/util/List<Ljava/lang/String;>;~/project",
+            "home_then_descriptor": b"~/project;~Lcom/example/Outer$Inner;",
+            "doubled_semicolon": b"~Ljava/lang/String;;~LocalBuilder/project",
+            "quoted_semicolon": b"\";~ab/cd",
+        }
+        entrypoints = (
+            "public-json",
+            "release-text",
+            "artifact-closure-text",
+            "text-content",
+            "member-name",
+            "binary-content",
+            "binary-content-punct",
+            "binary-content-spaces",
+            "binary-content-utf16le",
+            "nested-binary-content",
+        )
+        for label, value in probes.items():
+            for entrypoint in entrypoints:
+                with self.subTest(label=label, entrypoint=entrypoint):
+                    with tempfile.TemporaryDirectory() as directory:
+                        with self.assertRaisesRegex(
+                            osrsPublicPathError, "host_home_reference"
+                        ):
+                            self._scan_tilde_probe(
+                                Path(directory),
+                                value,
+                                entrypoint,
+                                f"semicolon-boundary-{label}",
+                            )
+
+    def test_punctuation_adjacent_tilde_home_reviewer_matrix_rejects_all_entrypoints(self):
+        probes = {
+            "localbuilder_comma_suffix": b"~LocalBuilder/project,/more",
+            "luser_comma_suffix": b"~Luser/project,/more",
+            "alice_comma_suffix": b"~alice/Code,/tmp",
+            "member_segment_localbuilder_semicolon": b"payload/~LocalBuilder/project;/more.txt",
+            "member_segment_luser_semicolon": b"payload/~Luser/project;/more.txt",
+            "member_segment_localbuilder_comma": b"payload/~LocalBuilder/project,/more.txt",
+            "localbuilder_colon_suffix": b"~LocalBuilder/project:/more",
+            "localbuilder_bang_suffix": b"~LocalBuilder/project!/more",
+            "localbuilder_paren_suffix": b"~LocalBuilder/project)/more",
+            "localbuilder_bracket_suffix": b"~LocalBuilder/project]/more",
+            "localbuilder_brace_suffix": b"~LocalBuilder/project}/more",
+            "short_user_comma_suffix": b"~ab/cd,/more",
+            "lrunner_colon_internal": b"~Lrunner/work:project/more",
+            "luser_colon_adjacent_home": b"~Luser/project:~/other",
+            "localbuilder_comma_adjacent_home": b"~LocalBuilder/project,~/other",
+        }
+        direct_contexts = (
+            _osrsArchiveHostPathScanContext.SEMANTIC_TEXT,
+            _osrsArchiveHostPathScanContext.ARCHIVE_MEMBER_NAME,
+            _osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND,
+        )
+        scanner_entrypoints = (
+            "public-json",
+            "release-text",
+            "artifact-closure-text",
+            "text-content",
+            "member-name",
+            "binary-content",
+            "binary-content-punct",
+            "binary-content-spaces",
+            "binary-content-utf16le",
+            "nested-binary-content",
+        )
+        for label, value in probes.items():
+            text = value.decode("ascii")
+            for context in direct_contexts:
+                with self.subTest(label=label, context=context.value):
+                    self.assertEqual(
+                        ("host_home_reference",),
+                        _osrs_archive_host_path_kinds(text, context=context),
+                    )
+            with self.subTest(label=label, context="descriptor-only"):
+                self.assertEqual(
+                    ("host_home_reference",),
+                    _osrs_archive_descriptor_only_host_path_kinds(text),
+                )
+            with self.subTest(label=label, context="strict-json-kind"):
+                with self.assertRaisesRegex(
+                    osrsPublicPathError, "host_home_reference"
+                ):
+                    osrs_assert_public_json_portable({"kind": text})
+            for entrypoint in scanner_entrypoints:
+                with self.subTest(label=label, entrypoint=entrypoint):
+                    with tempfile.TemporaryDirectory() as directory:
+                        with self.assertRaisesRegex(
+                            osrsPublicPathError, "host_home_reference"
+                        ):
+                            self._scan_tilde_probe(
+                                Path(directory),
+                                value,
+                                entrypoint,
+                                f"r8-punctuation-{label}",
+                            )
+
+    def test_decoded_unit_tilde_home_extractor_is_position_invariant(self):
+        homes = (
+            b"~/project",
+            b"~alice/Code",
+            b"~Alice/Code",
+            b"~ab/cd",
+            b"~LocalBuilder/project",
+            b"~Luser/project",
+        )
+        delimiters = (b";", b",", b":", b"!", b")", b"]", b"}")
+        suffixes = (b"", b"/more", b"~/other", b" trailing text")
+        positions = (
+            (b"", b""),
+            (b"prefix ", b""),
+            (b"payload/", b".txt"),
+            (b"payload/nested/", b"/member.txt"),
+        )
+        scanner_entrypoints = (
+            "text-content",
+            "member-name",
+            "binary-content",
+            "artifact-closure-text",
+        )
+        for home in homes:
+            for delimiter in delimiters:
+                for suffix in suffixes:
+                    for prefix, trailer in positions:
+                        value = prefix + home + delimiter + suffix + trailer
+                        text = value.decode("ascii")
+                        with self.subTest(value=value, context="direct"):
+                            self.assertEqual(
+                                ("host_home_reference",),
+                                _osrs_archive_host_path_kinds(text),
+                            )
+                        for entrypoint in scanner_entrypoints:
+                            with self.subTest(value=value, entrypoint=entrypoint):
+                                with tempfile.TemporaryDirectory() as directory:
+                                    with self.assertRaisesRegex(
+                                        osrsPublicPathError, "host_home_reference"
+                                    ):
+                                        self._scan_tilde_probe(
+                                            Path(directory),
+                                            value,
+                                            entrypoint,
+                                            "position-invariant-tilde-home",
+                                        )
+
+    def test_tilde_home_scanners_share_audited_candidate_extractor(self):
+        tree = ast.parse(inspect.getsource(hygiene))
+        callers = set()
+        decoded_unit_callers = set()
+        archive_tilde_path_finditer_callers = set()
+
+        class Visitor(ast.NodeVisitor):
+            def __init__(self):
+                self.current_function = None
+
+            def visit_FunctionDef(self, node):
+                previous = self.current_function
+                self.current_function = node.name
+                self.generic_visit(node)
+                self.current_function = previous
+
+            def visit_Call(self, node):
+                function = node.func
+                if (
+                    isinstance(function, ast.Name)
+                    and function.id == "_osrs_archive_tilde_home_candidate_matches"
+                ):
+                    callers.add(self.current_function)
+                if (
+                    isinstance(function, ast.Name)
+                    and function.id == "_osrs_decoded_unit_tilde_home_candidates"
+                ):
+                    decoded_unit_callers.add(self.current_function)
+                if isinstance(function, ast.Attribute) and function.attr == "finditer":
+                    receiver = function.value
+                    if (
+                        isinstance(receiver, ast.Name)
+                        and receiver.id == "_OSRS_ARCHIVE_TILDE_PATH"
+                    ):
+                        archive_tilde_path_finditer_callers.add(self.current_function)
+                self.generic_visit(node)
+
+        Visitor().visit(tree)
+        self.assertEqual(
+            {
+                "_osrs_archive_host_path_kinds",
+                "_osrs_binary_tilde_home_has_path_token_boundary",
+            },
+            callers,
+        )
+        self.assertEqual(
+            {"_osrs_archive_tilde_home_candidate_matches"},
+            decoded_unit_callers,
+        )
+        source = inspect.getsource(hygiene)
+        self.assertNotIn("_OSRS_ARCHIVE_TILDE_HOME_CANDIDATE", source)
+        self.assertNotIn("_OSRS_TILDE_HOME_BOUNDARY", source)
+        self.assertEqual(set(), archive_tilde_path_finditer_callers)
+        for public_entrypoint in (
+            "osrs_host_absolute_path_kinds",
+            "_osrs_scan_printable_bytes",
+            "_osrs_scan_binary_tilde_home_bytes",
+            "_osrs_scan_zip_bytes",
+            "_osrs_validate_public_tree",
+        ):
+            with self.subTest(public_entrypoint=public_entrypoint):
+                source = inspect.getsource(getattr(hygiene, public_entrypoint))
+                self.assertIn("_osrs_archive_host_path_kinds", source)
+        decoded_source = inspect.getsource(
+            hygiene._osrs_decoded_unit_tilde_home_candidates
+        )
+        self.assertIn("_osrs_tilde_home_candidate_scan_views", decoded_source)
+        self.assertIn("_osrs_raw_tilde_home_candidates", decoded_source)
+
+    def test_dot_current_empty_tilde_home_reviewer_matrix_rejects_all_entrypoints(self):
+        probes = {
+            "home_parent_segment": b"~/../project",
+            "home_current_segment": b"~/./project",
+            "home_empty_segment": b"~//project",
+            "user_parent_segment": b"~alice/../Code",
+            "user_current_segment": b"~Alice/./Code",
+            "short_user_empty_segment": b"~ab//cd",
+            "runner_empty_segment": b"~Lrunner//work/project",
+            "encoded_parent_segment": b"~alice/%2e%2e/Code",
+            "encoded_current_segment": b"~alice/%2e/Code",
+            "encoded_empty_segment": b"~alice/%2FCode",
+            "literal_unicode_parent_segment": b"~alice/\\u002e\\u002e/Code",
+            "literal_hex_parent_segment": b"~alice/\\x2e\\x2e/Code",
+            "backslash_parent_segment": b"~alice\\..\\Code",
+            "backslash_current_segment": b"~alice\\.\\Code",
+            "backslash_empty_segment": b"~alice\\\\Code",
+            "punctuation_prefix_home_parent": b"prefix;~/../project suffix",
+            "home_parent_adjacent_descriptor": b"~/../project;~Ljava/lang/String;",
+        }
+        direct_contexts = (
+            _osrsArchiveHostPathScanContext.SEMANTIC_TEXT,
+            _osrsArchiveHostPathScanContext.ARCHIVE_MEMBER_NAME,
+            _osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND,
+        )
+        scanner_entrypoints = (
+            "public-json",
+            "release-text",
+            "artifact-closure-text",
+            "text-content",
+            "member-name",
+            "binary-content",
+            "binary-content-punct",
+            "binary-content-spaces",
+            "binary-content-utf16le",
+            "nested-binary-content",
+        )
+        for label, value in probes.items():
+            text = value.decode("ascii")
+            for context in direct_contexts:
+                with self.subTest(label=label, context=context.value):
+                    self.assertEqual(
+                        ("host_home_reference",),
+                        _osrs_archive_host_path_kinds(text, context=context),
+                    )
+            with self.subTest(label=label, context="descriptor-only"):
+                self.assertEqual(
+                    ("host_home_reference",),
+                    _osrs_archive_descriptor_only_host_path_kinds(text),
+                )
+            with self.subTest(label=label, context="strict-public-json-value"):
+                with self.assertRaisesRegex(
+                    osrsPublicPathError, "host_home_reference"
+                ):
+                    osrs_assert_public_json_portable({"value": text})
+            for entrypoint in scanner_entrypoints:
+                with self.subTest(label=label, entrypoint=entrypoint):
+                    with tempfile.TemporaryDirectory() as directory:
+                        if entrypoint == "member-name":
+                            with self.assertRaises(osrsPublicPathError):
+                                self._scan_tilde_probe(
+                                    Path(directory),
+                                    value,
+                                    entrypoint,
+                                    f"r9-dot-current-empty-{label}",
+                                )
+                        else:
+                            with self.assertRaisesRegex(
+                                osrsPublicPathError, "host_home_reference"
+                            ):
+                                self._scan_tilde_probe(
+                                    Path(directory),
+                                    value,
+                                    entrypoint,
+                                    f"r9-dot-current-empty-{label}",
+                                )
+
+    def test_tilde_home_dot_segments_are_monotonic_under_lexical_variants(self):
+        homes = (b"~/project", b"~alice/Code", b"~Lrunner/work/project")
+        segment_insertions = (
+            (b"/./", b"/"),
+            (b"/../", b"/"),
+            (b"//", b"/"),
+            (b"\\\\.\\\\", b"\\"),
+            (b"\\\\..\\\\", b"\\"),
+            (b"\\\\\\\\", b"\\"),
+        )
+        wrappers = (
+            (b"", b""),
+            (b"prefix;", b" suffix"),
+            (b"payload/", b".txt"),
+            (b"~Ljava/lang/String;", b""),
+        )
+        contexts = (
+            _osrsArchiveHostPathScanContext.SEMANTIC_TEXT,
+            _osrsArchiveHostPathScanContext.ARCHIVE_MEMBER_NAME,
+            _osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND,
+            _osrsArchiveHostPathScanContext.DESCRIPTOR_ONLY_JAVA_DALVIK_OBJECT,
+        )
+        for home in homes:
+            for insertion, separator in segment_insertions:
+                mutated = home.replace(separator, insertion, 1)
+                for prefix, suffix in wrappers:
+                    value = prefix + mutated + suffix
+                    text = value.decode("ascii")
+                    candidates = list(
+                        hygiene._osrs_decoded_unit_tilde_home_candidates(text)
+                    )
+                    with self.subTest(value=value, invariant="candidate"):
+                        self.assertTrue(candidates)
+                    for context in contexts:
+                        with self.subTest(value=value, context=context.value):
+                            self.assertEqual(
+                                ("host_home_reference",),
+                                _osrs_archive_host_path_kinds(text, context=context),
+                            )
+
+    def test_tilde_home_extractor_scans_raw_and_slash_normalized_views(self):
+        text = r"prefix ~alice\..\Code and ~ab\\cd"
+        candidates = [
+            candidate.group("path")
+            for candidate in hygiene._osrs_decoded_unit_tilde_home_candidates(text)
+        ]
+        self.assertIn(r"~alice\..\Code", candidates)
+        self.assertIn("~alice/../Code", candidates)
+        self.assertIn(r"~ab\\cd", candidates)
+        self.assertIn("~ab//cd", candidates)
+        self.assertEqual(
+            ("host_home_reference",),
+            _osrs_archive_host_path_kinds(text),
+        )
+
+    def test_archive_binary_scan_reports_real_path_leak_next_to_valid_descriptor(self):
+        with tempfile.TemporaryDirectory() as directory:
+            apk = Path(directory) / "descriptor-with-leak.apk"
+            with zipfile.ZipFile(apk, "w") as archive:
+                archive.writestr(
+                    "classes.dex",
+                    b"~Ljava/util/List<Ljava/lang/String;>;\0"
+                    b"~/project/release/packet-manifest.json\0",
+                )
+            with self.assertRaisesRegex(osrsPublicPathError, "host_home_reference"):
+                osrs_validate_public_archive(apk)
 
     def test_archive_scan_catches_structured_alternate_host_paths(self):
         bad_values = [

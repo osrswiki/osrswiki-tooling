@@ -49,6 +49,14 @@
       "audience": "internal",
       "description": "Binding internal Candidate 006 addendum for fail-closed payload-bearing ZIP directory members and evidence-backed accepted-member inspection accounting."
     },
+    "docs/internal/non-surface-realms-direction-3-selector-spec-2026-07-23.md": {
+      "audience": "internal",
+      "description": "Binding internal Direction 3 specification for the centered persistent realm selector, IME-relative geometry, preserved compact floor controls, and Candidate 007 acceptance."
+    },
+    "docs/internal/non-surface-realms-direction-3-production-binding-spec-2026-07-27.md": {
+      "audience": "internal",
+      "description": "Binding internal Candidate 008 addendum for exact Candidate 006 canonical-asset materialization, digest-bound production assembly, and Direction 3 production-candidate acceptance."
+    },
     "docs/internal/android-expanded-test-environment.md": {
       "audience": "internal",
       "description": "Internal plan for expanding Android QA beyond the vanilla emulator and adb testing environment."

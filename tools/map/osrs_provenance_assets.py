@@ -522,6 +522,8 @@ def osrs_iter_rendered_provenance_realms(
     components: Sequence[osrsProvenanceComponent],
     definitions: Sequence[Mapping[str, Any]],
     special_region_index: Mapping[int, str] | None = None,
+    *,
+    coverage_mask: np.ndarray | None = None,
 ) -> Iterator[tuple[str, osrsRenderedRealm]]:
     """Yield lossless, tightly packed source-component rasters.
 
@@ -536,6 +538,13 @@ def osrs_iter_rendered_provenance_realms(
     owners = np.asarray(owner_codes)
     if source.shape[:2] != owners.shape or owners.dtype.kind not in {"u", "i"}:
         raise osrsPipelineError("source RGB and owner-code raster dimensions differ")
+    coverage = None
+    if coverage_mask is not None:
+        coverage = np.asarray(coverage_mask)
+        if coverage.shape != owners.shape or coverage.dtype != np.bool_:
+            raise osrsPipelineError("coverage raster dimensions or dtype are invalid")
+        if np.any(coverage & (owners == 0)):
+            raise osrsPipelineError("coverage raster contains actual writes without a final owner")
     stable_id_by_file = {
         _osrs_int(definition.get("file_id"), "file_id"): osrs_stable_native_realm_id(
             definition
@@ -635,9 +644,12 @@ def osrs_iter_rendered_provenance_realms(
         packed_height = max(destination.max_y for *_, destination in placements)
         rgba = np.zeros((packed_height, packed_width, 4), dtype=np.uint8)
         mask = np.zeros((packed_height, packed_width), dtype=np.bool_)
+        ownership_mask = np.zeros((packed_height, packed_width), dtype=np.bool_)
         source_bounds: list[osrsRect] = []
         layout_rows: list[dict[str, Any]] = []
         for transform, group_bounds, values, destination in placements:
+            group_ownership_pixels = 0
+            group_display_pixels = 0
             for component in values:
                 bounds = component.source_pixel_bounds
                 source_crop = source[
@@ -649,8 +661,10 @@ def osrs_iter_rendered_provenance_realms(
                     bounds.min_y : bounds.max_y,
                     bounds.min_x : bounds.max_x,
                 ]
-                local_y, local_x = np.nonzero(owner_crop == component.code)
-                if local_x.size != component.pixel_count:
+                component_ownership = owner_crop == component.code
+                local_y, local_x = np.nonzero(component_ownership)
+                ownership_pixels = int(local_x.size)
+                if ownership_pixels != component.pixel_count:
                     raise osrsPipelineError(
                         f"code {component.code} ledger count={component.pixel_count}, "
                         f"raster count={local_x.size}"
@@ -661,14 +675,33 @@ def osrs_iter_rendered_provenance_realms(
                 destination_y = (
                     local_y + bounds.min_y - group_bounds.min_y + destination.min_y
                 )
-                if np.any(mask[destination_y, destination_x]):
+                if np.any(ownership_mask[destination_y, destination_x]):
                     raise osrsPipelineError(
                         f"source-coordinate owner collision in {realm_id} floor {plane}"
                     )
-                colors = source_crop[local_y, local_x]
-                rgba[destination_y, destination_x, :3] = colors
-                rgba[destination_y, destination_x, 3] = 255
-                mask[destination_y, destination_x] = True
+                ownership_mask[destination_y, destination_x] = True
+                group_ownership_pixels += ownership_pixels
+                if coverage is None or plane == 0:
+                    component_display = component_ownership
+                else:
+                    coverage_crop = coverage[
+                        bounds.min_y : bounds.max_y,
+                        bounds.min_x : bounds.max_x,
+                    ]
+                    component_display = component_ownership & coverage_crop
+                display_y, display_x = np.nonzero(component_display)
+                if display_x.size:
+                    destination_display_x = (
+                        display_x + bounds.min_x - group_bounds.min_x + destination.min_x
+                    )
+                    destination_display_y = (
+                        display_y + bounds.min_y - group_bounds.min_y + destination.min_y
+                    )
+                    colors = source_crop[display_y, display_x]
+                    rgba[destination_display_y, destination_display_x, :3] = colors
+                    rgba[destination_display_y, destination_display_x, 3] = 255
+                    mask[destination_display_y, destination_display_x] = True
+                    group_display_pixels += int(display_x.size)
                 source_bounds.append(_osrs_pixel_bounds_to_game(bounds, projection))
             layout_rows.append(
                 {
@@ -677,8 +710,11 @@ def osrs_iter_rendered_provenance_realms(
                     "provenance_codes": [component.code for component in values],
                     "source_pixel_bounds": group_bounds.to_json(),
                     "asset_pixel_bounds": destination.to_json(),
-                    "assigned_source_pixel_count": sum(
-                        component.pixel_count for component in values
+                    "assigned_source_pixel_count": group_ownership_pixels,
+                    "ownership_pixel_count": group_ownership_pixels,
+                    "display_pixel_count": group_display_pixels,
+                    "transparent_owned_pixel_count": (
+                        group_ownership_pixels - group_display_pixels
                     ),
                 }
             )
@@ -688,17 +724,32 @@ def osrs_iter_rendered_provenance_realms(
             packed_width // projection.scale,
             packed_height // projection.scale,
         )
+        ownership_pixels = int(np.count_nonzero(ownership_mask))
+        display_pixels = int(np.count_nonzero(mask))
+        transparent_owned_pixels = ownership_pixels - display_pixels
+        if transparent_owned_pixels < 0:
+            raise osrsPipelineError(f"display mask exceeds ownership for {realm_id} floor {plane}")
+        if plane == 0 and display_pixels != ownership_pixels:
+            raise osrsPipelineError(f"floor 0 display mask must equal ownership for {realm_id}")
+        visible_black = int(
+            np.count_nonzero(mask & np.all(rgba[..., :3] == 0, axis=2))
+        )
         yield (
             realm_id,
             osrsRenderedRealm(
                 rgba=rgba,
                 mask=mask,
+                ownership_mask=ownership_mask,
                 source_bounds=tuple(sorted(set(source_bounds))),
                 display_bounds=display_game_bounds,
                 plane=plane,
                 assigned_source_pixel_count=sum(
                     component.pixel_count for component in realm_components
                 ),
+                ownership_pixel_count=ownership_pixels,
+                display_pixel_count=display_pixels,
+                transparent_owned_pixel_count=transparent_owned_pixels,
+                visible_exact_black_pixel_count=visible_black,
                 identical_rgb_display_collision_count=0,
                 layout_components=tuple(layout_rows),
             ),

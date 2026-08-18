@@ -26,6 +26,7 @@ import sys
 import urllib.parse
 import zipfile
 from dataclasses import dataclass, field
+from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
@@ -79,11 +80,12 @@ _OSRS_WINDOWS_ROOTED = re.compile(
 _OSRS_FILE_URI = re.compile(
     _OSRS_FILE_URI_BOUNDARY + r"file:(?:(?:/{1,3})|(?:\\{1,3}))", re.IGNORECASE
 )
-_OSRS_TILDE_HOME = re.compile(_OSRS_BOUNDARY + r"~(?:[A-Za-z0-9._-]+)?[\\/]")
 _OSRS_LITERAL_UNICODE_SLASH = re.compile(r"\\u(?:002f|2215)", re.IGNORECASE)
 _OSRS_LITERAL_UNICODE_BACKSLASH = re.compile(r"\\u(?:005c|29f5)", re.IGNORECASE)
+_OSRS_LITERAL_UNICODE_DOT = re.compile(r"\\u(?:002e)", re.IGNORECASE)
 _OSRS_LITERAL_HEX_SLASH = re.compile(r"\\x2f", re.IGNORECASE)
 _OSRS_LITERAL_HEX_BACKSLASH = re.compile(r"\\x5c", re.IGNORECASE)
+_OSRS_LITERAL_HEX_DOT = re.compile(r"\\x2e", re.IGNORECASE)
 _OSRS_BUILD_HOST_POSIX_ROOT = re.compile(
     r"(?:^|[\s\"'=>(\[\{,])/(?:"
     r"Users|home|root|Volumes|workspace|workspaces|build|builds|mnt|opt|tmp|srv|"
@@ -95,6 +97,10 @@ _OSRS_BUILD_HOST_POSIX_ROOT = re.compile(
 _OSRS_ASCII_PRINTABLE_RUN = re.compile(rb"[\x20-\x7e]{5,}")
 _OSRS_UTF16LE_PRINTABLE_RUN = re.compile(rb"(?:[\x20-\x7e]\x00){5,}")
 _OSRS_UTF16BE_PRINTABLE_RUN = re.compile(rb"(?:\x00[\x20-\x7e]){5,}")
+_OSRS_BINARY_TILDE_PATH_BYTES = re.compile(
+    rb"~[A-Za-z0-9._-]+[\\/][A-Za-z0-9][A-Za-z0-9._+@ \-]{0,254}"
+    rb"(?:[\\/][A-Za-z0-9._+@ \-]{1,255})*[.,;:!?\)\]\}>]?"
+)
 _OSRS_HEX_TOKEN = re.compile(r"(?<![0-9A-Fa-f])(?:[0-9A-Fa-f]{2}){5,}(?![0-9A-Fa-f])")
 _OSRS_BASE64_TOKEN = re.compile(
     r"(?<![A-Za-z0-9_+/-])[A-Za-z0-9_+/-]{12,}={0,2}(?![A-Za-z0-9_+/-])"
@@ -112,9 +118,6 @@ _OSRS_ARCHIVE_WINDOWS_UNC_PATH = re.compile(
 )
 _OSRS_ARCHIVE_WINDOWS_ROOTED_PATH = re.compile(
     _OSRS_BOUNDARY + r"(?P<path>\\(?!\\)[^\s\"'<>|]+)"
-)
-_OSRS_ARCHIVE_TILDE_PATH = re.compile(
-    _OSRS_BOUNDARY + r"(?P<path>~(?:[A-Za-z0-9._-]+)?[\\/][^\s\"'<>|]+)"
 )
 _OSRS_ARCHIVE_FILE_URI_PATH = re.compile(
     _OSRS_FILE_URI_BOUNDARY
@@ -136,6 +139,21 @@ _OSRS_WINDOWS_ROOT_COMPONENTS = {
 _OSRS_PLAIN_PATH_COMPONENT = re.compile(r"^[A-Za-z0-9._+@ -]{1,255}$")
 _OSRS_CONTAINER_SUFFIXES = {".aar", ".apk", ".jar", ".zip"}
 _OSRS_GZIP_SUFFIXES = {".gz", ".gzip"}
+_OSRS_TEXT_LIKE_SUFFIXES = {
+    ".css",
+    ".csv",
+    ".html",
+    ".js",
+    ".jsonl",
+    ".log",
+    ".md",
+    ".properties",
+    ".txt",
+    ".xml",
+    ".yaml",
+    ".yml",
+}
+_OSRS_BINARY_PATH_DELIMITER_BYTES = frozenset(b"\0\r\n\t \"'=,;:()[]{}")
 _OSRS_REFERENCE_FIELD_NAMES = {
     "artifact",
     "artifact_path",
@@ -210,10 +228,103 @@ class _osrsZipByteRegion:
         return self.end - self.start
 
 
+class _osrsArchiveHostPathScanContext(Enum):
+    SEMANTIC_TEXT = "semantic_text"
+    ARCHIVE_MEMBER_NAME = "archive_member_name"
+    BINARY_PRINTABLE_ISLAND = "binary_printable_island"
+    DESCRIPTOR_ONLY_JAVA_DALVIK_OBJECT = "descriptor_only_java_dalvik_object"
+
+
+@dataclass(frozen=True)
+class _osrsTildeHomeCandidate:
+    path: str
+    start_index: int
+    end_index: int
+
+    def group(self, name: str) -> str:
+        if name != "path":
+            raise IndexError(name)
+        return self.path
+
+    def start(self, name: str = "path") -> int:
+        if name != "path":
+            raise IndexError(name)
+        return self.start_index
+
+    def end(self, name: str = "path") -> int:
+        if name != "path":
+            raise IndexError(name)
+        return self.end_index
+
+
+def _osrs_ascii_alpha(value: str) -> bool:
+    return "A" <= value <= "Z" or "a" <= value <= "z"
+
+
+def _osrs_ascii_digit(value: str) -> bool:
+    return "0" <= value <= "9"
+
+
+def _osrs_tilde_home_user_char(value: str) -> bool:
+    return _osrs_ascii_alpha(value) or _osrs_ascii_digit(value) or value in "._-"
+
+
+def _osrs_tilde_home_component_char(value: str) -> bool:
+    return _osrs_ascii_alpha(value) or _osrs_ascii_digit(value) or value in "._+@-"
+
+
+def _osrs_tilde_home_path_body_char(value: str) -> bool:
+    return _osrs_tilde_home_component_char(value) or value in "/\\"
+
+
+def _osrs_tilde_home_candidate_scan_views(value: str) -> Iterable[str]:
+    yield value
+    slash_normalized = value.replace("\\", "/")
+    if slash_normalized != value:
+        yield slash_normalized
+
+
+def _osrs_raw_tilde_home_candidates(value: str) -> Iterable[_osrsTildeHomeCandidate]:
+    for start, character in enumerate(value):
+        if character != "~":
+            continue
+        cursor = start + 1
+        while cursor < len(value) and _osrs_tilde_home_user_char(value[cursor]):
+            cursor += 1
+        if cursor >= len(value) or value[cursor] not in "/\\":
+            continue
+        cursor += 1
+        while cursor < len(value) and _osrs_tilde_home_path_body_char(value[cursor]):
+            cursor += 1
+        yield _osrsTildeHomeCandidate(value[start:cursor], start, cursor)
+
+
+def _osrs_decoded_unit_tilde_home_candidates(
+    value: str,
+) -> Iterable[_osrsTildeHomeCandidate]:
+    """Yield home-path candidates from one decoded string unit.
+
+    The extractor scans every tilde in the decoded unit instead of depending on
+    a left-boundary regex.  Punctuation and archive-member separators terminate
+    the candidate so adjacent tokens such as ``~user/project;/more`` are still
+    evaluated as the real ``~user/project`` home reference.  Raw and
+    slash-normalized views are both scanned; normalization can add evidence, but
+    it never suppresses a raw home-path candidate.
+    """
+
+    for scan_view in _osrs_tilde_home_candidate_scan_views(value):
+        yield from _osrs_raw_tilde_home_candidates(scan_view)
+
+
 def osrs_host_absolute_path_kinds(value: str) -> tuple[str, ...]:
     """Return every host-path class found after bounded escape normalization."""
 
     kinds: set[str] = set()
+    kinds.update(
+        _osrs_archive_host_path_kinds(
+            value, context=_osrsArchiveHostPathScanContext.SEMANTIC_TEXT
+        )
+    )
     for variant in _osrs_serialization_variants(value):
         if _OSRS_FILE_URI.search(variant):
             kinds.add("file_uri")
@@ -223,8 +334,6 @@ def osrs_host_absolute_path_kinds(value: str) -> tuple[str, ...]:
             kinds.add("windows_unc_absolute")
         if _OSRS_WINDOWS_ROOTED.search(variant):
             kinds.add("windows_rooted_absolute")
-        if _OSRS_TILDE_HOME.search(variant):
-            kinds.add("host_home_reference")
         if _OSRS_POSIX_ABSOLUTE.search(variant):
             kinds.add("posix_absolute")
     return tuple(sorted(kinds))
@@ -288,6 +397,19 @@ def osrs_assert_public_json_portable(value: Any, artifact: str = "public JSON") 
             f"{artifact} contains {len(findings)} host-absolute path string(s): "
             f"{summary}"
         )
+
+
+def osrs_assert_public_binary_portable(
+    data: bytes,
+    artifact: str = "public binary",
+) -> None:
+    """Apply the release scanner's printable-island rules to one binary payload."""
+
+    if not isinstance(data, bytes):
+        raise TypeError("public binary payload must be bytes")
+    state = _osrsPathScanState(root=None, limits=OSRS_DEFAULT_PATH_SCAN_LIMITS)
+    _osrs_scan_leaf(data, artifact, ".bin", state, disk_path=None)
+    _osrs_raise_binary_findings(state, artifact)
 
 
 def osrs_portabilize_source_snapshot(value: Any) -> Any:
@@ -483,7 +605,10 @@ def _osrs_validate_public_tree(
             continue
         seen.add(resolved_path)
         relative = resolved_path.relative_to(resolved_root).as_posix()
-        name_kinds = _osrs_archive_host_path_kinds(relative)
+        name_kinds = _osrs_archive_host_path_kinds(
+            relative,
+            context=_osrsArchiveHostPathScanContext.ARCHIVE_MEMBER_NAME,
+        )
         if name_kinds:
             state.findings.append(
                 {
@@ -1150,7 +1275,7 @@ def _osrs_account_and_scan_zip_regions(
         if region.scan_raw:
             state.zip_scanned_raw_bytes += region.size
             _osrs_scan_printable_bytes(
-                data[region.start : region.end], region.provenance, state
+                data[region.start : region.end], region.provenance, "", state
             )
     if unclassified != 0:
         raise osrsPublicPathError("ZIP raw-byte accounting is incomplete")
@@ -1197,7 +1322,10 @@ def _osrs_scan_zip_bytes(
             _osrs_validate_archive_member_name(member, member_provenance)
             if record_top_level_members and not member.is_dir():
                 state.scanned_artifacts.append(member.filename)
-            member_kinds = _osrs_archive_host_path_kinds(member.filename)
+            member_kinds = _osrs_archive_host_path_kinds(
+                member.filename,
+                context=_osrsArchiveHostPathScanContext.ARCHIVE_MEMBER_NAME,
+            )
             if member_kinds:
                 state.findings.append(
                     {
@@ -1294,7 +1422,7 @@ def _osrs_scan_gzip_bytes(
     depth: int,
 ) -> None:
     _osrs_enter_container(state, provenance, depth)
-    _osrs_scan_printable_bytes(data, f"{provenance}:gzip-header", state)
+    _osrs_scan_printable_bytes(data, f"{provenance}:gzip-header", "", state)
     remaining = min(
         state.limits.max_single_member_bytes,
         state.limits.max_expanded_bytes - state.expanded_bytes,
@@ -1346,20 +1474,64 @@ def _osrs_scan_leaf(
             osrs_assert_public_json_portable(value, provenance)
         return
     state.non_json_artifact_count += 1
-    _osrs_scan_printable_bytes(data, provenance, state)
+    _osrs_scan_printable_bytes(data, provenance, suffix, state)
 
 
 def _osrs_scan_printable_bytes(
-    data: bytes, provenance: str, state: _osrsPathScanState
+    data: bytes, provenance: str, suffix: str, state: _osrsPathScanState
 ) -> None:
-    for encoding, text in _osrs_printable_strings(data):
+    binary_leaf = suffix not in _OSRS_TEXT_LIKE_SUFFIXES
+    context = (
+        _osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND
+        if binary_leaf
+        else _osrsArchiveHostPathScanContext.SEMANTIC_TEXT
+    )
+    if binary_leaf:
+        _osrs_scan_binary_tilde_home_bytes(data, provenance, state)
+    for encoding, text, start, end in _osrs_printable_string_spans(data):
         state.printable_string_count += 1
-        kinds = _osrs_archive_host_path_kinds(text)
+        kinds = _osrs_archive_host_path_kinds(text, context=context)
+        if (
+            binary_leaf
+            and kinds == ("host_home_reference",)
+            and not _osrs_binary_tilde_home_has_path_token_boundary(
+                text,
+                data[start - 1] if start > 0 else None,
+                data[end] if end < len(data) else None,
+            )
+        ):
+            continue
         if kinds:
             state.findings.append(
                 {
                     "artifact": provenance,
                     "encoding": encoding,
+                    "kinds": list(kinds),
+                }
+            )
+
+
+def _osrs_scan_binary_tilde_home_bytes(
+    data: bytes, provenance: str, state: _osrsPathScanState
+) -> None:
+    for match in _OSRS_BINARY_TILDE_PATH_BYTES.finditer(data):
+        before = data[match.start() - 1] if match.start() > 0 else None
+        after = data[match.end()] if match.end() < len(data) else None
+        if not (
+            _osrs_byte_is_binary_path_delimiter(before)
+            and _osrs_byte_is_binary_path_delimiter(after)
+        ):
+            continue
+        text = match.group().decode("ascii")
+        kinds = _osrs_archive_host_path_kinds(
+            text,
+            context=_osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND,
+        )
+        if kinds:
+            state.findings.append(
+                {
+                    "artifact": provenance,
+                    "encoding": "ascii-bounded",
                     "kinds": list(kinds),
                 }
             )
@@ -1718,8 +1890,10 @@ def _osrs_serialization_variants(value: str) -> tuple[str, ...]:
                 item.replace(r"\\", "\\"),
                 _OSRS_LITERAL_UNICODE_SLASH.sub("/", item),
                 _OSRS_LITERAL_UNICODE_BACKSLASH.sub(r"\\", item),
+                _OSRS_LITERAL_UNICODE_DOT.sub(".", item),
                 _OSRS_LITERAL_HEX_SLASH.sub("/", item),
                 _OSRS_LITERAL_HEX_BACKSLASH.sub(r"\\", item),
+                _OSRS_LITERAL_HEX_DOT.sub(".", item),
                 urllib.parse.unquote(item),
                 html.unescape(item),
             }
@@ -1778,7 +1952,224 @@ def _osrs_decoded_token_may_contain_path(value: str) -> bool:
     )
 
 
-def _osrs_archive_host_path_kinds(value: str) -> tuple[str, ...]:
+_OSRS_JAVA_DESCRIPTOR_IDENTIFIER = re.compile(r"[A-Za-z_$][A-Za-z0-9_$]*")
+_OSRS_JAVA_DESCRIPTOR_TERMINATORS = frozenset("\0\r\n\t \"'=,)]}")
+_OSRS_COMPACT_TILDE_L_NOISE = re.compile(r"~L[A-Za-z0-9_$]{1,64}")
+_OSRS_COMPACT_TILDE_HOME_NOISE = re.compile(r"~/[A-Za-z0-9]")
+
+
+class _osrsJavaDescriptorParser:
+    def __init__(self, value: str):
+        self.value = value
+
+    def parse_object_type(self, index: int) -> int | None:
+        if index >= len(self.value) or self.value[index] != "L":
+            return None
+        index += 1
+        index = self._parse_class_name(index)
+        if index is None:
+            return None
+        index = self._parse_optional_type_arguments(index)
+        if index < 0:
+            return None
+        while index < len(self.value) and self.value[index] == ".":
+            index = self._parse_identifier(index + 1)
+            if index is None:
+                return None
+            index = self._parse_optional_type_arguments(index)
+            if index < 0:
+                return None
+        if index >= len(self.value) or self.value[index] != ";":
+            return None
+        return index + 1
+
+    def _parse_class_name(self, index: int) -> int | None:
+        index = self._parse_identifier(index)
+        if index is None:
+            return None
+        while index < len(self.value) and self.value[index] == "/":
+            index = self._parse_identifier(index + 1)
+            if index is None:
+                return None
+        return index
+
+    def _parse_identifier(self, index: int) -> int | None:
+        match = _OSRS_JAVA_DESCRIPTOR_IDENTIFIER.match(self.value, index)
+        return match.end() if match else None
+
+    def _parse_optional_type_arguments(self, index: int) -> int:
+        if index >= len(self.value) or self.value[index] != "<":
+            return index
+        index += 1
+        parsed_argument = False
+        while index < len(self.value) and self.value[index] != ">":
+            if self.value[index] == "*":
+                index += 1
+                parsed_argument = True
+                continue
+            if self.value[index] in "+-":
+                index += 1
+            next_index = self._parse_type_argument(index)
+            if next_index is None:
+                return -1
+            index = next_index
+            parsed_argument = True
+        if not parsed_argument or index >= len(self.value) or self.value[index] != ">":
+            return -1
+        return index + 1
+
+    def _parse_type_argument(self, index: int) -> int | None:
+        if index >= len(self.value):
+            return None
+        marker = self.value[index]
+        if marker == "L":
+            return self.parse_object_type(index)
+        if marker == "T":
+            end = self._parse_identifier(index + 1)
+            if end is None or end >= len(self.value) or self.value[end] != ";":
+                return None
+            return end + 1
+        while index < len(self.value) and self.value[index] == "[":
+            index += 1
+        if index >= len(self.value):
+            return None
+        if self.value[index] == "L":
+            return self.parse_object_type(index)
+        if self.value[index] in "BCDFIJSZ":
+            return index + 1
+        return None
+
+
+def _osrs_archive_tilde_path_complete_java_descriptor_end(
+    value: str, start: int
+) -> int | None:
+    """Return the end of one complete ``~L...;`` Java/Dalvik descriptor token.
+
+    The leading tilde is a DEX/signature-adjacent byte token, not a home
+    directory marker, only when the following object descriptor parses fully and
+    terminates before any path-like suffix.  Malformed descriptor-shaped strings
+    stay fail-closed as host-home references.
+    """
+
+    if not value.startswith("~L", start):
+        return None
+    end = _osrsJavaDescriptorParser(value).parse_object_type(start + 1)
+    if end is None or end <= start + 2:
+        return None
+    if end == len(value) or value[end] in _OSRS_JAVA_DESCRIPTOR_TERMINATORS:
+        return end
+    return None
+
+
+def _osrs_archive_tilde_path_is_complete_java_descriptor(value: str, start: int) -> bool:
+    return _osrs_archive_tilde_path_complete_java_descriptor_end(value, start) is not None
+
+
+def _osrs_archive_malformed_tilde_java_descriptor_is_path_like(path: str) -> bool:
+    """Fail descriptor-shaped bypass probes without flagging arbitrary binary runs."""
+
+    if not path.startswith("~L"):
+        return False
+    descriptor_tail = path[2:]
+    if not descriptor_tail:
+        return False
+    separators = ("/", "\\")
+    components = re.split(r"[\\/]", descriptor_tail)
+    if len(components) < 2:
+        return False
+    first = components[0].casefold()
+    if first in {"java", "javax", "kotlin", "android", "com", "org", "net", "io"}:
+        return True
+    if path.startswith(("~Ljava/", "~Ljava\\")):
+        return True
+    if any("." in component for component in components[1:]):
+        return True
+    return False
+
+
+def _osrs_archive_tilde_l_noise_is_confidently_non_path_like(path: str) -> bool:
+    """Allow only compact ``~L`` binary fragments that do not resemble homes."""
+
+    if not path.startswith("~L"):
+        return False
+    if path.split("?", 1)[0].split("#", 1)[0].endswith(";"):
+        return False
+    token = _osrs_trim_path_terminal_punctuation(
+        path.split("?", 1)[0].split("#", 1)[0]
+    )
+    return _OSRS_COMPACT_TILDE_L_NOISE.fullmatch(token) is not None
+
+
+def _osrs_archive_tilde_home_noise_is_confidently_non_path_like(path: str) -> bool:
+    """Allow the historical one-byte ``~/x`` binary control, not real homes."""
+
+    token = _osrs_trim_path_terminal_punctuation(
+        path.split("?", 1)[0].split("#", 1)[0]
+    ).replace("\\", "/")
+    return _OSRS_COMPACT_TILDE_HOME_NOISE.fullmatch(token) is not None
+
+
+def _osrs_archive_compact_tilde_noise_allowed(
+    path: str, context: _osrsArchiveHostPathScanContext
+) -> bool:
+    if context is not _osrsArchiveHostPathScanContext.BINARY_PRINTABLE_ISLAND:
+        return False
+    return _osrs_archive_tilde_home_noise_is_confidently_non_path_like(
+        path
+    ) or _osrs_archive_tilde_l_noise_is_confidently_non_path_like(path)
+
+
+def _osrs_archive_tilde_home_reference_is_path_like(
+    path: str, *, context: _osrsArchiveHostPathScanContext
+) -> bool:
+    """Return true for archive tilde-home paths, including one-component homes."""
+
+    path_without_query = path.split("?", 1)[0].split("#", 1)[0]
+    normalized = _osrs_trim_path_terminal_punctuation(path_without_query).replace(
+        "\\", "/"
+    )
+    match = re.fullmatch(
+        r"~(?P<user>[A-Za-z0-9._-]+)?/(?P<body>[^?#]*)",
+        normalized,
+    )
+    if match is None:
+        return False
+    if _osrs_archive_compact_tilde_noise_allowed(path, context):
+        return False
+    components = match.group("body").split("/")
+    if components == [""]:
+        return True
+    if not all(
+        item in {"", ".", ".."} or _OSRS_PLAIN_PATH_COMPONENT.fullmatch(item)
+        for item in components
+    ):
+        return False
+    return True
+
+
+def _osrs_archive_tilde_home_candidate_matches(
+    value: str,
+) -> Iterable[_osrsTildeHomeCandidate]:
+    """Yield audited tilde-home candidates from one decoded scanner unit."""
+
+    return _osrs_decoded_unit_tilde_home_candidates(value)
+
+
+def _osrs_archive_descriptor_has_non_home_type_syntax_suffix(
+    value: str, match: _osrsTildeHomeCandidate, descriptor_end: int | None
+) -> bool:
+    if descriptor_end is None or descriptor_end <= match.end("path"):
+        return False
+    return value[match.end("path")] in "<$"
+
+
+def _osrs_archive_host_path_kinds(
+    value: str,
+    *,
+    context: _osrsArchiveHostPathScanContext = (
+        _osrsArchiveHostPathScanContext.SEMANTIC_TEXT
+    ),
+) -> tuple[str, ...]:
     """Find build-host locations without treating binary syntax as a path.
 
     Arbitrary DEX, SQLite, PNG, and native-library bytes routinely contain
@@ -1790,6 +2181,10 @@ def _osrs_archive_host_path_kinds(value: str) -> tuple[str, ...]:
     """
 
     kinds: set[str] = set()
+    descriptor_only = (
+        context
+        is _osrsArchiveHostPathScanContext.DESCRIPTOR_ONLY_JAVA_DALVIK_OBJECT
+    )
     for variant in _osrs_serialization_variants(value):
         for match in _OSRS_ARCHIVE_POSIX_PATH.finditer(variant):
             if _osrs_is_build_host_posix_path(match.group("path")):
@@ -1809,14 +2204,36 @@ def _osrs_archive_host_path_kinds(value: str) -> tuple[str, ...]:
                 and all(_OSRS_PLAIN_PATH_COMPONENT.fullmatch(item) for item in components)
             ):
                 kinds.add("windows_rooted_absolute")
-        for match in _OSRS_ARCHIVE_TILDE_PATH.finditer(variant):
-            components = _osrs_windows_path_components(
-                re.sub(r"^~(?:[A-Za-z0-9._-]+)?[\\/]", "", match.group("path"))
+        for match in _osrs_archive_tilde_home_candidate_matches(variant):
+            path = match.group("path")
+            descriptor_end = (
+                _osrs_archive_tilde_path_complete_java_descriptor_end(
+                    variant, match.start("path")
+                )
+                if path.startswith("~L")
+                else None
             )
-            if len(components) >= 2 and all(
-                _OSRS_PLAIN_PATH_COMPONENT.fullmatch(item) for item in components
+            complete_descriptor = descriptor_end is not None
+            descriptor_has_non_home_type_syntax_suffix = (
+                _osrs_archive_descriptor_has_non_home_type_syntax_suffix(
+                    variant, match, descriptor_end
+                )
+            )
+            if _osrs_archive_tilde_home_reference_is_path_like(
+                path, context=context
             ):
+                if descriptor_only and complete_descriptor:
+                    continue
+                if descriptor_has_non_home_type_syntax_suffix:
+                    continue
                 kinds.add("host_home_reference")
+                continue
+            if path.startswith("~L"):
+                if complete_descriptor:
+                    continue
+                if _osrs_archive_malformed_tilde_java_descriptor_is_path_like(path):
+                    kinds.add("host_home_reference")
+                continue
         for match in _OSRS_ARCHIVE_FILE_URI_PATH.finditer(variant):
             path = re.sub(r"^file:", "", match.group("path"), flags=re.IGNORECASE)
             decoded_path = urllib.parse.unquote(path)
@@ -1831,6 +2248,15 @@ def _osrs_archive_host_path_kinds(value: str) -> tuple[str, ...]:
             ):
                 kinds.add("file_uri")
     return tuple(sorted(kinds))
+
+
+def _osrs_archive_descriptor_only_host_path_kinds(value: str) -> tuple[str, ...]:
+    """Scan one descriptor-aware extractor token with descriptor-only provenance."""
+
+    return _osrs_archive_host_path_kinds(
+        value,
+        context=_osrsArchiveHostPathScanContext.DESCRIPTOR_ONLY_JAVA_DALVIK_OBJECT,
+    )
 
 
 def _osrs_is_build_host_posix_path(value: str) -> bool:
@@ -1928,13 +2354,58 @@ def _osrs_trim_path_terminal_punctuation(value: str) -> str:
     return value.rstrip(".,;:!?)]}>")
 
 
-def _osrs_printable_strings(data: bytes) -> Iterable[tuple[str, str]]:
+def _osrs_byte_is_binary_path_delimiter(value: int | None) -> bool:
+    return value is None or value in _OSRS_BINARY_PATH_DELIMITER_BYTES
+
+
+def _osrs_binary_tilde_home_has_path_token_boundary(
+    value: str, before: int | None, after: int | None
+) -> bool:
+    if not (
+        _osrs_byte_is_binary_path_delimiter(before)
+        and _osrs_byte_is_binary_path_delimiter(after)
+    ):
+        return False
+    for variant in _osrs_serialization_variants(value):
+        for match in _osrs_archive_tilde_home_candidate_matches(variant):
+            path = match.group("path")
+            descriptor_end = (
+                _osrs_archive_tilde_path_complete_java_descriptor_end(
+                    variant, match.start("path")
+                )
+                if path.startswith("~L")
+                else None
+            )
+            if _osrs_archive_tilde_home_reference_is_path_like(
+                path,
+                context=_osrsArchiveHostPathScanContext.SEMANTIC_TEXT,
+            ):
+                if _osrs_archive_descriptor_has_non_home_type_syntax_suffix(
+                    variant, match, descriptor_end
+                ):
+                    continue
+                return True
+            if descriptor_end is not None:
+                continue
+            if path.startswith("~L") and _osrs_archive_malformed_tilde_java_descriptor_is_path_like(
+                path
+            ):
+                return True
+    return False
+
+
+def _osrs_printable_string_spans(data: bytes) -> Iterable[tuple[str, str, int, int]]:
     for match in _OSRS_ASCII_PRINTABLE_RUN.finditer(data):
-        yield "ascii", match.group().decode("ascii")
+        yield "ascii", match.group().decode("ascii"), match.start(), match.end()
     for match in _OSRS_UTF16LE_PRINTABLE_RUN.finditer(data):
-        yield "utf-16le", match.group().decode("utf-16le")
+        yield "utf-16le", match.group().decode("utf-16le"), match.start(), match.end()
     for match in _OSRS_UTF16BE_PRINTABLE_RUN.finditer(data):
-        yield "utf-16be", match.group().decode("utf-16be")
+        yield "utf-16be", match.group().decode("utf-16be"), match.start(), match.end()
+
+
+def _osrs_printable_strings(data: bytes) -> Iterable[tuple[str, str]]:
+    for encoding, value, _, _ in _osrs_printable_string_spans(data):
+        yield encoding, value
 
 
 def _osrs_name_list_sha256(values: Sequence[str]) -> str:

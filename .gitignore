@@ -150,3 +150,6 @@ emulator.out
 sessions/
 # Pixi environments are materialized from tools/pixi.lock.
 .pixi/
+
+# Job scope records stay local to the checkout; never land them on main.
+.agents/scope.json

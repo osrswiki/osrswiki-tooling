@@ -12,6 +12,8 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/find-git-repo.sh"
 
+osrs_load_local_storage_config
+
 # Discover repository locations
 if ! REPO_CONTEXT=$(validate_repo_context); then
     echo -e "${RED}❌ Repository discovery failed${NC}"
@@ -38,8 +40,10 @@ if [[ "$(cd "$GIT_ROOT" && git rev-parse --git-dir)" != "$(cd "$GIT_ROOT" && git
 fi
 
 TOPIC="${1:-development}"
-SESSION_NAME="codex-$(date +%Y%m%d-%H%M%S)-$TOPIC"
-BRANCH_NAME="codex/$(date +%Y%m%d-%H%M%S)-$TOPIC"
+# Optional scope (written into the session artifact manifest, not Git):
+#   OSRS_JOB_INTENT OSRS_JOB_IN_SCOPE OSRS_JOB_OUT_OF_SCOPE OSRS_JOB_DONE_WHEN
+SESSION_NAME="job-$(date +%Y%m%d-%H%M%S)-$TOPIC"
+BRANCH_NAME="job/$(date +%Y%m%d-%H%M%S)-$TOPIC"
 
 # New worktrees and heavyweight artifacts are machine-local. The resolver
 # verifies the configured root before returning either path.
@@ -140,6 +144,10 @@ OSRS_MANIFEST_LANE_ID="$SESSION_NAME" \
 OSRS_MANIFEST_THREAD_ID="${OSRS_THREAD_ID:-}" \
 OSRS_MANIFEST_BRANCH="$BRANCH_NAME" \
 OSRS_MANIFEST_STARTING_HEAD="$STARTING_HEAD" \
+OSRS_MANIFEST_INTENT="${OSRS_JOB_INTENT:-}" \
+OSRS_MANIFEST_IN_SCOPE="${OSRS_JOB_IN_SCOPE:-}" \
+OSRS_MANIFEST_OUT_OF_SCOPE="${OSRS_JOB_OUT_OF_SCOPE:-}" \
+OSRS_MANIFEST_DONE_WHEN="${OSRS_JOB_DONE_WHEN:-}" \
 python3 - "$SESSION_ARTIFACT_DIR/manifest.json" <<'PY'
 import datetime
 import json
@@ -167,6 +175,10 @@ manifest = {
         "starting_head": os.environ["OSRS_MANIFEST_STARTING_HEAD"],
         "branch": os.environ["OSRS_MANIFEST_BRANCH"],
     },
+    "intent": os.environ.get("OSRS_MANIFEST_INTENT", ""),
+    "in_scope": os.environ.get("OSRS_MANIFEST_IN_SCOPE", ""),
+    "out_of_scope": os.environ.get("OSRS_MANIFEST_OUT_OF_SCOPE", ""),
+    "done_when": os.environ.get("OSRS_MANIFEST_DONE_WHEN", ""),
     "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
 }
 path = pathlib.Path(sys.argv[1])

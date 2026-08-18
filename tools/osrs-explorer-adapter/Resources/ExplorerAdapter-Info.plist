@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key><string>en</string>
+  <key>CFBundleExecutable</key><string>osrs-explorer-adapter</string>
+  <key>CFBundleIdentifier</key><string>com.omiyawaki.osrswiki.explorer-adapter</string>
+  <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+  <key>CFBundleName</key><string>OSRS Explorer Adapter</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleShortVersionString</key><string>0.2.0</string>
+  <key>CFBundleVersion</key><string>1</string>
+  <key>LSMinimumSystemVersion</key><string>14.0</string>
+  <key>LSUIElement</key><true/>
+  <key>NSHumanReadableCopyright</key><string>Local adapter</string>
+  <key>NSScreenCaptureUsageDescription</key><string>Capture only the bound OSRS or laboratory window for an operator-authorized map queue.</string>
+  <key>NSInputMonitoringUsageDescription</key><string>Stop an in-flight foreground lease when operator input could conflict with the bounded target action.</string>
+</dict>
+</plist>

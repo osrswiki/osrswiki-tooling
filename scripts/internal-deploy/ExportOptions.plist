@@ -8,6 +8,8 @@
     <string>upload</string>
     <key>signingStyle</key>
     <string>automatic</string>
+    <key>signingCertificate</key>
+    <string>Apple Distribution</string>
     <key>teamID</key>
     <string>8M2762LWD7</string>
     <key>uploadSymbols</key>

@@ -268,7 +268,16 @@ deploy_ios_internal() {
 
     mkdir -p "$archive_dir" "$export_dir"
 
+    # Ensure xcodebuild uses macOS system rsync, not Homebrew rsync.
+    # xcodebuild's IDEDistributionCreateIPAStep fails with Homebrew rsync 3.4.4.
+    # Prepend /usr/bin to PATH so /usr/bin/rsync is found first.
+    local safe_path="/usr/bin:/bin:/usr/sbin:/sbin"
+    if [[ -n "${PATH:-}" ]]; then
+        safe_path="$safe_path:$PATH"
+    fi
+
     archive_cmd=(
+        env PATH="$safe_path"
         xcodebuild archive
         -project "$IOS_PROJECT"
         -scheme "$IOS_SCHEME"
@@ -276,11 +285,13 @@ deploy_ios_internal() {
         -destination "generic/platform=iOS"
         -archivePath "$archive_path"
         CODE_SIGN_STYLE=Automatic
+        CODE_SIGN_IDENTITY="Apple Distribution"
         DEVELOPMENT_TEAM="$ios_team"
         -allowProvisioningUpdates
     )
 
     export_cmd=(
+        env PATH="$safe_path"
         xcodebuild -exportArchive
         -archivePath "$archive_path"
         -exportOptionsPlist "$export_options"

@@ -36,9 +36,18 @@ xcodebuild test -project platforms/ios/osrswiki.xcodeproj -scheme osrswiki -dest
 xcodebuild test -project platforms/ios/osrswiki.xcodeproj -scheme osrswiki -destination "platform=iOS Simulator,id=$IOS_SIMULATOR_UDID" -only-testing:osrswikiTests
 ```
 
+### Live emulator/simulator reproduce (CUA)
+When Osamu asks to reproduce or test in the emulator or Simulator, that is a
+live-user GUI pass: drive the visible device window with CUA (`cua-driver`).
+If CUA HID does not reach the guest framebuffer, snapshot with CUA and send
+the taps through the device (`adb shell input` or the leased Simulator UDID).
+XCTest remains the land-gate harness. It does not replace CUA for that request.
+A headless `-no-window` emulator is not a live-user test. See
+`policies/gui-app-testing.md` in agent-recipes.
+
 ### Direct Simulator and Exploratory Testing
 - **When to use**: Broad UI/UX audits, gesture-heavy flows, visual polish checks, navigation discovery, permission/system sheet behavior, and debugging test failures.
-- **Tools**: Simulator UI, `xcrun simctl`, accessibility inspection, screenshots/video, logs, interactive gestures, Browser/Chrome/Computer Use when useful.
+- **Tools**: Simulator UI via CUA (`cua-driver`), `xcrun simctl`, accessibility inspection, screenshots/video, logs, interactive gestures.
 - **Purpose**: Discover unexpected, unintuitive, unresponsive, or visually broken behavior that scripted tests may miss.
 
 ```bash

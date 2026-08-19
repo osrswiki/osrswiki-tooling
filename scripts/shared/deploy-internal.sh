@@ -276,6 +276,10 @@ deploy_ios_internal() {
         safe_path="$safe_path:$PATH"
     fi
 
+    # Automatic signing must pick the archive identity. Forcing
+    # CODE_SIGN_IDENTITY="Apple Distribution" conflicts with
+    # CODE_SIGN_STYLE=Automatic and fails the archive. ExportOptions.plist
+    # still requests Apple Distribution for the TestFlight upload.
     archive_cmd=(
         env PATH="$safe_path"
         xcodebuild archive
@@ -285,7 +289,6 @@ deploy_ios_internal() {
         -destination "generic/platform=iOS"
         -archivePath "$archive_path"
         CODE_SIGN_STYLE=Automatic
-        CODE_SIGN_IDENTITY="Apple Distribution"
         DEVELOPMENT_TEAM="$ios_team"
         -allowProvisioningUpdates
     )

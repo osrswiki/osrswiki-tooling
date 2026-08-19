@@ -20,6 +20,8 @@ class InternalDeployCommandTests(unittest.TestCase):
         script = ENTRYPOINT.read_text(encoding="utf-8")
 
         self.assertIn("Google Play internal testing", script)
+        self.assertIn("--also-assign-track alpha", script)
+        self.assertIn("Closed testing Alpha", script)
         self.assertIn("TestFlight", script)
         self.assertIn("--dry-run", script)
         self.assertIn("--validate-only", script)
@@ -115,6 +117,151 @@ class InternalDeployCommandTests(unittest.TestCase):
             self.assertTrue(payload["dry_run"])
             self.assertEqual(payload["track"], "internal")
             self.assertEqual(payload["release_name"], "internal-123")
+            self.assertEqual(payload["also_assign_tracks"], [])
+            self.assertEqual(payload["assigned_tracks"], ["internal"])
+
+    def test_android_uploader_dry_run_records_alpha_assignment_without_google_dependencies(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            aab = tmp_path / "app-release.aab"
+            service_account = tmp_path / "play-service-account.json"
+            evidence = tmp_path / "evidence"
+            aab.write_bytes(b"fake-aab")
+            service_account.write_text("{}", encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ANDROID_UPLOADER),
+                    "--aab",
+                    str(aab),
+                    "--package-name",
+                    "com.omiyawaki.osrswiki",
+                    "--service-account-json",
+                    str(service_account),
+                    "--track",
+                    "internal",
+                    "--also-assign-track",
+                    "alpha",
+                    "--version-code",
+                    "16",
+                    "--evidence-dir",
+                    str(evidence),
+                    "--dry-run",
+                ],
+                cwd=REPO_ROOT,
+                env={**os.environ, "PYTHONPATH": ""},
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            payload = json.loads((evidence / "android-upload-result.json").read_text(encoding="utf-8"))
+            self.assertTrue(payload["dry_run"])
+            self.assertFalse(payload["assign_only"])
+            self.assertEqual(payload["track"], "internal")
+            self.assertEqual(payload["also_assign_tracks"], ["alpha"])
+            self.assertEqual(payload["assigned_tracks"], ["internal", "alpha"])
+            self.assertEqual(payload["release_name"], "internal-16")
+            self.assertNotIn("releaseNotes", json.dumps(payload))
+
+    def test_android_uploader_assign_only_dry_run_does_not_need_aab(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            service_account = tmp_path / "play-service-account.json"
+            evidence = tmp_path / "evidence"
+            service_account.write_text("{}", encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ANDROID_UPLOADER),
+                    "--assign-only",
+                    "--package-name",
+                    "com.omiyawaki.osrswiki",
+                    "--service-account-json",
+                    str(service_account),
+                    "--track",
+                    "alpha",
+                    "--version-code",
+                    "16",
+                    "--evidence-dir",
+                    str(evidence),
+                    "--dry-run",
+                ],
+                cwd=REPO_ROOT,
+                env={**os.environ, "PYTHONPATH": ""},
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            payload = json.loads((evidence / "android-upload-result.json").read_text(encoding="utf-8"))
+            self.assertTrue(payload["assign_only"])
+            self.assertIsNone(payload["aab"])
+            self.assertEqual(payload["track"], "alpha")
+            self.assertEqual(payload["assigned_tracks"], ["alpha"])
+            self.assertEqual(payload["release_name"], "internal-16")
+
+    def test_android_uploader_rejects_production_and_beta_assignment(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            service_account = tmp_path / "play-service-account.json"
+            service_account.write_text("{}", encoding="utf-8")
+
+            for forbidden in ("production", "beta"):
+                with self.subTest(track=forbidden):
+                    extra = subprocess.run(
+                        [
+                            sys.executable,
+                            str(ANDROID_UPLOADER),
+                            "--assign-only",
+                            "--package-name",
+                            "com.omiyawaki.osrswiki",
+                            "--service-account-json",
+                            str(service_account),
+                            "--track",
+                            "internal",
+                            "--also-assign-track",
+                            forbidden,
+                            "--version-code",
+                            "16",
+                            "--dry-run",
+                        ],
+                        cwd=REPO_ROOT,
+                        env={**os.environ, "PYTHONPATH": ""},
+                        text=True,
+                        capture_output=True,
+                        check=False,
+                    )
+                    self.assertNotEqual(extra.returncode, 0, extra.stdout)
+                    self.assertIn("out of scope", extra.stderr)
+
+                    primary = subprocess.run(
+                        [
+                            sys.executable,
+                            str(ANDROID_UPLOADER),
+                            "--assign-only",
+                            "--package-name",
+                            "com.omiyawaki.osrswiki",
+                            "--service-account-json",
+                            str(service_account),
+                            "--track",
+                            forbidden,
+                            "--version-code",
+                            "16",
+                            "--dry-run",
+                        ],
+                        cwd=REPO_ROOT,
+                        env={**os.environ, "PYTHONPATH": ""},
+                        text=True,
+                        capture_output=True,
+                        check=False,
+                    )
+                    self.assertNotEqual(primary.returncode, 0, primary.stdout)
+                    self.assertIn("out of scope", primary.stderr)
 
 
 if __name__ == "__main__":

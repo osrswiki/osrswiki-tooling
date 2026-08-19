@@ -20,7 +20,8 @@ Usage:
   scripts/shared/deploy-internal.sh [--android] [--ios] [--dry-run] [--validate-only] [--no-bump] [--evidence-dir PATH]
 
 Targets:
-  --android        Package and upload Android to Google Play internal testing.
+  --android        Package and upload Android to Google Play internal testing,
+                   then assign the same versionCode to Closed testing Alpha.
   --ios            Archive and upload iOS to TestFlight.
   no platform flag Deploy both Android and iOS.
 
@@ -79,7 +80,7 @@ fi
 load_internal_deploy_env
 
 print_header "OSRS Wiki internal deployment"
-echo "Android target: Google Play internal testing"
+echo "Android target: Google Play internal testing, then Closed testing Alpha"
 echo "iOS target: TestFlight"
 echo "Repo: $REPO_ROOT"
 echo "Dry run: $DRY_RUN"
@@ -218,15 +219,31 @@ bump_ios_build_number_if_needed() {
 deploy_android_internal() {
     print_phase "Android package and upload"
     local version_code version_name aab_path service_account_json play_track
+    local -a upload_cmd
     version_code="$(bump_android_version_code_if_needed)"
     version_name="$(read_android_version_name)"
     aab_path="$ANDROID_PLATFORM_DIR/app/build/outputs/bundle/release/app-release.aab"
     service_account_json="${PLAY_SERVICE_ACCOUNT_JSON:-$CONFIG_DIR/play-service-account.json}"
     play_track="${PLAY_TRACK:-internal}"
+    # Xperia testers are on Closed testing Alpha, not the internal opt-in.
+    # Every internal upload must also assign that same versionCode to alpha.
+    upload_cmd=(
+        "$PYTHON_BIN"
+        "$INTERNAL_DEPLOY_DIR/upload-android-play.py"
+        --aab "$aab_path"
+        --package-name "$ANDROID_PACKAGE_NAME"
+        --service-account-json "$service_account_json"
+        --track "$play_track"
+        --version-code "$version_code"
+        --evidence-dir "$EVIDENCE_DIR"
+    )
+    if [[ "$play_track" == "internal" ]]; then
+        upload_cmd+=(--also-assign-track alpha)
+    fi
 
     if [[ "$DRY_RUN" == true ]]; then
         print_info "[dry-run] cd $ANDROID_PLATFORM_DIR && ./gradlew --no-daemon :app:bundleRelease --console=plain"
-        print_info "[dry-run] $PYTHON_BIN $INTERNAL_DEPLOY_DIR/upload-android-play.py --aab $aab_path --package-name $ANDROID_PACKAGE_NAME --service-account-json $service_account_json --track $play_track --version-code $version_code --evidence-dir $EVIDENCE_DIR --dry-run"
+        print_info "[dry-run] ${upload_cmd[*]} --dry-run"
     else
         (
             cd "$ANDROID_PLATFORM_DIR"
@@ -236,13 +253,7 @@ deploy_android_internal() {
             print_error "Expected AAB not found: $aab_path"
             exit 1
         fi
-        "$PYTHON_BIN" "$INTERNAL_DEPLOY_DIR/upload-android-play.py" \
-            --aab "$aab_path" \
-            --package-name "$ANDROID_PACKAGE_NAME" \
-            --service-account-json "$service_account_json" \
-            --track "$play_track" \
-            --version-code "$version_code" \
-            --evidence-dir "$EVIDENCE_DIR"
+        "${upload_cmd[@]}"
     fi
 
     {
@@ -250,6 +261,9 @@ deploy_android_internal() {
         echo "version_name=$version_name"
         echo "aab_path=$aab_path"
         echo "play_track=$play_track"
+        if [[ "$play_track" == "internal" ]]; then
+            echo "also_assign_track=alpha"
+        fi
         echo "dry_run=$DRY_RUN"
     } >"$EVIDENCE_DIR/android-summary.txt"
 }

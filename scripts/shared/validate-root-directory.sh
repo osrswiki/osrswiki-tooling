@@ -338,8 +338,8 @@ main() {
     
     # Parse the output to get paths
     local repo_root parent_dir
-    repo_root=$(echo "$context_output" | grep "REPO_ROOT=" | cut -d'=' -f2)
-    parent_dir=$(echo "$context_output" | grep "PARENT_DIR=" | cut -d'=' -f2)
+    repo_root=$(echo "$context_output" | grep "^REPO_ROOT=" | cut -d'=' -f2)
+    parent_dir=$(echo "$context_output" | grep "^PARENT_DIR=" | cut -d'=' -f2)
     
     print_success "Repository detected:"
     print_info "   Git repository: $repo_root"

@@ -30,9 +30,9 @@ get_repo_context() {
     
     # Parse the output to get paths
     local repo_root monorepo_root parent_dir
-    repo_root=$(echo "$context_output" | grep "REPO_ROOT=" | cut -d'=' -f2)
-    monorepo_root=$(echo "$context_output" | grep "MONOREPO_ROOT=" | cut -d'=' -f2)
-    parent_dir=$(echo "$context_output" | grep "PARENT_DIR=" | cut -d'=' -f2)
+    repo_root=$(echo "$context_output" | grep "^REPO_ROOT=" | cut -d'=' -f2)
+    monorepo_root=$(echo "$context_output" | grep "^MONOREPO_ROOT=" | cut -d'=' -f2)
+    parent_dir=$(echo "$context_output" | grep "^PARENT_DIR=" | cut -d'=' -f2)
     monorepo_root="${monorepo_root:-$parent_dir}"
     
     if [[ -z "$repo_root" ]] || [[ -z "$monorepo_root" ]]; then
@@ -142,8 +142,8 @@ main() {
     local context_output
     context_output=$(get_repo_context)
     local repo_root monorepo_root
-    repo_root=$(echo "$context_output" | grep "REPO_ROOT=" | cut -d'=' -f2)
-    monorepo_root=$(echo "$context_output" | grep "MONOREPO_ROOT=" | cut -d'=' -f2)
+    repo_root=$(echo "$context_output" | grep "^REPO_ROOT=" | cut -d'=' -f2)
+    monorepo_root=$(echo "$context_output" | grep "^MONOREPO_ROOT=" | cut -d'=' -f2)
     
     echo -e "${GREEN}✅ Repository detected:${NC}"
     echo "   Git repository: $repo_root"

@@ -55,9 +55,28 @@ assert_context() {
     echo "PASS $label"
 }
 
+assert_anchored_repo_root_parse() {
+    local output="$1"
+    local good bad good_lines bad_lines
+    good="$(printf '%s\n' "$output" | grep "^REPO_ROOT=" | cut -d'=' -f2)"
+    bad="$(printf '%s\n' "$output" | grep "REPO_ROOT=" | cut -d'=' -f2)"
+    good_lines="$(printf '%s\n' "$good" | grep -c .)"
+    bad_lines="$(printf '%s\n' "$bad" | grep -c .)"
+    [[ "$good_lines" -eq 1 ]] || {
+        echo "FAIL anchored REPO_ROOT parse produced $good_lines lines: $good" >&2
+        return 1
+    }
+    [[ "$bad_lines" -gt 1 ]] || {
+        echo "FAIL expected unanchored REPO_ROOT= grep to also match PRIMARY_REPO_ROOT=" >&2
+        return 1
+    }
+    echo "PASS anchored REPO_ROOT parse ignores PRIMARY_REPO_ROOT"
+}
+
 current_repo="$(git -C "$SCRIPT_DIR/../.." rev-parse --show-toplevel)"
 current_monorepo="$(find_monorepo_root "$current_repo")"
 primary_repo="$(find_primary_repo "$current_repo")"
+assert_anchored_repo_root_parse "$(cd "$current_repo" && validate_repo_context)"
 
 assert_context "current repository root" "$current_repo" "$current_repo" "$current_monorepo" "$primary_repo"
 assert_context "current repository subdirectory" "$SCRIPT_DIR" "$current_repo" "$current_monorepo" "$primary_repo"

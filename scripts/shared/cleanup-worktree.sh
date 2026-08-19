@@ -12,7 +12,7 @@ if [[ "${1:-}" == "--delete" ]]; then
     DELETE_REQUESTED=true
 fi
 
-if [[ ! "$SESSION_NAME" =~ ^(claude|codex)-[0-9]{8}-[0-9]{6} ]]; then
+if [[ ! "$SESSION_NAME" =~ ^(claude|codex|job)-[0-9]{8}-[0-9]{6} ]]; then
     echo "⚠️ Not in a recognized session directory; preserving worktree"
     echo "Current directory: $CURRENT_DIR"
     exit 0

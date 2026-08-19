@@ -34,9 +34,10 @@ show_usage() {
     echo "This script performs:"
     echo "  1. Pre-merge validation"
     echo "  2. Merge operation (fast-forward or merge commit)"
-    echo "  3. Worktree and branch preservation by default"
-    echo "  4. Optional authorized cleanup when OSRS_ARTIFACT_CLEANUP_AUTHORIZED=1"
-    echo "  5. Post-merge verification"
+    echo "  3. Post-merge verification"
+    echo "  4. Remove a clean session worktree and delete the job branch"
+    echo "     (artifacts stay; OSRS_ARTIFACT_CLEANUP_AUTHORIZED is not required"
+    echo "     for this worktree/branch close step)"
 }
 
 # Function to detect merge strategy
@@ -143,7 +144,7 @@ cleanup_worktree_session() {
     local primary_repo="$1"
     local feature_branch="$2"
     
-    echo -e "${YELLOW}🌿 Evaluating associated worktree retention...${NC}"
+    echo -e "${YELLOW}🌿 Removing associated clean job worktree...${NC}"
     
     # Extract session name from branch name.
     local session_name
@@ -158,25 +159,22 @@ cleanup_worktree_session() {
         return 0
     fi
 
-    if [[ "${OSRS_ARTIFACT_CLEANUP_AUTHORIZED:-}" != "1" ]]; then
-        echo -e "${GREEN}✅ Worktree preserved pending a separately authorized disposition: $session_path${NC}"
-        return 0
-    fi
-
     if [[ -n "$(git -C "$session_path" status --porcelain)" ]]; then
         echo -e "${RED}❌ Refusing to remove dirty worktree: $session_path${NC}" >&2
+        echo "Landed commits stay on main. Clean or park the worktree before close." >&2
         return 1
     fi
     
     cd "$primary_repo"
     
-    # Remove only a clean worktree after explicit authorization. Artifact
-    # directories remain preserved for their own disposition decision.
-    if git -C "$primary_repo" worktree remove "$session_path" 2>/dev/null; then
-        echo -e "${GREEN}✅ Worktree session cleaned up successfully${NC}"
+    # A clean job worktree whose commits are already on private main is close,
+    # not artifact disposition. Artifact directories remain for their own
+    # separately authorized cleanup (OSRS_ARTIFACT_CLEANUP_AUTHORIZED).
+    if git -C "$primary_repo" worktree remove "$session_path"; then
+        echo -e "${GREEN}✅ Worktree session removed: $session_path${NC}"
         return 0
     else
-        echo -e "${RED}❌ Authorized worktree removal failed; preserving it for inspection${NC}" >&2
+        echo -e "${RED}❌ Worktree removal failed; preserving it for inspection${NC}" >&2
         return 1
     fi
 }
@@ -199,6 +197,14 @@ delete_feature_branch() {
     # Delete the branch
     if git branch -d "$feature_branch"; then
         echo -e "${GREEN}✅ Feature branch deleted successfully${NC}"
+        if git rev-parse --verify "origin/$feature_branch" >/dev/null 2>&1; then
+            if git push origin --delete "$feature_branch"; then
+                echo -e "${GREEN}✅ Remote feature branch deleted${NC}"
+            else
+                echo -e "${YELLOW}⚠️  Local branch deleted, but remote delete failed${NC}"
+                return 1
+            fi
+        fi
         return 0
     else
         echo -e "${RED}❌ Failed to delete branch '$feature_branch'${NC}"
@@ -334,22 +340,20 @@ main() {
     fi
     echo ""
     
-    # Step 6: Preserve local worktree/artifacts unless separately authorized.
-    echo -e "${BLUE}📋 Step 6: Worktree retention${NC}"
+    # Step 6: Remove the clean session worktree. Artifacts stay.
+    echo -e "${BLUE}📋 Step 6: Worktree close${NC}"
     if ! cleanup_worktree_session "$primary_repo_root" "$feature_branch"; then
-        echo -e "${YELLOW}⚠️  Merge succeeded, but authorized cleanup did not complete${NC}"
-    fi
-    echo ""
-    
-    # Step 7: Keep branch provenance unless the same explicit authorization
-    # allowed clean worktree removal.
-    echo -e "${BLUE}📋 Step 7: Feature branch retention${NC}"
-    if [[ "${OSRS_ARTIFACT_CLEANUP_AUTHORIZED:-}" == "1" && ! -d "$(get_sessions_dir)/${feature_branch/\//-}" ]]; then
+        echo -e "${YELLOW}⚠️  Merge succeeded, but worktree removal did not complete${NC}"
+        echo -e "${YELLOW}   Job branch kept until the worktree is clean and removed${NC}"
+        echo ""
+        echo -e "${BLUE}📋 Step 7: Feature branch retention${NC}"
+        echo -e "${GREEN}✅ Feature branch preserved until the worktree can be removed${NC}"
+    else
+        echo ""
+        echo -e "${BLUE}📋 Step 7: Feature branch close${NC}"
         if ! delete_feature_branch "$repo_root" "$feature_branch"; then
             echo -e "${YELLOW}⚠️  Branch deletion failed, but merge was successful${NC}"
         fi
-    else
-        echo -e "${GREEN}✅ Feature branch preserved for provenance${NC}"
     fi
     
     # Step 8: Final verification
@@ -365,11 +369,11 @@ main() {
     echo ""
     echo -e "${BLUE}📋 Summary:${NC}"
     echo -e "${GREEN}   ✅ Feature branch merged to main${NC}"
-    echo -e "${GREEN}   ✅ Retention policy applied to worktree and branch${NC}"
+    echo -e "${GREEN}   ✅ Clean job worktree and branch removed (artifacts kept)${NC}"
     echo -e "${GREEN}   ✅ All validations passed${NC}"
     echo ""
     echo -e "${YELLOW}💡 Next steps:${NC}"
-    echo "   • Deploy when ready: /deploy command"
+    echo "   • Push private main, then publish public trees: ./scripts/shared/publish-public-trees.sh"
     echo "   • Start new session: /start command"
     echo ""
     echo -e "${BLUE}Repository ready for next development session!${NC}"

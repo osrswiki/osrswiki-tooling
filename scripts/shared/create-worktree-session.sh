@@ -42,6 +42,8 @@ fi
 TOPIC="${1:-development}"
 # Optional scope (written into the session artifact manifest, not Git):
 #   OSRS_JOB_INTENT OSRS_JOB_IN_SCOPE OSRS_JOB_OUT_OF_SCOPE OSRS_JOB_DONE_WHEN
+# Park fields (same names as .agents/scope.json) may later be written into
+# that manifest: parked=true, remaining_done_when, question, checkout, branch.
 SESSION_NAME="job-$(date +%Y%m%d-%H%M%S)-$TOPIC"
 BRANCH_NAME="job/$(date +%Y%m%d-%H%M%S)-$TOPIC"
 
@@ -179,6 +181,11 @@ manifest = {
     "in_scope": os.environ.get("OSRS_MANIFEST_IN_SCOPE", ""),
     "out_of_scope": os.environ.get("OSRS_MANIFEST_OUT_OF_SCOPE", ""),
     "done_when": os.environ.get("OSRS_MANIFEST_DONE_WHEN", ""),
+    "parked": False,
+    "remaining_done_when": "",
+    "question": "",
+    "checkout": os.environ.get("OSRS_MANIFEST_WORKTREE_URI", ""),
+    "branch": os.environ["OSRS_MANIFEST_BRANCH"],
     "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
 }
 path = pathlib.Path(sys.argv[1])
@@ -218,5 +225,8 @@ echo ""
 echo "   # ... develop ..."
 echo "   ./scripts/shared/end-session.sh               # Release owned runtime resources"
 echo ""
-echo -e "${BLUE}💡 Retention:${NC}"
-echo "   Preserve this worktree and its artifact directory until ownership is released, provenance is verified, and cleanup is separately authorized."
+echo -e "${BLUE}💡 Close:${NC}"
+echo "   When done-criteria hold and there is no question, land, publish, release"
+echo "   runtime, then remove this worktree and the job branch. Artifacts stay"
+echo "   until a separate disposition. Park only with parked=true, a non-empty"
+echo "   question, remaining_done_when, checkout, and branch in the session manifest."

@@ -51,7 +51,8 @@
             "js/ge_charts_init.js",
             "js/highcharts-stock.js",
             "js/table_column_normalize.js",
-            "js/tabber_init.js"
+            "js/tabber_init.js",
+            "js/osrs_calculator_runtime.js"
           ],
           "target_dir": "web",
           "description": "WebView-specific JavaScript files"

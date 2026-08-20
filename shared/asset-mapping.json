@@ -53,7 +53,8 @@
             "js/table_column_normalize.js",
             "js/tabber_init.js",
             "js/osrs_calculator_runtime.js",
-            "js/live_article_asset_warm.js"
+            "js/live_article_asset_warm.js",
+            "js/first_viewport_assets.js"
           ],
           "target_dir": "web",
           "description": "WebView-specific JavaScript files"
@@ -134,6 +135,7 @@
       "js/tablesort_init.js",
       "web/collapsible_content.js",
       "web/live_article_asset_warm.js",
+      "web/first_viewport_assets.js",
       "web/collapsible_sections.css",
       "web/collapsible_tables.css",
       "web/horizontal_scroll_interceptor.js",

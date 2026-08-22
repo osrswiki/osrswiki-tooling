@@ -58,11 +58,36 @@ fact "evidence_dir" "$EVIDENCE_DIR"
 fact "ios_simulator_udid" "$IOS_SIMULATOR_UDID"
 fact "bundle_id" "$BUNDLE_ID"
 
-if grep -q 'import StoreKit' "$OSRS_IOS_DIR/osrswiki/Views/DonateView.swift"; then
+if grep -q 'import StoreKit' "$OSRS_IOS_DIR/osrswiki/Models/osrsStoreKitDonationGateway.swift"; then
     fact "storekit_import" "present"
 else
     fact "storekit_import" "missing"
     exit 1
+fi
+
+if grep -q 'osrsStoreKitDonationGateway()' "$OSRS_IOS_DIR/osrswiki/Models/osrsDonationPaymentGateway.swift"; then
+    fact "default_gateway" "storekit2"
+else
+    fact "default_gateway" "missing_storekit2"
+    exit 1
+fi
+
+if grep -q 'donate_1_usd' "$OSRS_IOS_DIR/osrswiki/Models/osrsDonationProductIds.swift" \
+    && grep -q 'donate_5_usd' "$OSRS_IOS_DIR/osrswiki/Models/osrsDonationProductIds.swift" \
+    && grep -q 'donate_10_usd' "$OSRS_IOS_DIR/osrswiki/Models/osrsDonationProductIds.swift" \
+    && grep -q 'donate_25_usd' "$OSRS_IOS_DIR/osrswiki/Models/osrsDonationProductIds.swift"; then
+    fact "donation_product_ids" "donate_1_usd,donate_5_usd,donate_10_usd,donate_25_usd"
+else
+    fact "donation_product_ids" "missing"
+    exit 1
+fi
+
+if grep -q 'apple-pay-donation' "$OSRS_IOS_DIR/osrswiki/Views/DonateView.swift" \
+    || grep -q 'apple-pay-donation' "$OSRS_IOS_DIR/osrswiki/Models/osrsDonationManager.swift"; then
+    fact "synthetic_apple_pay_product_id" "present"
+    exit 1
+else
+    fact "synthetic_apple_pay_product_id" "removed"
 fi
 
 if grep -q 'import PassKit' "$OSRS_IOS_DIR/osrswiki/Views/DonateView.swift"; then
@@ -77,10 +102,16 @@ else
     fact "merchant_identifier_reference" "missing_direct_merchant_removed"
 fi
 
-if grep -q 'no payment provider is configured' "$OSRS_IOS_DIR/osrswiki/Views/DonateView.swift"; then
-    fact "payment_provider_unconfigured_state" "documented_in_ui_state"
+if grep -q 'osrsUnavailableDonationGateway' "$OSRS_IOS_DIR/osrswiki/Models/osrsDonationPaymentGateway.swift"; then
+    fact "unavailable_stub" "retained_for_tests_and_launch_argument"
 else
-    fact "payment_provider_unconfigured_state" "missing"
+    fact "unavailable_stub" "missing"
+fi
+
+if grep -q 'contact.omiyawaki@gmail.com' "$OSRS_IOS_DIR/osrswiki/Models/osrsStoreKitDonationGateway.swift"; then
+    fact "sandbox_account_documented" "present"
+else
+    fact "sandbox_account_documented" "missing"
 fi
 
 if grep -q 'merchant.com.omiyawaki.osrswiki' "$OSRS_IOS_DIR/osrswiki/osrswiki.entitlements"; then

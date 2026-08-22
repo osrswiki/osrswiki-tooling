@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "marketing_version": "2.0.0",
+  "current_build_numbers": {
+    "android": 30,
+    "ios": 24
+  },
+  "notes": [
+    "marketing_version is the single source of truth for user-facing version strings",
+    "current_build_numbers are informational only; store builds are incremented independently per platform",
+    "deploy-internal.sh reads marketing_version and writes it to both platforms unless --bump-marketing none",
+    "Store build numbers (versionCode, CURRENT_PROJECT_VERSION) remain per-platform and independent"
+  ]
+}

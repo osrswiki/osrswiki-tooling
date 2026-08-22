@@ -263,6 +263,49 @@ class InternalDeployCommandTests(unittest.TestCase):
                     self.assertNotEqual(primary.returncode, 0, primary.stdout)
                     self.assertIn("out of scope", primary.stderr)
 
+    def test_marketing_version_manifest_exists_and_is_valid_json(self):
+        manifest_path = REPO_ROOT / "shared" / "manifests" / "app-version.json"
+        self.assertTrue(manifest_path.is_file(), f"Marketing version manifest missing: {manifest_path}")
+        
+        content = json.loads(manifest_path.read_text(encoding="utf-8"))
+        self.assertIn("schema_version", content)
+        self.assertIn("marketing_version", content)
+        self.assertIsInstance(content["marketing_version"], str)
+        self.assertRegex(content["marketing_version"], r'^\d+\.\d+\.\d+$')
+
+    def test_common_sh_defines_marketing_version_helpers(self):
+        common_sh = (INTERNAL_DIR / "common.sh").read_text(encoding="utf-8")
+        
+        required_functions = [
+            "read_marketing_version_from_manifest",
+            "write_marketing_version_to_manifest",
+            "bump_marketing_version",
+            "apply_marketing_version_to_platforms",
+            "write_android_version_name",
+            "write_ios_marketing_version",
+        ]
+        
+        for func in required_functions:
+            with self.subTest(function=func):
+                self.assertIn(f"{func}()", common_sh)
+        
+        self.assertIn("APP_VERSION_MANIFEST=", common_sh)
+
+    def test_deploy_internal_sh_documents_bump_marketing_flag(self):
+        script = ENTRYPOINT.read_text(encoding="utf-8")
+        
+        self.assertIn("--bump-marketing", script)
+        self.assertIn("patch", script)
+        self.assertIn("minor", script)
+        self.assertIn("major", script)
+        self.assertIn("BUMP_MARKETING", script)
+
+    def test_deploy_internal_sh_applies_marketing_version_to_both_platforms(self):
+        script = ENTRYPOINT.read_text(encoding="utf-8")
+        
+        self.assertIn("bump_and_apply_marketing_version", script)
+        self.assertIn("MARKETING_VERSION=", script)
+
 
 if __name__ == "__main__":
     unittest.main()

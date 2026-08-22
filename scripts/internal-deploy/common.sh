@@ -35,6 +35,8 @@ IOS_PROJECT="$IOS_PLATFORM_DIR/osrswiki.xcodeproj"
 IOS_SCHEME="osrswiki"
 IOS_BUNDLE_ID="omiyawaki.osrswiki"
 
+APP_VERSION_MANIFEST="$REPO_ROOT/shared/manifests/app-version.json"
+
 COLOR_SCRIPT="$REPO_ROOT/scripts/shared/color-utils.sh"
 if [[ -f "$COLOR_SCRIPT" ]]; then
     # shellcheck disable=SC1090
@@ -82,6 +84,11 @@ write_android_version_code() {
     perl -0pi -e "s/versionCode = \\d+/versionCode = $new_code/" "$ANDROID_BUILD_GRADLE"
 }
 
+write_android_version_name() {
+    local new_name="$1"
+    perl -0pi -e "s/versionName = \"[^\"]+\"/versionName = \"$new_name\"/" "$ANDROID_BUILD_GRADLE"
+}
+
 read_ios_build_number() {
     grep -m1 'CURRENT_PROJECT_VERSION = ' "$IOS_PROJECT/project.pbxproj" | sed -E 's/.*CURRENT_PROJECT_VERSION = ([^;]+);/\1/'
 }
@@ -93,6 +100,73 @@ read_ios_marketing_version() {
 write_ios_build_number() {
     local new_build="$1"
     perl -pi -e "s/CURRENT_PROJECT_VERSION = \\d+;/CURRENT_PROJECT_VERSION = $new_build;/g" "$IOS_PROJECT/project.pbxproj"
+}
+
+write_ios_marketing_version() {
+    local new_version="$1"
+    perl -pi -e "s/MARKETING_VERSION = [^;]+;/MARKETING_VERSION = $new_version;/g" "$IOS_PROJECT/project.pbxproj"
+}
+
+read_marketing_version_from_manifest() {
+    if [[ ! -f "$APP_VERSION_MANIFEST" ]]; then
+        print_error "Marketing version manifest not found: $APP_VERSION_MANIFEST"
+        return 1
+    fi
+    if command -v jq >/dev/null 2>&1; then
+        jq -r '.marketing_version' "$APP_VERSION_MANIFEST"
+    else
+        grep -m1 '"marketing_version"' "$APP_VERSION_MANIFEST" | sed -E 's/.*"marketing_version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/'
+    fi
+}
+
+write_marketing_version_to_manifest() {
+    local new_version="$1"
+    if [[ ! -f "$APP_VERSION_MANIFEST" ]]; then
+        print_error "Marketing version manifest not found: $APP_VERSION_MANIFEST"
+        return 1
+    fi
+    if command -v jq >/dev/null 2>&1; then
+        local tmp
+        tmp="$(mktemp)"
+        jq --arg v "$new_version" '.marketing_version = $v' "$APP_VERSION_MANIFEST" > "$tmp" && mv "$tmp" "$APP_VERSION_MANIFEST"
+    else
+        perl -pi -e "s/(\"marketing_version\"[[:space:]]*:[[:space:]]*\")[^\"]+/\${1}$new_version/" "$APP_VERSION_MANIFEST"
+    fi
+}
+
+bump_marketing_version() {
+    local mode="$1"
+    local current new
+    current="$(read_marketing_version_from_manifest)"
+    if [[ -z "$current" ]]; then
+        print_error "Could not read current marketing version"
+        return 1
+    fi
+    case "$mode" in
+        major)
+            new="$(echo "$current" | awk -F. '{print ($1+1)".0.0"}')"
+            ;;
+        minor)
+            new="$(echo "$current" | awk -F. '{print $1"."($2+1)".0"}')"
+            ;;
+        patch)
+            new="$(echo "$current" | awk -F. '{print $1"."$2"."($3+1)}')"
+            ;;
+        none)
+            new="$current"
+            ;;
+        *)
+            print_error "Invalid bump mode: $mode (expected major|minor|patch|none)"
+            return 1
+            ;;
+    esac
+    echo "$new"
+}
+
+apply_marketing_version_to_platforms() {
+    local version="$1"
+    write_android_version_name "$version"
+    write_ios_marketing_version "$version"
 }
 
 android_signing_file() {

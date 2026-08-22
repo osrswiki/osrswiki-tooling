@@ -17,7 +17,7 @@ source "$INTERNAL_DEPLOY_DIR/maplibre-dsym.sh"
 usage() {
     cat <<'EOF'
 Usage:
-  scripts/shared/deploy-internal.sh [--android] [--ios] [--dry-run] [--validate-only] [--no-bump] [--evidence-dir PATH]
+  scripts/shared/deploy-internal.sh [--android] [--ios] [--dry-run] [--validate-only] [--no-bump] [--bump-marketing MODE] [--evidence-dir PATH]
 
 Targets:
   --android        Package and upload Android to Google Play internal testing,
@@ -29,6 +29,10 @@ Safety:
   --dry-run        Print build/upload commands and validate local configuration without uploading.
   --validate-only  Validate tools, paths, and credential file presence only.
   --no-bump        Reuse current Android versionCode and iOS build number.
+  --bump-marketing MODE
+                   Bump marketing version: patch, minor, major, or none.
+                   Default is none unless explicitly specified.
+                   With --no-bump, marketing defaults to none unless this flag is passed.
   --evidence-dir   Override the verified machine-local evidence path.
 
 Local env:
@@ -42,6 +46,7 @@ RUN_IOS=false
 DRY_RUN=false
 VALIDATE_ONLY=false
 NO_BUMP=false
+BUMP_MARKETING="none"
 EVIDENCE_DIR=""
 
 while [[ $# -gt 0 ]]; do
@@ -51,6 +56,14 @@ while [[ $# -gt 0 ]]; do
         --dry-run) DRY_RUN=true ;;
         --validate-only) VALIDATE_ONLY=true ;;
         --no-bump) NO_BUMP=true ;;
+        --bump-marketing)
+            shift
+            if [[ $# -eq 0 ]]; then
+                print_error "--bump-marketing requires a mode (patch|minor|major|none)"
+                exit 1
+            fi
+            BUMP_MARKETING="$1"
+            ;;
         --evidence-dir)
             shift
             if [[ $# -eq 0 ]]; then
@@ -216,12 +229,53 @@ bump_ios_build_number_if_needed() {
     echo "$next"
 }
 
+bump_and_apply_marketing_version() {
+    local mode="$1"
+    local current new
+    
+    current="$(read_marketing_version_from_manifest)"
+    if [[ -z "$current" ]]; then
+        print_error "Could not read current marketing version from manifest"
+        return 1
+    fi
+    
+    if [[ "$mode" == "none" ]]; then
+        new="$current"
+    else
+        new="$(bump_marketing_version "$mode")"
+        if [[ -z "$new" ]]; then
+            print_error "Failed to bump marketing version"
+            return 1
+        fi
+    fi
+    
+    if [[ "$DRY_RUN" == true ]]; then
+        if [[ "$mode" == "none" ]]; then
+            print_info "[dry-run] would keep marketing version at $current" >&2
+        else
+            print_info "[dry-run] would bump marketing version $current -> $new ($mode)" >&2
+        fi
+        print_info "[dry-run] would write marketing $new to both Android versionName and iOS MARKETING_VERSION" >&2
+    else
+        if [[ "$mode" != "none" ]]; then
+            write_marketing_version_to_manifest "$new"
+            print_success "Marketing version bumped in manifest: $current -> $new ($mode)" >&2
+        fi
+        apply_marketing_version_to_platforms "$new"
+        print_success "Marketing version $new applied to both platforms" >&2
+    fi
+    
+    echo "$new"
+}
+
 deploy_android_internal() {
     print_phase "Android package and upload"
     local version_code version_name aab_path service_account_json play_track
     local -a upload_cmd
+    
     version_code="$(bump_android_version_code_if_needed)"
     version_name="$(read_android_version_name)"
+    
     aab_path="$ANDROID_PLATFORM_DIR/app/build/outputs/bundle/release/app-release.aab"
     service_account_json="${PLAY_SERVICE_ACCOUNT_JSON:-$CONFIG_DIR/play-service-account.json}"
     play_track="${PLAY_TRACK:-internal}"
@@ -257,6 +311,7 @@ deploy_android_internal() {
     fi
 
     {
+        echo "marketing_version=$MARKETING_VERSION"
         echo "version_code=$version_code"
         echo "version_name=$version_name"
         echo "aab_path=$aab_path"
@@ -270,10 +325,9 @@ deploy_android_internal() {
 
 deploy_ios_internal() {
     print_phase "iOS archive and upload"
-    local ios_team build_number marketing_version archive_dir archive_path export_dir export_options ipa_path
+    local ios_team build_number archive_dir archive_path export_dir export_options ipa_path
     ios_team="${IOS_DEVELOPMENT_TEAM:-8M2762LWD7}"
     build_number="$(bump_ios_build_number_if_needed)"
-    marketing_version="$(read_ios_marketing_version)"
     archive_dir="$EVIDENCE_DIR/archive"
     archive_path="$archive_dir/osrswiki.xcarchive"
     export_dir="$EVIDENCE_DIR/export"
@@ -366,7 +420,7 @@ deploy_ios_internal() {
     if [[ "$DRY_RUN" == true ]]; then
         {
             echo "bundle_id=$IOS_BUNDLE_ID"
-            echo "marketing_version=$marketing_version"
+            echo "marketing_version=$MARKETING_VERSION"
             echo "build_number=$build_number"
             echo "archive_path=$archive_path"
             echo "export_dir=$export_dir"
@@ -376,7 +430,7 @@ deploy_ios_internal() {
     else
         {
             echo "bundle_id=$IOS_BUNDLE_ID"
-            echo "marketing_version=$marketing_version"
+            echo "marketing_version=$MARKETING_VERSION"
             echo "build_number=$build_number"
             echo "upload_mode=exportArchive-upload"
             echo "archive_path=removed_after_successful_upload"
@@ -407,6 +461,11 @@ fi
 
 init_evidence_dir "internal"
 record_inventory_snapshot
+
+# Bump and apply marketing version once if either platform is being deployed
+if [[ "$RUN_ANDROID" == true || "$RUN_IOS" == true ]]; then
+    MARKETING_VERSION="$(bump_and_apply_marketing_version "$BUMP_MARKETING")"
+fi
 
 if [[ "$RUN_ANDROID" == true ]]; then
     deploy_android_internal

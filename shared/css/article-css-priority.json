@@ -1,0 +1,25 @@
+{
+  "comment": "Canonical article CSS load order for both platforms. Critical sheets are render-blocking (theme tokens, typography, above-fold). Deferred sheets must not block first paint; they still apply after load so wiki fidelity is unchanged.",
+  "critical": [
+    "themes.css",
+    "base.css",
+    "fonts.css",
+    "layout.css",
+    "components.css"
+  ],
+  "criticalWeb": [
+    "collapsible_tables.css",
+    "collapsible_sections.css",
+    "switch_infobox_styles.css"
+  ],
+  "deferred": [
+    "wiki-integration.css",
+    "navbox_styles.css",
+    "fixes.css",
+    "gadget_calc.css"
+  ],
+  "deferredPlatform": {
+    "android": ["android-article-aesthetics.css"],
+    "ios": ["ios-article-aesthetics.css"]
+  }
+}

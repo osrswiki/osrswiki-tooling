@@ -306,6 +306,34 @@ class InternalDeployCommandTests(unittest.TestCase):
         self.assertIn("bump_and_apply_marketing_version", script)
         self.assertIn("MARKETING_VERSION=", script)
 
+    def test_real_deploy_requires_explicit_bump_marketing_flag(self):
+        script = ENTRYPOINT.read_text(encoding="utf-8")
+        
+        # Script must check for explicit flag before real deploys
+        self.assertIn("BUMP_MARKETING_EXPLICIT", script)
+        self.assertIn("Real internal deploys require an explicit --bump-marketing flag", script)
+        
+        # Script must track whether flag was explicitly provided
+        self.assertIn('BUMP_MARKETING_EXPLICIT=true', script)
+        self.assertIn('BUMP_MARKETING_EXPLICIT=false', script)
+        
+        # Script must reject real deploys without explicit flag
+        self.assertIn('if [[ "$DRY_RUN" == false && "$VALIDATE_ONLY" == false && "$BUMP_MARKETING_EXPLICIT" == false ]]; then', script)
+
+    def test_dry_run_and_validate_only_allow_omitted_bump_marketing(self):
+        script = ENTRYPOINT.read_text(encoding="utf-8")
+        
+        # Script must default to none when flag is omitted for dry-run/validate
+        self.assertIn('if [[ "$BUMP_MARKETING_EXPLICIT" == false ]]; then', script)
+        self.assertIn('BUMP_MARKETING="none"', script)
+
+    def test_usage_documents_required_bump_marketing_for_real_deploys(self):
+        script = ENTRYPOINT.read_text(encoding="utf-8")
+        
+        # Usage must indicate --bump-marketing is required for real deploys
+        self.assertIn("REQUIRED for real deploys", script)
+        self.assertIn("Optional for --dry-run and --validate-only", script)
+
 
 if __name__ == "__main__":
     unittest.main()

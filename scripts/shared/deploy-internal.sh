@@ -17,7 +17,7 @@ source "$INTERNAL_DEPLOY_DIR/maplibre-dsym.sh"
 usage() {
     cat <<'EOF'
 Usage:
-  scripts/shared/deploy-internal.sh [--android] [--ios] [--dry-run] [--validate-only] [--no-bump] [--bump-marketing MODE] [--evidence-dir PATH]
+  scripts/shared/deploy-internal.sh [--android] [--ios] [--dry-run] [--validate-only] [--no-bump] --bump-marketing MODE [--evidence-dir PATH]
 
 Targets:
   --android        Package and upload Android to Google Play internal testing,
@@ -27,12 +27,14 @@ Targets:
 
 Safety:
   --dry-run        Print build/upload commands and validate local configuration without uploading.
+                   With --dry-run, --bump-marketing is optional (defaults to none for preview).
   --validate-only  Validate tools, paths, and credential file presence only.
+                   With --validate-only, --bump-marketing is optional (defaults to none).
   --no-bump        Reuse current Android versionCode and iOS build number.
+                   Marketing version still requires explicit --bump-marketing.
   --bump-marketing MODE
-                   Bump marketing version: patch, minor, major, or none.
-                   Default is none unless explicitly specified.
-                   With --no-bump, marketing defaults to none unless this flag is passed.
+                   REQUIRED for real deploys. Bump marketing version: patch, minor, major, or none.
+                   Optional for --dry-run and --validate-only (defaults to none when omitted).
   --evidence-dir   Override the verified machine-local evidence path.
 
 Local env:
@@ -46,7 +48,8 @@ RUN_IOS=false
 DRY_RUN=false
 VALIDATE_ONLY=false
 NO_BUMP=false
-BUMP_MARKETING="none"
+BUMP_MARKETING=""
+BUMP_MARKETING_EXPLICIT=false
 EVIDENCE_DIR=""
 
 while [[ $# -gt 0 ]]; do
@@ -63,6 +66,7 @@ while [[ $# -gt 0 ]]; do
                 exit 1
             fi
             BUMP_MARKETING="$1"
+            BUMP_MARKETING_EXPLICIT=true
             ;;
         --evidence-dir)
             shift
@@ -88,6 +92,17 @@ done
 if [[ "$RUN_ANDROID" == false && "$RUN_IOS" == false ]]; then
     RUN_ANDROID=true
     RUN_IOS=true
+fi
+
+# Require explicit marketing bump for real uploads
+if [[ "$DRY_RUN" == false && "$VALIDATE_ONLY" == false && "$BUMP_MARKETING_EXPLICIT" == false ]]; then
+    print_error "Real internal deploys require an explicit --bump-marketing flag (patch|minor|major|none)"
+    exit 1
+fi
+
+# Default to none for dry-run and validate-only when not explicit
+if [[ "$BUMP_MARKETING_EXPLICIT" == false ]]; then
+    BUMP_MARKETING="none"
 fi
 
 load_internal_deploy_env

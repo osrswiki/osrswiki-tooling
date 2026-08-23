@@ -1,11 +1,13 @@
 {
-  "comment": "Canonical article CSS load order for both platforms. Critical sheets are render-blocking (theme tokens, typography, above-fold). Deferred sheets must not block first paint; they still apply after load so wiki fidelity is unchanged.",
+  "comment": "Canonical article CSS load order for both platforms. Critical sheets are render-blocking (theme tokens, typography, above-fold, table/infobox polish, calculator chrome). Deferred sheets must not block first paint; they still apply after load so wiki fidelity is unchanged. fixes.css + gadget_calc.css are critical because early-paint table-layout:fixed without their column rules crushes equipment-bonuses tables and calc forms.",
   "critical": [
     "themes.css",
     "base.css",
     "fonts.css",
     "layout.css",
-    "components.css"
+    "components.css",
+    "fixes.css",
+    "gadget_calc.css"
   ],
   "criticalWeb": [
     "collapsible_tables.css",
@@ -14,12 +16,14 @@
   ],
   "deferred": [
     "wiki-integration.css",
-    "navbox_styles.css",
-    "fixes.css",
-    "gadget_calc.css"
+    "navbox_styles.css"
   ],
   "deferredPlatform": {
-    "android": ["android-article-aesthetics.css"],
-    "ios": ["ios-article-aesthetics.css"]
+    "android": [
+      "android-article-aesthetics.css"
+    ],
+    "ios": [
+      "ios-article-aesthetics.css"
+    ]
   }
 }

@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "marketing_version": "2.0.0",
+  "marketing_version": "2.0.1",
   "current_build_numbers": {
-    "android": 30,
-    "ios": 24
+    "android": 38,
+    "ios": 31
   },
   "notes": [
     "marketing_version is the single source of truth for user-facing version strings",

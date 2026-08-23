@@ -284,6 +284,13 @@ OSRS_MAP_ASSET_SOURCE_DIR="$CACHE_BASE/binary-assets/mbtiles" \
     scripts/fetch-map-assets.sh materialize map-assets-manifest.json "$ASSETS_DIR"
 print_success "Pinned release map assets materialized and verified outside Git"
 
+# Install public landing README + LICENSE into the staged public tree
+print_info "Installing public landing README/LICENSE for android..."
+"$GIT_ROOT/scripts/shared/osrs-public-landing.sh" install \
+  --target android \
+  --dest "$PWD" \
+  --landing-root "$GIT_ROOT/docs/public-landing"
+
 # Verify dual-mode build configuration  
 print_info "Verifying dual-mode build configuration..."
 if [[ -f "app/build.gradle.kts" ]]; then

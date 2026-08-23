@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-# Project the private Fleet Sync checkout into the public android, iOS, and
-# tooling trees. Each projector already no-ops when the staged tree matches
-# public main. Run this from the primary checkout on private main after land.
-# This is not TestFlight or Play upload.
+# Project the private Fleet Sync checkout into the public android, iOS,
+# tooling, and privacy-policy trees. Each projector already no-ops when the
+# staged tree matches public main. Run this from the primary checkout on
+# private main after land. This is not TestFlight or Play upload.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=color-utils.sh
@@ -41,7 +41,7 @@ cd "$GIT_ROOT"
 print_success "Publishing public trees from $GIT_ROOT ($branch)"
 
 status=0
-for projector in deploy-android.sh deploy-ios.sh deploy-tooling.sh; do
+for projector in deploy-android.sh deploy-ios.sh deploy-tooling.sh deploy-privacy-policy.sh; do
     CURRENT_PHASE="$projector"
     print_phase "Running $projector"
     if ! "$GIT_ROOT/scripts/shared/$projector"; then
@@ -55,5 +55,5 @@ if [[ "$status" -ne 0 ]]; then
     exit "$status"
 fi
 
-print_success "Public android, iOS, and tooling projectors finished"
+print_success "Public android, iOS, tooling, and privacy-policy projectors finished"
 print_info "Trees whose projected content matched public main were left unchanged"

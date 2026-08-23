@@ -159,15 +159,16 @@ done
 
 echo "  ⏭️  Skipping platforms/ (deployed separately)"
 
-# Copy important root files (excluding AGENTS.md for public repo)
+# Copy important root files (excluding AGENTS.md / root README; landing helper owns README + LICENSE)
 print_info "Copying root files..."
-for file in "$MONOREPO_ROOT"/{README.md,.gitignore,.editorconfig}; do
+for file in "$MONOREPO_ROOT"/{.gitignore,.editorconfig}; do
     if [[ -f "$file" ]]; then
         echo "  → Copying $(basename "$file")"
         cp "$file" .
     fi
 done
 echo "  ⏭️  Skipping AGENTS.md (contains private development instructions)"
+echo "  ⏭️  Skipping root README.md (public landing helper installs tooling README/LICENSE)"
 
 # Copy any dotfiles that might be important (excluding .git, session files, and common temp files)
 for file in "$MONOREPO_ROOT"/.*; do
@@ -180,6 +181,13 @@ for file in "$MONOREPO_ROOT"/.*; do
     fi
 done
 echo "  ⏭️  Skipping .claude-session-device (session-specific file)"
+
+# Install public landing README + LICENSE last so they win over any accidental root LICENSE
+print_info "Installing public landing README/LICENSE for tooling..."
+"$MONOREPO_ROOT/scripts/shared/osrs-public-landing.sh" install \
+  --target tooling \
+  --dest "$PWD" \
+  --landing-root "$MONOREPO_ROOT/docs/public-landing"
 
 # Stage all changes
 git add -A

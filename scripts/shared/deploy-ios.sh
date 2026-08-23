@@ -181,6 +181,13 @@ OSRS_MAP_ASSET_SOURCE_DIR="$CACHE_BASE/binary-assets/mbtiles" \
     scripts/fetch-map-assets.sh materialize map-assets-manifest.json osrswiki
 print_success "Pinned release map assets materialized and verified outside Git"
 
+# Install public landing README + LICENSE into the staged public tree
+print_info "Installing public landing README/LICENSE for ios..."
+"$GIT_ROOT/scripts/shared/osrs-public-landing.sh" install \
+  --target ios \
+  --dest "$PWD" \
+  --landing-root "$GIT_ROOT/docs/public-landing"
+
 # Create iOS-specific shared component bridge if shared components exist
 print_info "Creating shared components bridge..."
 IOS_SHARED_DIR="osrswiki/Shared"

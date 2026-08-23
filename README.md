@@ -9,6 +9,10 @@ Shared tooling, map asset manifests, and scripts used by the unofficial OSRS Wik
 - [Android](https://github.com/osrswiki/osrswiki-android)
 - [iOS](https://github.com/osrswiki/osrswiki-ios)
 
+## Support
+
+Support the apps: [GitHub Sponsors](https://github.com/sponsors/omiyawaki).
+
 ## License
 
 Source in this repository is licensed under **GPL-3.0-or-later**. See [LICENSE](LICENSE).

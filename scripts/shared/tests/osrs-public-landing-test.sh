@@ -21,6 +21,18 @@ if grep -q "sponsors_status: pending" "$ROOT/docs/public-landing/manifest.yaml";
     echo "FAIL: pending sponsors still emits Sponsors in android README" >&2
     exit 1
   }
+elif grep -q "sponsors_status: live" "$ROOT/docs/public-landing/manifest.yaml"; then
+  grep -q "GitHub Sponsors" "$TMP/android/README.md" || {
+    echo "FAIL: live sponsors missing from android README" >&2
+    exit 1
+  }
+  grep -q "https://github.com/sponsors/omiyawaki" "$TMP/android/README.md" || {
+    echo "FAIL: live sponsors URL missing from android README" >&2
+    exit 1
+  }
+else
+  echo "FAIL: sponsors_status must be live or pending" >&2
+  exit 1
 fi
 "$HELPER" install --target tooling --dest "$TMP/tooling" --landing-root "$ROOT/docs/public-landing"
 test -f "$TMP/tooling/LICENSE"

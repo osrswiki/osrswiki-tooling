@@ -14,23 +14,30 @@
           "description": "Main CSS files go to styles/ directory"
         },
         {
-          "source_pattern": "css/modules/*.css", 
+          "source_pattern": "css/modules/*.css",
           "target_dir": "styles/modules",
           "description": "CSS modules maintain their subdirectory structure"
         },
         {
           "source_pattern": "js/*.js",
           "target_dir": "js",
-          "exclude_patterns": ["js/mediawiki/*.js"],
+          "exclude_patterns": [
+            "js/mediawiki/*.js"
+          ],
           "description": "Main JavaScript files go to js/ directory"
         },
         {
-          "source_files": ["js/mediawiki/startup.js"],
+          "source_files": [
+            "js/mediawiki/startup.js"
+          ],
           "target_dir": "",
           "description": "startup.js goes to assets root for direct access"
         },
         {
-          "source_files": ["js/mediawiki/page_bootstrap.js", "js/mediawiki/page_modules.js"],
+          "source_files": [
+            "js/mediawiki/page_bootstrap.js",
+            "js/mediawiki/page_modules.js"
+          ],
           "target_dir": "mediawiki",
           "description": "Other MediaWiki modules go to mediawiki/ subdirectory"
         },
@@ -42,7 +49,8 @@
         {
           "source_files": [
             "js/collapsible_content.js",
-            "js/horizontal_scroll_interceptor.js", 
+            "js/horizontal_scroll_interceptor.js",
+            "js/image_area_cap.js",
             "js/responsive_videos.js",
             "js/clipboard_bridge.js",
             "js/infobox_switcher_bootstrap.js",
@@ -82,7 +90,7 @@
         },
         {
           "source_pattern": "js/**/*.js",
-          "target_dir": "js", 
+          "target_dir": "js",
           "description": "All JavaScript files maintain their subdirectory structure"
         },
         {
@@ -96,7 +104,7 @@
           "description": "All assets maintain their structure"
         },
         {
-          "source_pattern": "data/**/*", 
+          "source_pattern": "data/**/*",
           "target_dir": "data",
           "description": "Data files maintain their structure"
         }
@@ -106,7 +114,7 @@
   "validation": {
     "required_files": [
       "css/themes.css",
-      "css/base.css", 
+      "css/base.css",
       "css/fonts.css",
       "css/layout.css",
       "css/components.css",
@@ -125,7 +133,7 @@
     "android_expected_paths": [
       "styles/themes.css",
       "styles/base.css",
-      "styles/fonts.css", 
+      "styles/fonts.css",
       "styles/layout.css",
       "styles/components.css",
       "styles/wiki-integration.css",
@@ -139,6 +147,7 @@
       "web/collapsible_sections.css",
       "web/collapsible_tables.css",
       "web/horizontal_scroll_interceptor.js",
+      "web/image_area_cap.js",
       "web/responsive_videos.js",
       "web/clipboard_bridge.js",
       "web/infobox_switcher_bootstrap.js",
@@ -158,7 +167,7 @@
       "gradle_changes": {
         "remove_relative_paths": [
           "../../../shared/css",
-          "../../../shared/js", 
+          "../../../shared/js",
           "../../../shared/assets"
         ],
         "ensure_local_assets": "app/src/main/assets"
@@ -177,7 +186,7 @@
     "android": [
       "The Android app expects specific directory structures (styles/, js/, web/)",
       "WebView-related assets must be in web/ directory",
-      "MediaWiki modules go in mediawiki/ directory", 
+      "MediaWiki modules go in mediawiki/ directory",
       "Map tiles must be in assets root for MapLibre access"
     ],
     "ios": [

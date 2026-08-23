@@ -113,10 +113,14 @@ figcaption:empty {
  * container, while leaving inventory/item images at their natural size.
  * This rule targets a container with .infobox-full-width-content but
  * explicitly ignores it if it also has the .inventory-image class.
+ * 
+ * Mobile viewport area cap: Content images are capped at 50% viewport area via JS
+ * (image_area_cap.js). CSS fallback uses max-height as approximation.
  */
 .infobox-full-width-content:not(.inventory-image) img {
     width: 100%;
     height: auto; /* Maintain aspect ratio */
+    max-height: 70vh; /* CSS fallback: prevent single image from dominating screen */
 }
 
 /* --- Responsive Video Embeds (Enhanced) --- */
@@ -1050,8 +1054,9 @@ html body .osrs-calculator-panel .oo-ui-horizontalLayout.jsCalc-group {
     display: block !important;
     height: auto !important;
     margin: 0.4em auto !important;
-    max-height: min(34vh, 280px) !important;
-    max-width: min(68vw, 220px) !important;
+    /* CSS fallback caps - JS image_area_cap.js provides exact 50% area limit */
+    max-height: min(50vh, 280px) !important;
+    max-width: min(70vw, 220px) !important;
     object-fit: contain !important;
     width: auto !important;
 }
@@ -2212,8 +2217,7 @@ html body a.external.text {
 
 /* In-article Contents stays visible even without a .mw-body-content wrapper.
    The native sidebar TOC is additional navigation, not a replacement.
-   display:table shrink-wraps and can sit in the leftover column beside a
-   floated vignette; keep it a full-width block on every platform. */
+   Shrink-wrap to content rather than forcing full viewport width. */
 #toc,
 .toc,
 .mw-parser-output #toc,
@@ -2227,7 +2231,7 @@ html body a.external.text {
     margin: 1em 0;
     max-width: 100% !important;
     padding: 1em;
-    width: 100% !important;
+    width: fit-content !important;
 }
 
 #toc .toctitle,
@@ -2278,7 +2282,16 @@ html body a.external.text {
 .osrs-toc-layout-table > tr > :is(th, td),
 .osrs-toc-layout-table > :is(tbody, thead, tfoot) > tr > :is(th, td),
 .osrs-toc-layout-host,
-#toctemplate,
+#toctemplate {
+    box-sizing: border-box !important;
+    display: block !important;
+    float: none !important;
+    clear: both !important;
+    max-width: 100% !important;
+    width: fit-content !important;
+    margin-inline: 0 !important;
+}
+
 #toctemplate #toc,
 #toctemplate .toc {
     box-sizing: border-box !important;
@@ -2286,7 +2299,7 @@ html body a.external.text {
     float: none !important;
     clear: both !important;
     max-width: 100% !important;
-    width: 100% !important;
+    width: fit-content !important;
     margin-inline: 0 !important;
 }
 

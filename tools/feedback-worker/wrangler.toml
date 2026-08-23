@@ -1,0 +1,14 @@
+# Cloudflare Worker: OSRS Wiki in-app feedback → GitHub Issues
+# Secrets (never commit): GITHUB_TOKEN
+# Optional future: TURNSTILE_SECRET_KEY
+name = "osrswiki-feedback"
+main = "src/index.js"
+compatibility_date = "2026-08-23"
+
+# workers_dev subdomain URL is printed by `wrangler deploy`.
+# Custom route (optional later):
+# routes = [{ pattern = "feedback.example.com/*", zone_name = "example.com" }]
+
+[vars]
+# Non-secret config only. Token must be: wrangler secret put GITHUB_TOKEN
+GITHUB_OWNER = "osrswiki"

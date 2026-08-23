@@ -291,7 +291,7 @@ deploy_android_internal() {
     version_code="$(bump_android_version_code_if_needed)"
     version_name="$(read_android_version_name)"
     
-    aab_path="$ANDROID_PLATFORM_DIR/app/build/outputs/bundle/release/app-release.aab"
+    aab_path="$ANDROID_PLATFORM_DIR/app/build/outputs/bundle/playRelease/app-play-release.aab"
     service_account_json="${PLAY_SERVICE_ACCOUNT_JSON:-$CONFIG_DIR/play-service-account.json}"
     play_track="${PLAY_TRACK:-internal}"
     # Xperia testers are on Closed testing Alpha, not the internal opt-in.
@@ -311,12 +311,12 @@ deploy_android_internal() {
     fi
 
     if [[ "$DRY_RUN" == true ]]; then
-        print_info "[dry-run] cd $ANDROID_PLATFORM_DIR && ./gradlew --no-daemon :app:bundleRelease --console=plain"
+        print_info "[dry-run] cd $ANDROID_PLATFORM_DIR && ./gradlew --no-daemon :app:bundlePlayRelease --console=plain"
         print_info "[dry-run] ${upload_cmd[*]} --dry-run"
     else
         (
             cd "$ANDROID_PLATFORM_DIR"
-            ./gradlew --no-daemon :app:bundleRelease --console=plain
+            ./gradlew --no-daemon :app:bundlePlayRelease --console=plain
         )
         if [[ ! -f "$aab_path" ]]; then
             print_error "Expected AAB not found: $aab_path"

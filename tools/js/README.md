@@ -125,7 +125,7 @@ Maps wiki modules to app implementations:
   "modules": {
     "ge_charts": {
       "wiki_names": ["ext.gadget.GECharts", "ext.gadget.GECharts-core"],
-      "app_files": ["web/ge_charts_init.js", "web/highcharts-stock.js"],
+      "app_files": ["web/ge_charts_init.js", "web/chart.umd.min.js"],
       "implementation_type": "custom_curated",
       "implemented_date": "2025-01-20",
       "functionality": "Grand Exchange price charts with interactive graphs"

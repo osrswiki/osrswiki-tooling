@@ -24,7 +24,7 @@ shared/
 - **Interactive features**: collapsible_content.js, map_native_finder.js
 - **UI enhancements**: infobox_switcher_bootstrap.js, responsive_videos.js
 - **MediaWiki integration**: mediawiki/ subdirectory contains page loading modules
-- **Third-party libraries**: highcharts-stock.js, tablesort.min.js
+- **Third-party libraries**: chart.umd.min.js (Chart.js), tablesort.min.js
 
 ### Assets (`assets/`)
 - **Map data**: .mbtiles files for offline map functionality

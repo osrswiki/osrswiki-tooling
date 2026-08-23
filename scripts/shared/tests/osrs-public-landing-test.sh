@@ -4,20 +4,41 @@ ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 HELPER="$ROOT/scripts/shared/osrs-public-landing.sh"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-# Expect helper exists
 test -x "$HELPER"
 "$HELPER" install --target android --dest "$TMP/android" --landing-root "$ROOT/docs/public-landing"
 test -f "$TMP/android/README.md"
 test -f "$TMP/android/LICENSE"
 grep -q "GNU GENERAL PUBLIC LICENSE" "$TMP/android/LICENSE"
 grep -q "unofficial" "$TMP/android/README.md"
-# pending sponsors should not emit a live sponsors badge URL requirement failure
+# Public READMEs must not publish contact email
+if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/android/README.md"; then
+  echo "FAIL: public android README contains email" >&2
+  exit 1
+fi
 if grep -q "sponsors_status: pending" "$ROOT/docs/public-landing/manifest.yaml"; then
-  grep -q "contact.omiyawaki@gmail.com" "$TMP/android/README.md"
+  # pending: no Support section / no Sponsors badge URL noise required
+  ! grep -q "GitHub Sponsors" "$TMP/android/README.md" || {
+    echo "FAIL: pending sponsors still emits Sponsors in android README" >&2
+    exit 1
+  }
 fi
 "$HELPER" install --target tooling --dest "$TMP/tooling" --landing-root "$ROOT/docs/public-landing"
 test -f "$TMP/tooling/LICENSE"
 "$HELPER" install --target privacy-policy --dest "$TMP/privacy" --landing-root "$ROOT/docs/public-landing"
 test -f "$TMP/privacy/README.md"
 test ! -f "$TMP/privacy/LICENSE"
+if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/privacy/README.md"; then
+  echo "FAIL: privacy README contains email" >&2
+  exit 1
+fi
+"$HELPER" install --target ios --dest "$TMP/ios" --landing-root "$ROOT/docs/public-landing"
+if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/ios/README.md"; then
+  echo "FAIL: public ios README contains email" >&2
+  exit 1
+fi
+"$HELPER" install --target org --dest "$TMP/org" --landing-root "$ROOT/docs/public-landing"
+if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/org/README.md"; then
+  echo "FAIL: org README contains email" >&2
+  exit 1
+fi
 echo "osrs-public-landing-test: PASS"

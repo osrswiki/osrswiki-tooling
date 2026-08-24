@@ -800,6 +800,10 @@
     "qa-evidence/osrs-map-semantic-prototype-standalone-e2e-2026-07-14/logs/final-git-status.txt": {
       "audience": "internal",
       "description": "Internal final git status, diff stat, and changed-file snapshot for the semantic map prototype standalone clipping-fix lane."
+    },
+    "docs/superpowers/specs/2026-08-24-native-calc-auto-sync-research.md": {
+      "audience": "internal",
+      "description": "Internal feasibility and design overview for native calculator UI with auto-synced wiki logic/data. Research only; not a product rewrite."
     }
   }
 }

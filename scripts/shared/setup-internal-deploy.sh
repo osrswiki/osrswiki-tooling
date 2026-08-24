@@ -49,7 +49,12 @@ What this does:
   5. If --validate: runs deploy-internal.sh --validate-only
 
 Machine recipe:
-  For complete Mac setup (Homebrew, Xcode, Tailscale, SSH keys, etc.),
+    Headless/SSH iOS signing:
+  Ensure ~/.config/osrswiki/ios-{development,distribution}.p12 (+ .pass) exist, then run:
+    ./scripts/shared/ios-headless-codesign.sh prepare
+  deploy-internal.sh calls this automatically before archive.
+
+For complete Mac setup (Homebrew, Xcode, Tailscale, SSH keys, etc.),
   see ~/tools/bringup (not managed by this repo).
 
 Never commit:

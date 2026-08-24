@@ -351,6 +351,12 @@ deploy_ios_internal() {
 
     mkdir -p "$archive_dir" "$export_dir"
 
+    # SSH/headless sessions cannot use login.keychain private keys
+    # (errSecInternalComponent). Unlock dedicated signing keychain first.
+    # shellcheck source=ios-headless-codesign.sh
+    source "$SCRIPT_DIR/ios-headless-codesign.sh"
+    ios_headless_codesign_prepare
+
     # Ensure xcodebuild uses macOS system rsync, not Homebrew rsync.
     # xcodebuild's IDEDistributionCreateIPAStep fails with Homebrew rsync 3.4.4.
     # Prepend /usr/bin to PATH so /usr/bin/rsync is found first.

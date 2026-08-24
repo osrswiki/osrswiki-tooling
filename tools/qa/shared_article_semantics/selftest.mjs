@@ -784,6 +784,183 @@ async function assertReaderTextHook(fixes) {
     );
 }
 
+async function assertFittingInfoboxUsesNeededWidth({
+    collapsible,
+    polish,
+    switcher,
+    fixes,
+    collapsibleTables,
+    switchInfoboxStyles,
+    themes,
+    platformAesthetics,
+    bonusesProbe
+}) {
+    const mwStub = `window.mw = window.mw || { hook() { return { add() {} }; } };`;
+    const body = `
+      <div id="phoneViewport" style="width:360px;max-width:360px;box-sizing:border-box;">
+      <main class="mw-parser-output" id="articleColumn">
+        <table class="infobox no-parenthesis-style infobox-music" id="seaShanty">
+          <tbody>
+            <tr><th class="infobox-header" colspan="5">Sea Shanty 2 <span style="font-size:80%">(#107)</span></th></tr>
+            <tr><td class="infobox-full-width-content infobox-media-player" colspan="5">
+              <audio id="seaShantyAudio" controls="" width="300" style="width:300px"></audio>
+            </td></tr>
+            <tr><th colspan="2">Released</th><td colspan="3">15 March 2004</td></tr>
+            <tr><th colspan="2">Unlock hint</th><td colspan="3">This track unlocks in Port Sarim.</td></tr>
+            <tr><th colspan="2">Location</th><td colspan="3">Port Sarim, Prifddinas docks, Tempoross Cove</td></tr>
+            <tr><th colspan="2">Duration</th><td colspan="3">02:08</td></tr>
+            <tr><th colspan="2">Instruments</th>
+              <td colspan="3">English Horn, Acoustic Guitar (Steel), Accordion, Piccolo</td></tr>
+            <tr><th class="infobox-subheader" colspan="5">Map</th></tr>
+            <tr><td class="infobox-full-width-content" colspan="5">
+              <a id="seaShantyMap" class="mw-kartographer-map mw-kartographer-container center"
+                 style="width:300px;height:250px;display:block;background:#888"></a>
+            </td></tr>
+          </tbody>
+        </table>
+        <table class="infobox infobox-switch" id="glory" data-resource-class=".infobox-resources-glory">
+          <caption>
+            <div class="infobox-buttons" id="gloryButtons" data-default-version="0">
+              <span class="button" data-switch-index="0">Uncharged</span>
+              <span class="button" data-switch-index="1">6</span>
+            </div>
+          </caption>
+          <tbody>
+            <tr><th class="infobox-header" data-attr-param="name" id="gloryName">placeholder</th></tr>
+            <tr><td data-attr-param="charge" id="gloryCharge">placeholder</td></tr>
+          </tbody>
+        </table>
+        <div class="infobox-switch-resources infobox-resources-glory">
+          <span data-attr-param="name">
+            <span data-attr-index="0">Amulet of glory</span>
+            <span data-attr-index="1">Amulet of glory (6)</span>
+          </span>
+          <span data-attr-param="charge">
+            <span data-attr-index="0">Uncharged</span>
+            <span data-attr-index="1">6 charges</span>
+          </span>
+        </div>
+        <table class="infobox infobox-bonuses" id="combatStats">
+          <tbody>
+            <tr>
+              <th class="infobox-subheader">Attack bonuses</th>
+              <th class="infobox-bonuses-image">Stab</th>
+              <th class="infobox-bonuses-image">Slash</th>
+              <th class="infobox-bonuses-image">Crush</th>
+            </tr>
+            <tr>
+              <td>Attack</td>
+              <td id="combatValue">+10</td>
+              <td>+12</td>
+              <td>+8</td>
+            </tr>
+            <tr>
+              <td>Defence</td>
+              <td>+3</td>
+              <td>+4</td>
+              <td>+5</td>
+            </tr>
+          </tbody>
+        </table>
+      </main>
+      </div>`;
+    const state = await runDocument({
+        body,
+        scripts: [mwStub, collapsible, polish, switcher],
+        styles: themes + '\n' + collapsibleTables + '\n' + switchInfoboxStyles + '\n' +
+            fixes + '\n' + platformAesthetics,
+        evaluate: `() => {
+            if (typeof initializePage === 'function') initializePage();
+            const overflowOf = el => el ? (el.scrollWidth - el.clientWidth) : 0;
+            const measureTheme = () => {
+                const table = document.getElementById('seaShanty');
+                const container = table.closest('.collapsible-container');
+                const content = container && container.querySelector(':scope > .collapsible-content');
+                const disclosure = content && content.querySelector(':scope > .osrs-disclosure-body');
+                const column = document.getElementById('phoneViewport') ||
+                    document.getElementById('articleColumn');
+                const audio = document.getElementById('seaShantyAudio');
+                const map = document.getElementById('seaShantyMap');
+                const columnWidth = column.getBoundingClientRect().width;
+                const innerCandidates = [table, disclosure, content, container].filter(Boolean);
+                const innerOverflow = Math.max(0, ...innerCandidates.map(overflowOf));
+                const tableWidth = table.getBoundingClientRect().width;
+                const containerWidth = container.getBoundingClientRect().width;
+                return {
+                    columnWidth,
+                    tableWidth,
+                    containerWidth,
+                    innerOverflow,
+                    tableOverflow: overflowOf(table),
+                    disclosureOverflow: overflowOf(disclosure),
+                    contentOverflow: overflowOf(content),
+                    containerOverflow: overflowOf(container),
+                    audioWidth: audio.getBoundingClientRect().width,
+                    mapWidth: map.getBoundingClientRect().width,
+                    containerNarrowerThanColumn: containerWidth + 2 < columnWidth,
+                    tableNarrowerThanNeededMedia: tableWidth + 2 < 300
+                };
+            };
+            const light = measureTheme();
+            document.documentElement.classList.add('theme-osrs-dark');
+            document.body.classList.add('theme-osrs-dark');
+            const dark = measureTheme();
+            const bonusesProbe = ${bonusesProbe.replace(/;+\s*$/, '')};
+            const glory = document.getElementById('glory');
+            const selected = document.querySelector('#gloryButtons .button-selected');
+            return {
+                light,
+                dark,
+                bonusesProbe,
+                glorySelectedIndex: selected && selected.getAttribute('data-switch-index'),
+                gloryName: (document.getElementById('gloryName').textContent || '').trim(),
+                gloryCharge: (document.getElementById('gloryCharge').textContent || '').trim(),
+                gloryReady: glory.dataset.osrsSwitcherReady || ''
+            };
+        }`
+    });
+
+    assert.deepEqual(state.runtimeErrors, []);
+    for (const theme of ['light', 'dark']) {
+        const measured = state[theme];
+        assert.ok(measured.columnWidth >= 350 && measured.columnWidth <= 370,
+            `${theme} phone-width column is the 360px fixture (got ${measured.columnWidth})`);
+        assert.ok(
+            measured.innerOverflow <= 2,
+            `${theme} fitting music infobox must not nest a horizontal scrollport ` +
+                `(overflow=${measured.innerOverflow}, table=${measured.tableWidth}, ` +
+                `container=${measured.containerWidth}, column=${measured.columnWidth})`
+        );
+        assert.ok(
+            measured.containerWidth <= measured.columnWidth + 0.5,
+            `${theme} infobox stays within the content column`
+        );
+        assert.ok(
+            measured.tableWidth >= 300,
+            `${theme} infobox grows to the authored 300px media width (got table=${measured.tableWidth})`
+        );
+        assert.ok(
+            measured.tableWidth <= measured.columnWidth + 0.5,
+            `${theme} infobox does not exceed the content column`
+        );
+        assert.ok(
+            measured.mapWidth >= 295,
+            `${theme} authored 300px map is shown at needed width (got ${measured.mapWidth})`
+        );
+        assert.equal(
+            measured.tableNarrowerThanNeededMedia && measured.containerNarrowerThanColumn,
+            false,
+            `${theme} inner infobox must expand to needed width when that width fits the column`
+        );
+    }
+    assert.equal(state.glorySelectedIndex, '0', 'Glory default pane is the authored first-screen index');
+    assert.equal(state.gloryName, 'Amulet of glory');
+    assert.equal(state.gloryCharge, 'Uncharged');
+    assert.equal(state.gloryReady, 'true');
+    assert.equal(state.bonusesProbe.ok, true, 'Task 8 bonuses cells stay at least 28 CSS px');
+    assert.ok(state.bonusesProbe.minCellWidth >= 28, `minCellWidth=${state.bonusesProbe.minCellWidth}`);
+}
+
 async function main() {
     const only = (process.argv.find((arg) => arg.startsWith('--only=')) || '').slice(7);
     await assertAssetParity();
@@ -799,7 +976,11 @@ async function main() {
         iosHorizontalScroll,
         iosFixes,
         iosCollapsibleTables,
-        iosSwitchInfoboxStyles
+        iosSwitchInfoboxStyles,
+        switcher,
+        themes,
+        iosAesthetics,
+        bonusesProbe
     ] = await Promise.all([
         read('shared/js/collapsible_content.js'),
         read('shared/js/mobile_article_polish.js'),
@@ -811,7 +992,11 @@ async function main() {
         read('platforms/ios/osrswiki/Assets/web/horizontal_scroll_interceptor.js'),
         read('platforms/ios/osrswiki/Assets/styles/fixes.css'),
         read('platforms/ios/osrswiki/Assets/web/collapsible_tables.css'),
-        read('platforms/ios/osrswiki/Assets/web/switch_infobox_styles.css')
+        read('platforms/ios/osrswiki/Assets/web/switch_infobox_styles.css'),
+        read('shared/js/switch_infobox.js'),
+        read('shared/css/themes.css'),
+        read('platforms/ios/osrswiki/Assets/styles/ios-article-aesthetics.css'),
+        read('tools/qa/bonuses-min-cell-guardrail-probe.js')
     ]);
     if (!only || only === 'vignette-phone') {
         await assertVignetteLeadPhoneContract(polish, fixes);
@@ -850,6 +1035,30 @@ async function main() {
         ''
     );
     process.stdout.write('iOS table geometry/ownership runtime contract: PASS\n');
+    await assertFittingInfoboxUsesNeededWidth({
+        collapsible,
+        polish,
+        switcher,
+        fixes,
+        collapsibleTables,
+        switchInfoboxStyles,
+        themes,
+        platformAesthetics: androidAesthetics,
+        bonusesProbe
+    });
+    process.stdout.write('Android fitting infobox / Task 8 / Glory default pane: PASS\n');
+    await assertFittingInfoboxUsesNeededWidth({
+        collapsible,
+        polish,
+        switcher,
+        fixes: iosFixes,
+        collapsibleTables: iosCollapsibleTables,
+        switchInfoboxStyles: iosSwitchInfoboxStyles,
+        themes,
+        platformAesthetics: iosAesthetics,
+        bonusesProbe
+    });
+    process.stdout.write('iOS fitting infobox / Task 8 / Glory default pane: PASS\n');
     await assertReaderTextHook(fixes);
     process.stdout.write('shared article semantic/CSS self-test: PASS\n');
 }

@@ -52,7 +52,10 @@ Machine recipe:
     Headless/SSH iOS signing:
   Ensure ~/.config/osrswiki/ios-{development,distribution}.p12 (+ .pass) exist, then run:
     ./scripts/shared/ios-headless-codesign.sh prepare
-  deploy-internal.sh calls this automatically before archive.
+  deploy-internal.sh calls prepare before archive and restore on EXIT
+  (signing keychain is not left in the default search list).
+  If a GUI codesign password dialog appears, Cancel and run:
+    ./scripts/shared/ios-headless-codesign.sh restore
 
 For complete Mac setup (Homebrew, Xcode, Tailscale, SSH keys, etc.),
   see ~/tools/bringup (not managed by this repo).

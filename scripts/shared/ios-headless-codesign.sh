@@ -1,16 +1,24 @@
 #!/usr/bin/env bash
 # Prepare a dedicated signing keychain so xcodebuild/codesign work over SSH
-# (avoids errSecInternalComponent / "User interaction is not allowed" on login.keychain).
+# without GUI password prompts (avoids errSecInternalComponent on login.keychain).
 #
 # Secrets (never commit):
 #   ~/.config/osrswiki/signing-keychain.pass
 #   ~/.config/osrswiki/ios-development.p12 (+ .pass)
 #   ~/.config/osrswiki/ios-distribution.p12 (+ .pass)
 #
+# Important: this keychain must NOT stay first (or even present) in the default
+# user keychain search list. Otherwise Glean/xcodebuild/other codesign work pops
+# "codesign wants to use the 'osrswiki-signing' keychain" whenever it locks.
+# prepare = unlock + never-lock + temporarily prepend for this shell's deploy.
+# restore = put login(+system) only back as the search list.
+#
 # Usage:
 #   source scripts/shared/ios-headless-codesign.sh
 #   ios_headless_codesign_prepare
-# Or: scripts/shared/ios-headless-codesign.sh prepare
+#   ... archive/export ...
+#   ios_headless_codesign_restore
+# Or: scripts/shared/ios-headless-codesign.sh prepare|restore
 
 set -euo pipefail
 
@@ -32,6 +40,28 @@ _ios_hc_require_file() {
     fi
 }
 
+_ios_hc_login_kc() {
+    echo "$HOME/Library/Keychains/login.keychain-db"
+}
+
+_ios_hc_system_kc() {
+    echo "/Library/Keychains/System.keychain"
+}
+
+# Drop signing keychain from the default search list so background codesign
+# (Glean, simulator xcodebuild, etc.) never prompts for it.
+ios_headless_codesign_restore() {
+    local login_kc system_kc
+    login_kc="$(_ios_hc_login_kc)"
+    system_kc="$(_ios_hc_system_kc)"
+    if [[ -f "$login_kc" ]]; then
+        security list-keychains -d user -s "$login_kc" "$system_kc"
+    else
+        security list-keychains -d user -s "$system_kc"
+    fi
+    echo "✅ Restored user keychain search list (signing keychain not in default list)"
+}
+
 ios_headless_codesign_prepare() {
     local kc pass_file kpass
     local dev_p12 dev_pass_file dist_p12 dist_pass_file
@@ -43,8 +73,8 @@ ios_headless_codesign_prepare() {
     dev_pass_file="$OSRSWIKI_CONFIG_DIR/ios-development.p12.pass"
     dist_p12="$OSRSWIKI_CONFIG_DIR/ios-distribution.p12"
     dist_pass_file="$OSRSWIKI_CONFIG_DIR/ios-distribution.p12.pass"
-    login_kc="$HOME/Library/Keychains/login.keychain-db"
-    system_kc="/Library/Keychains/System.keychain"
+    login_kc="$(_ios_hc_login_kc)"
+    system_kc="$(_ios_hc_system_kc)"
 
     umask 077
     mkdir -p "$OSRSWIKI_CONFIG_DIR"
@@ -68,13 +98,12 @@ ios_headless_codesign_prepare() {
         echo "ℹ️  Created signing keychain: $kc"
     fi
 
-    # Unlock first — set-keychain-settings fails with "User interaction is not
-    # allowed" over SSH if the keychain is still locked.
+    # Unlock, then disable lock-on-sleep and idle timeout so GUI never asks again
+    # for this keychain after a successful unlock (man security: no -l/-u = never lock).
     security unlock-keychain -p "$kpass" "$kc"
-    # Best-effort lock timeout (non-fatal on headless sessions).
-    security set-keychain-settings -lut 21600 "$kc" >/dev/null 2>&1 || true
+    security set-keychain-settings "$kc" >/dev/null 2>&1 || true
 
-    # Prefer signing keychain first so Automatic signing picks these identities.
+    # Temporarily put signing keychain first ONLY for this deploy session.
     if [[ -f "$login_kc" ]]; then
         security list-keychains -d user -s "$kc" "$login_kc" "$system_kc"
     else
@@ -87,7 +116,6 @@ ios_headless_codesign_prepare() {
     dev_pass="$(_ios_hc_read_pass "$dev_pass_file")"
     dist_pass="$(_ios_hc_read_pass "$dist_pass_file")"
 
-    # Ignore "already exists" style failures on re-import.
     security import "$dev_p12" -k "$kc" -P "$dev_pass" -f pkcs12 -A >/dev/null 2>&1 || true
     security import "$dist_p12" -k "$kc" -P "$dist_pass" -f pkcs12 -A >/dev/null 2>&1 || true
 
@@ -96,17 +124,20 @@ ios_headless_codesign_prepare() {
     if ! security find-identity -v -p codesigning "$kc" | grep -q "Apple Distribution"; then
         echo "❌ Apple Distribution identity missing from $kc after import" >&2
         security find-identity -v -p codesigning "$kc" >&2 || true
+        ios_headless_codesign_restore || true
         return 1
     fi
 
-    echo "✅ Headless iOS codesign keychain ready: $kc"
+    echo "✅ Headless iOS codesign keychain ready (temporary search-list prepend): $kc"
+    echo "   Call ios_headless_codesign_restore when archive/export finishes."
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     case "${1:-prepare}" in
         prepare) ios_headless_codesign_prepare ;;
+        restore) ios_headless_codesign_restore ;;
         *)
-            echo "Usage: $0 prepare" >&2
+            echo "Usage: $0 prepare|restore" >&2
             exit 2
             ;;
     esac

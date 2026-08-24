@@ -352,10 +352,13 @@ deploy_ios_internal() {
     mkdir -p "$archive_dir" "$export_dir"
 
     # SSH/headless sessions cannot use login.keychain private keys
-    # (errSecInternalComponent). Unlock dedicated signing keychain first.
+    # (errSecInternalComponent). Unlock dedicated signing keychain first,
+    # then ALWAYS restore the default keychain search list so background
+    # codesign (Glean, other xcodebuild) never prompts for osrswiki-signing.
     # shellcheck source=ios-headless-codesign.sh
     source "$SCRIPT_DIR/ios-headless-codesign.sh"
     ios_headless_codesign_prepare
+    trap 'ios_headless_codesign_restore' EXIT
 
     # Ensure xcodebuild uses macOS system rsync, not Homebrew rsync.
     # xcodebuild's IDEDistributionCreateIPAStep fails with Homebrew rsync 3.4.4.

@@ -63,7 +63,8 @@
             "js/osrs_calculator_runtime.js",
             "js/live_article_asset_warm.js",
             "js/article_image_lazy.js",
-            "js/first_viewport_assets.js"
+            "js/first_viewport_assets.js",
+            "js/article_audio_player.js"
           ],
           "target_dir": "web",
           "description": "WebView-specific JavaScript files"
@@ -155,6 +156,7 @@
       "web/infobox_switcher_bootstrap.js",
       "web/switch_infobox.js",
       "web/mobile_article_polish.js",
+      "web/article_audio_player.js",
       "web/switch_infobox_styles.css",
       "web/ge_charts_init.js",
       "web/chart.umd.min.js",

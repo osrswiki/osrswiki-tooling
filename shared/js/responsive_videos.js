@@ -79,7 +79,7 @@
             'padding:0',
             'cursor:pointer',
             'z-index:2',
-            'background:#111 url("https://i.ytimg.com/vi/' + encodeURIComponent(videoId) + '/hqdefault.jpg") center/cover no-repeat'
+            'background:#111 url("https://i.ytimg.com/vi/' + encodeURIComponent(videoId) + '/hqdefault.jpg") center/contain no-repeat'
         ].join(';');
         overlay.innerHTML = '<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:rgba(0,0,0,0.28)"><span style="width:68px;height:48px;border-radius:12px;background:#f00;display:flex;align-items:center;justify-content:center"><span style="border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent #fff;margin-left:4px"></span></span></span>';
         overlay.addEventListener('click', function(event) {

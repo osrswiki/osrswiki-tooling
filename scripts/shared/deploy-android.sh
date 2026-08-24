@@ -213,7 +213,8 @@ if [[ -d "$GIT_ROOT/shared" ]]; then
         # WebView JavaScript files
         for webjs in "collapsible_content.js" "horizontal_scroll_interceptor.js" "responsive_videos.js" \
                      "clipboard_bridge.js" "infobox_switcher_bootstrap.js" "switch_infobox.js" \
-                     "ge_charts_init.js" "chart.umd.min.js" "first_viewport_assets.js"; do
+                     "ge_charts_init.js" "chart.umd.min.js" "first_viewport_assets.js" \
+                     "article_image_lazy.js"; do
             if [[ -f "$GIT_ROOT/shared/js/$webjs" ]]; then
                 cp "$GIT_ROOT/shared/js/$webjs" "$ASSETS_DIR/web/"
             fi

@@ -62,6 +62,7 @@
             "js/tabber_init.js",
             "js/osrs_calculator_runtime.js",
             "js/live_article_asset_warm.js",
+            "js/article_image_lazy.js",
             "js/first_viewport_assets.js"
           ],
           "target_dir": "web",
@@ -143,6 +144,7 @@
       "js/tablesort_init.js",
       "web/collapsible_content.js",
       "web/live_article_asset_warm.js",
+      "web/article_image_lazy.js",
       "web/first_viewport_assets.js",
       "web/collapsible_sections.css",
       "web/collapsible_tables.css",

@@ -64,6 +64,11 @@ async function assertAssetParity() {
         'the caption guard ignores content already hidden by a prior idempotent pass'
     );
     assert.equal(sharedPolish.includes('[style*="padding"]'), false, 'inline icon classification is structural');
+    assert.equal(
+        sharedPolish.includes('Achievement Diary'),
+        false,
+        'lead relocation is structural, not title-gated'
+    );
 }
 
 function documentHtml({ body, scripts, styles = '', evaluate }) {
@@ -215,7 +220,8 @@ async function runDocument(configuration) {
             '--metrics-recording-only',
             '--no-default-browser-check',
             '--no-first-run',
-            '--window-size=390,1200',
+            '--force-device-scale-factor=1',
+            '--window-size=' + (configuration.windowSize || '390,1200'),
             '--user-data-dir=' + profileDirectory,
             '--dump-dom',
             url
@@ -228,6 +234,140 @@ async function runDocument(configuration) {
     } finally {
         await fs.rm(profileDirectory, { recursive: true, force: true });
     }
+}
+
+const PIXEL_GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+
+function achievementDiaryLeadBody() {
+    return `
+      <main class="mw-parser-output">
+        <div class="noexcerpt noprint nomobile navigation-not-searchable rs-external-header-links" style="display:none">header links</div>
+        <div id="hatnote" role="note" class="hatnote navigation-not-searchable">"Achievements" redirects here.</div>
+        <figure id="vignette" class="mw-halign-left" typeof="mw:File">
+          <a href="/w/File:Achievement_Diaries.png"><img class="mw-file-element" width="130" height="127" src="${PIXEL_GIF}"></a>
+          <figcaption></figcaption>
+        </figure>
+        <figure id="lead" typeof="mw:File/Frame">
+          <a href="/w/File:Achievement_Diary_tab.png"><img class="mw-file-element" width="204" height="275" src="${PIXEL_GIF}"></a>
+          <figcaption>The Achievement Diary interface.</figcaption>
+        </figure>
+        <p id="leadProse">The Achievement Diaries are sets of challenges exclusive to members that are completed for various rewards and benefits.</p>
+        <p id="secondProse">The tasks of each diary are split into four tiers based on their perceived difficulty.</p>
+      </main>`;
+}
+
+function ironmanLeadBody() {
+    return `
+      <main class="mw-parser-output">
+        <div id="hatnote" role="note" class="hatnote">For information on training Ironmen accounts, see the ironman guide.</div>
+        <figure id="vignette" class="mw-halign-left" typeof="mw:File">
+          <a href="/w/File:Ironman_Mode_logo.png"><img class="mw-file-element" width="150" height="145" src="${PIXEL_GIF}"></a>
+          <figcaption></figcaption>
+        </figure>
+        <figure id="lead" class="mw-default-size" typeof="mw:File/Thumb">
+          <a href="/w/File:Ironman_Mode_setup.png"><img class="mw-file-element" width="300" height="335" src="${PIXEL_GIF}"></a>
+          <figcaption>The Ironman setup interface</figcaption>
+        </figure>
+        <p id="leadProse">Ironman mode is an official game mode that players can choose to assign themselves.</p>
+      </main>`;
+}
+
+const evaluateVignetteLeadLayout = `() => {
+    const namedSiblings = () => Array.from(document.querySelector('.mw-parser-output').children)
+        .map(element => element.id)
+        .filter(Boolean);
+    const rect = id => document.getElementById(id).getBoundingClientRect();
+    window.OSRSApplyArticlePolish();
+    const afterFirst = {
+        siblingIds: namedSiblings(),
+        leadAfterProse: document.getElementById('leadProse').nextElementSibling === document.getElementById('lead'),
+        vignetteThenLead: document.getElementById('vignette').nextElementSibling === document.getElementById('lead'),
+        leadTop: rect('lead').top,
+        proseBottom: rect('leadProse').bottom,
+        vignetteBottom: rect('vignette').bottom
+    };
+    window.OSRSApplyArticlePolish();
+    return {
+        ...afterFirst,
+        afterSecondPassLeadAfterProse: document.getElementById('leadProse').nextElementSibling === document.getElementById('lead'),
+        afterSecondPassSiblingIds: namedSiblings(),
+        innerWidth: window.innerWidth,
+        clientWidth: document.documentElement.clientWidth
+    };
+}`;
+
+async function runVignetteLeadFixture({ body, polish, fixes, windowSize }) {
+    return runDocument({
+        body,
+        scripts: [polish],
+        styles: fixes,
+        windowSize,
+        evaluate: evaluateVignetteLeadLayout
+    });
+}
+
+function assertPhoneLeadMoved(state, label) {
+    assert.deepEqual(state.runtimeErrors, []);
+    assert.ok(state.clientWidth < 768, `${label}: phone-width viewport is under 768 CSS px`);
+    assert.equal(state.leadAfterProse, true, `${label}: lead figure follows the first prose paragraph`);
+    assert.equal(state.vignetteThenLead, false, `${label}: vignette and lead are not successive siblings`);
+    assert.ok(
+        state.leadTop + 0.5 >= state.proseBottom,
+        `${label}: lead top (${state.leadTop}) is not above the first paragraph bottom (${state.proseBottom})`
+    );
+    assert.deepEqual(
+        state.siblingIds.filter(id => id === 'vignette' || id === 'lead' || id === 'leadProse'),
+        ['vignette', 'leadProse', 'lead'],
+        `${label}: named lead siblings are vignette, first paragraph, then lead`
+    );
+    assert.equal(state.afterSecondPassLeadAfterProse, true, `${label}: a second polish pass stays idempotent`);
+    assert.deepEqual(state.afterSecondPassSiblingIds, state.siblingIds, `${label}: sibling order is stable after a second pass`);
+}
+
+function assertWideLeadUnmoved(state, label) {
+    assert.deepEqual(state.runtimeErrors, []);
+    assert.ok(state.clientWidth >= 768, `${label}: wide viewport is at least 768 CSS px`);
+    assert.equal(state.vignetteThenLead, true, `${label}: original sibling order keeps the lead next to the vignette`);
+    assert.equal(state.leadAfterProse, false, `${label}: wide layout does not force the lead below the first paragraph`);
+    assert.deepEqual(
+        state.siblingIds.filter(id => id === 'vignette' || id === 'lead' || id === 'leadProse'),
+        ['vignette', 'lead', 'leadProse'],
+        `${label}: named lead siblings stay vignette, lead, then first paragraph`
+    );
+    assert.deepEqual(state.afterSecondPassSiblingIds, state.siblingIds, `${label}: wide sibling order is stable after a second pass`);
+}
+
+async function assertVignetteLeadPhoneContract(polish, fixes) {
+    const state = await runVignetteLeadFixture({
+        body: achievementDiaryLeadBody(),
+        polish,
+        fixes,
+        windowSize: '390,1200'
+    });
+    assertPhoneLeadMoved(state, 'Achievement Diary phone');
+    return state;
+}
+
+async function assertVignetteLeadWideContract(polish, fixes) {
+    const state = await runVignetteLeadFixture({
+        body: achievementDiaryLeadBody(),
+        polish,
+        fixes,
+        windowSize: '1024,1200'
+    });
+    assertWideLeadUnmoved(state, 'Achievement Diary wide');
+    return state;
+}
+
+async function assertVignetteLeadSpotcheckContract(polish, fixes) {
+    const state = await runVignetteLeadFixture({
+        body: ironmanLeadBody(),
+        polish,
+        fixes,
+        windowSize: '390,1200'
+    });
+    assertPhoneLeadMoved(state, 'Ironman Mode phone');
+    return state;
 }
 
 async function assertRecipeContract(collapsible, fixes, collapsibleTables) {
@@ -645,6 +785,7 @@ async function assertReaderTextHook(fixes) {
 }
 
 async function main() {
+    const only = (process.argv.find((arg) => arg.startsWith('--only=')) || '').slice(7);
     await assertAssetParity();
     process.stdout.write('asset parity/title-gate contract: PASS\n');
     const [
@@ -672,6 +813,21 @@ async function main() {
         read('platforms/ios/osrswiki/Assets/web/collapsible_tables.css'),
         read('platforms/ios/osrswiki/Assets/web/switch_infobox_styles.css')
     ]);
+    if (!only || only === 'vignette-phone') {
+        await assertVignetteLeadPhoneContract(polish, fixes);
+        process.stdout.write('Achievement Diary phone-width lead relocation: PASS\n');
+        if (only) return;
+    }
+    if (!only || only === 'vignette-wide') {
+        await assertVignetteLeadWideContract(polish, fixes);
+        process.stdout.write('Achievement Diary wide-width lead order: PASS\n');
+        if (only) return;
+    }
+    if (!only || only === 'vignette-spotcheck') {
+        await assertVignetteLeadSpotcheckContract(polish, fixes);
+        process.stdout.write('Ironman Mode phone-width lead relocation: PASS\n');
+        if (only) return;
+    }
     await assertRecipeContract(collapsible, fixes, collapsibleTables);
     process.stdout.write('recipe semantic runtime contract: PASS\n');
     await assertDisclosureAccessibilityContract(collapsible, fixes, collapsibleTables);

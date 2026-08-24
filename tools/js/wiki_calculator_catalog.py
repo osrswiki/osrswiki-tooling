@@ -96,6 +96,42 @@ _LOOSE_CONFIG_RE = re.compile(
     r"(?is)(?:^|\n)\s*(?:template|module)\s*=.+?(?=\n\s*(?:\{\||----|<pre|$))"
 )
 
+# Native kit for this spike. Unknown types force WebView fallback.
+# Mirrors MediaWiki:Gadget-calc-core.js validParamTypes used on OSRS.
+NATIVE_KIT_TYPES = frozenset(
+    {
+        "string",
+        "int",
+        "number",
+        "select",
+        "buttonselect",
+        "check",
+        "toggleswitch",
+        "togglebutton",
+        "hs",
+        "rsn",
+        "hidden",
+        "fixed",
+        "semihidden",
+    }
+)
+SPIKE_NATIVE_TITLES = frozenset({"Calculator:Agility"})
+_SKIP_EMPTY_ON_SUBMIT = frozenset({"hs", "rsn"})
+_ALWAYS_SUBMIT = frozenset({"hidden", "fixed"})
+_CONFIG_KEYS = frozenset(
+    {
+        "form",
+        "param",
+        "result",
+        "suggestns",
+        "template",
+        "module",
+        "modulefunc",
+        "name",
+        "autosubmit",
+    }
+)
+
 
 def first_jcconfig(text: str) -> str | None:
     raw = text or ""
@@ -108,37 +144,268 @@ def first_jcconfig(text: str) -> str | None:
     return None
 
 
-def default_template_call(text: str) -> str | None:
+def _split_config_line(line: str) -> tuple[str, str] | None:
+    stripped = line.strip()
+    if not stripped or stripped.startswith("#"):
+        return None
+    if "=" not in stripped:
+        return None
+    key, value = stripped.split("=", 1)
+    return key.strip().lower(), value.strip()
+
+
+def _parse_toggles(raw: str, default_key: str) -> dict[str, dict[str, list[str]]]:
+    raw = (raw or "").strip()
+    if not raw:
+        return {}
+    toggles: dict[str, dict[str, list[str]]] = {}
+    all_keys: list[str] = []
+    all_vals: list[str] = []
+    for piece in re.split(r"\s*;\s*", raw):
+        if not piece:
+            continue
+        if "=" in piece:
+            keys_raw, vals_raw = piece.split("=", 1)
+            keys = [item.strip() for item in keys_raw.split(",") if item.strip()]
+            vals = [item.strip() for item in vals_raw.split(",") if item.strip()]
+        else:
+            keys = [default_key]
+            vals = [item.strip() for item in piece.split(",") if item.strip()]
+        for key in keys:
+            toggles[key] = {"on": list(vals), "off": []}
+            all_keys.append(key)
+        all_vals.extend(vals)
+    unique_vals = list(dict.fromkeys(all_vals))
+    for key in dict.fromkeys(all_keys):
+        on = toggles[key]["on"]
+        toggles[key]["off"] = [item for item in unique_vals if item not in on]
+    toggles["alltogs"] = {"on": [], "off": unique_vals}
+    return toggles
+
+
+def _options_for_type(kind: str, range_text: str) -> list[str]:
+    if kind in {"select", "buttonselect", "check"} and range_text:
+        return [item.strip() for item in range_text.split(",") if item.strip()]
+    return []
+
+
+def _int_range(range_text: str) -> dict[str, str]:
+    text = (range_text or "").strip()
+    if not text or "-" not in text:
+        return {}
+    left, right = text.split("-", 1)
+    return {"min": left.strip(), "max": right.strip()}
+
+
+def parse_calc_definition(
+    text: str,
+    title: str | None = None,
+    pageid: int | None = None,
+    revid: int | None = None,
+) -> dict | None:
     config = first_jcconfig(text)
     if not config:
         return None
-    module_match = _MODULE_RE.search(config)
-    template_match = _TEMPLATE_RE.search(config)
-    if module_match:
-        module = module_match.group(1).strip()
-        func = "main"
-        func_match = _MODULEFUNC_RE.search(config)
-        if func_match:
-            func = func_match.group(1).strip() or "main"
+    ui = {
+        "name": "Calculator",
+        "form_id": "",
+        "result_id": "",
+        "autosubmit": "off",
+    }
+    invoke = {
+        "kind": None,
+        "template": None,
+        "module": None,
+        "modulefunc": None,
+    }
+    inputs: list[dict] = []
+    unknown_types: list[str] = []
+    for raw_line in config.splitlines():
+        parsed = _split_config_line(raw_line)
+        if not parsed:
+            continue
+        key, value = parsed
+        if key not in _CONFIG_KEYS:
+            continue
+        if key == "suggestns":
+            continue
+        if key != "param":
+            if key == "form":
+                ui["form_id"] = value
+            elif key == "result":
+                ui["result_id"] = value
+            elif key == "name":
+                ui["name"] = value or ui["name"]
+            elif key == "autosubmit":
+                ui["autosubmit"] = value or "off"
+            elif key == "template":
+                invoke["kind"] = "template"
+                invoke["template"] = value
+            elif key == "module":
+                invoke["kind"] = "module"
+                invoke["module"] = value
+            elif key == "modulefunc":
+                invoke["modulefunc"] = value or "main"
+            continue
+        fields = [item.strip() for item in re.split(r"\s*\|\s*", value)]
+        while len(fields) < 6:
+            fields.append("")
+        name, label, default, kind, range_text, raw_toggles = fields[:6]
+        kind = kind.lower()
+        if not name:
+            continue
+        if kind and kind not in NATIVE_KIT_TYPES:
+            unknown_types.append(kind)
+        toggle_default = default or ("true" if kind in {"toggleswitch", "togglebutton", "check"} else name)
+        if kind == "toggleswitch" and not default:
+            default = "false"
+        inputs.append(
+            {
+                "name": name,
+                "label": label or name,
+                "default": default,
+                "type": kind,
+                "range": range_text,
+                "options": _options_for_type(kind, range_text),
+                "toggles": {
+                    key: value["on"]
+                    for key, value in _parse_toggles(raw_toggles, toggle_default).items()
+                    if key != "alltogs"
+                },
+                "toggle_off": {
+                    key: value["off"]
+                    for key, value in _parse_toggles(raw_toggles, toggle_default).items()
+                    if key != "alltogs"
+                },
+                "int_range": _int_range(range_text) if kind in {"int", "number"} else {},
+            }
+        )
+    if invoke["kind"] == "module" and not invoke["modulefunc"]:
+        invoke["modulefunc"] = "main"
+    if invoke["kind"] is None:
+        return None
+    calc_id = title or ui["name"] or "Calculator"
+    return {
+        "schema_version": 1,
+        "id": calc_id,
+        "pageid": pageid,
+        "revid": revid,
+        "wiki_origin": WIKI_ORIGIN,
+        "family": "skill-calc-shared-template"
+        if (invoke.get("template") or "").startswith("Calculator:Skill calc/")
+        else "jcconfig",
+        "ui": ui,
+        "invoke": invoke,
+        "inputs": inputs,
+        "unknown_types": unknown_types,
+    }
+
+
+def native_chrome_eligible(definition: dict | None) -> bool:
+    if not definition:
+        return False
+    if definition.get("id") not in SPIKE_NATIVE_TITLES:
+        return False
+    invoke = definition.get("invoke") or {}
+    if invoke.get("kind") == "template" and not invoke.get("template"):
+        return False
+    if invoke.get("kind") == "module" and not invoke.get("module"):
+        return False
+    if invoke.get("kind") not in {"template", "module"}:
+        return False
+    if definition.get("unknown_types"):
+        return False
+    inputs = definition.get("inputs") or []
+    if not inputs:
+        return False
+    return all((item.get("type") or "") in NATIVE_KIT_TYPES for item in inputs)
+
+
+def _visible_input_names(definition: dict, values: dict[str, str]) -> set[str]:
+    names = {item["name"] for item in definition.get("inputs") or []}
+    visible = set(names)
+    for item in definition.get("inputs") or []:
+        current = values.get(item["name"], item.get("default") or "")
+        toggles = item.get("toggles") or {}
+        toggle_off = item.get("toggle_off") or {}
+        if not toggles:
+            continue
+        if current in toggles:
+            for name in toggles.get(current) or []:
+                visible.add(name)
+            for name in toggle_off.get(current) or []:
+                visible.discard(name)
+        else:
+            # Gadget hides alltogs.off when the current value has no explicit mapping
+            # (toggleswitch=false → hide leagueMultiplier).
+            mapped = set()
+            for names_on in toggles.values():
+                mapped.update(names_on)
+            for name in mapped:
+                visible.discard(name)
+    return visible
+
+
+def invoke_wikitext(definition: dict | None, values: dict[str, str] | None = None) -> str | None:
+    if not definition:
+        return None
+    invoke = definition.get("invoke") or {}
+    if invoke.get("kind") == "module":
+        module = (invoke.get("module") or "").strip()
+        func = (invoke.get("modulefunc") or "main").strip() or "main"
         if not module:
             return None
         parts = ["{{#invoke:" + module + "|" + func]
-    elif template_match:
-        template = template_match.group(1).strip()
+    elif invoke.get("kind") == "template":
+        template = (invoke.get("template") or "").strip()
         if not template:
             return None
         parts = ["{{" + template]
     else:
         return None
-    for match in _PARAM_RE.finditer(config):
-        name = match.group(1).strip()
-        initial = match.group(3).strip()
-        kind = match.group(4).strip().lower()
-        if not name or kind in {"hidden", "hs", "rsn"}:
+    merged: dict[str, str] = {}
+    for item in definition.get("inputs") or []:
+        merged[item["name"]] = item.get("default") or ""
+    if values:
+        for key, value in values.items():
+            merged[key] = str(value)
+    visible = _visible_input_names(definition, merged)
+    for item in definition.get("inputs") or []:
+        name = item["name"]
+        kind = item.get("type") or ""
+        if kind == "group":
             continue
-        parts.append(f"|{name}={initial}")
+        if kind not in _ALWAYS_SUBMIT and name not in visible:
+            continue
+        value = merged.get(name, "")
+        if kind in _SKIP_EMPTY_ON_SUBMIT and not value:
+            continue
+        if kind == "toggleswitch":
+            lowered = value.lower()
+            if lowered in {"1", "true", "yes", "on"}:
+                value = "true"
+            elif lowered in {"0", "false", "no", "off", ""}:
+                value = "false"
+        parts.append(f"|{name}={value}")
     parts.append("}}")
     return "".join(parts)
+
+
+def parse_result_is_error(html: str | None) -> bool:
+    body = html or ""
+    if not body.strip():
+        return True
+    lowered = body.lower()
+    if "scribunto-error" in lowered:
+        return True
+    if "lua error" in lowered:
+        return True
+    return False
+
+
+def default_template_call(text: str) -> str | None:
+    definition = parse_calc_definition(text)
+    return invoke_wikitext(definition)
 
 
 def fetch_all_calculator_pages() -> list[dict]:

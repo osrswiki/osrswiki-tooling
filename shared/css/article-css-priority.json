@@ -6,8 +6,8 @@
     "fonts.css",
     "layout.css",
     "components.css",
-    "fixes.css",
-    "gadget_calc.css"
+    "gadget_calc.css",
+    "fixes.css"
   ],
   "criticalWeb": [
     "collapsible_tables.css",

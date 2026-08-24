@@ -115,7 +115,13 @@ NATIVE_KIT_TYPES = frozenset(
         "semihidden",
     }
 )
-SPIKE_NATIVE_TITLES = frozenset({"Calculator:Agility"})
+NATIVE_CHROME_TITLES = frozenset(
+    {
+        "Calculator:Agility",
+        "Calculator:Combat level",
+    }
+)
+SPIKE_NATIVE_TITLES = NATIVE_CHROME_TITLES
 _SKIP_EMPTY_ON_SUBMIT = frozenset({"hs", "rsn"})
 _ALWAYS_SUBMIT = frozenset({"hidden", "fixed"})
 _CONFIG_KEYS = frozenset(
@@ -304,7 +310,7 @@ def parse_calc_definition(
 def native_chrome_eligible(definition: dict | None) -> bool:
     if not definition:
         return False
-    if definition.get("id") not in SPIKE_NATIVE_TITLES:
+    if definition.get("id") not in NATIVE_CHROME_TITLES:
         return False
     invoke = definition.get("invoke") or {}
     if invoke.get("kind") == "template" and not invoke.get("template"):
@@ -401,6 +407,49 @@ def parse_result_is_error(html: str | None) -> bool:
     if "lua error" in lowered:
         return True
     return False
+
+
+def chrome_title(calc_id: str) -> str:
+    rest = calc_id or ""
+    if rest.startswith("Calculator:"):
+        rest = rest[len("Calculator:") :]
+    rest = rest.strip() or "Calculator"
+    if rest.lower().endswith("calculator"):
+        return rest
+    return f"{rest} calculator"
+
+
+def intro_copy(wikitext: str, title: str = "") -> str:
+    if title == "Calculator:Combat level":
+        lead = (
+            "Enter your combat stats, or look them up from hiscores. "
+            "The wiki returns your combat level. Formulas stay on the wiki, not in the app."
+        )
+    elif title == "Calculator:Agility":
+        lead = (
+            "Enter your current Agility level or XP and a goal. "
+            "Methods come from the live wiki calculator, not formulas shipped in the app."
+        )
+    else:
+        lead = (
+            "Fill the fields below. Results come from the live wiki calculator, "
+            "not formulas shipped in the app."
+        )
+    lines = [lead]
+    if "===Assumptions===" in (wikitext or ""):
+        rest = wikitext.split("===Assumptions===", 1)[1]
+        if "===" in rest:
+            rest = rest.split("===", 1)[0]
+        bullets = [
+            "• " + line[1:].strip()
+            for line in rest.splitlines()
+            if line.strip().startswith("*")
+        ]
+        if bullets:
+            lines.append("")
+            lines.append("Assumptions")
+            lines.extend(bullets)
+    return "\n".join(lines)
 
 
 def default_template_call(text: str) -> str | None:

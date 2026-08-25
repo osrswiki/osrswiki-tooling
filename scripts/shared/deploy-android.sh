@@ -285,6 +285,17 @@ OSRS_MAP_ASSET_SOURCE_DIR="$CACHE_BASE/binary-assets/mbtiles" \
     scripts/fetch-map-assets.sh materialize map-assets-manifest.json "$ASSETS_DIR"
 print_success "Pinned release map assets materialized and verified outside Git"
 
+# Publish the underground fetch recipe without baking the binaries into Git.
+# Default assemble still uses the fixture stub unless a later FOSS/F-Droid
+# version (not v2.0.1 / MR !46596) opts in with -PosrsUndergroundAssetsDir.
+cp "$GIT_ROOT/scripts/shared/fetch-underground-release-assets.sh" \
+    scripts/fetch-underground-assets.sh
+cp "$GIT_ROOT/shared/manifests/osrs-underground-assets-v1.json" \
+    underground-assets-manifest.json
+cp "$GIT_ROOT/docs/public/underground-release-assets.md" UNDERGROUND_ASSETS.md
+chmod 0755 scripts/fetch-underground-assets.sh
+print_success "Pinned underground release fetch recipe published without materializing binaries"
+
 # Install public landing README + LICENSE into the staged public tree
 print_info "Installing public landing README/LICENSE for android..."
 "$GIT_ROOT/scripts/shared/osrs-public-landing.sh" install \

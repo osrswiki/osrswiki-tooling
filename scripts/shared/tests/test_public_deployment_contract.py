@@ -20,6 +20,15 @@ class PublicDeploymentContractTests(unittest.TestCase):
                 self.assertIn("validate-public-deployment-tree.sh", script)
                 self.assertIn("OSRS_MAP_ASSET_SOURCE_DIR=", script)
 
+    def test_android_publishes_underground_fetch_recipe_without_materializing(self) -> None:
+        script = self.read_script("deploy-android.sh")
+        self.assertIn("fetch-underground-release-assets.sh", script)
+        self.assertIn("osrs-underground-assets-v1.json", script)
+        self.assertIn("underground-release-assets.md", script)
+        self.assertIn("scripts/fetch-underground-assets.sh", script)
+        self.assertNotIn("OSRS_UNDERGROUND_ASSET_SOURCE_DIR=", script)
+        self.assertIn("UNDERGROUND_ASSETS.md", script)
+
     def test_every_public_deployment_runs_the_tree_guard(self) -> None:
         for platform in ("android", "ios", "tooling"):
             name = f"deploy-{platform}.sh"

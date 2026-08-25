@@ -176,6 +176,8 @@ fi
 
 MAP_ASSET_MANIFEST="shared/manifests/osrs-map-assets-v1.json"
 MAP_ASSET_FETCHER="scripts/shared/fetch-map-release-assets.sh"
+UNDERGROUND_ASSET_MANIFEST="shared/manifests/osrs-underground-assets-v1.json"
+UNDERGROUND_ASSET_FETCHER="scripts/shared/fetch-underground-release-assets.sh"
 PUBLIC_TREE_VALIDATOR="scripts/shared/validate-public-deployment-tree.sh"
 
 if [[ -x "$MAP_ASSET_FETCHER" ]]; then
@@ -192,6 +194,22 @@ if [[ -f "$MAP_ASSET_MANIFEST" && -x "$MAP_ASSET_FETCHER" ]]; then
     fi
 elif [[ ! -f "$MAP_ASSET_MANIFEST" ]]; then
     validation_error "Immutable map release manifest not found: $MAP_ASSET_MANIFEST"
+fi
+
+if [[ -x "$UNDERGROUND_ASSET_FETCHER" ]]; then
+    validation_success "Underground release downloader/verifier is executable"
+else
+    validation_error "Underground release downloader/verifier is missing or not executable: $UNDERGROUND_ASSET_FETCHER"
+fi
+
+if [[ -f "$UNDERGROUND_ASSET_MANIFEST" && -x "$UNDERGROUND_ASSET_FETCHER" ]]; then
+    if "$UNDERGROUND_ASSET_FETCHER" validate-manifest "$UNDERGROUND_ASSET_MANIFEST" >/dev/null; then
+        validation_success "Immutable underground release manifest is valid"
+    else
+        validation_error "Immutable underground release manifest is invalid: $UNDERGROUND_ASSET_MANIFEST"
+    fi
+elif [[ ! -f "$UNDERGROUND_ASSET_MANIFEST" ]]; then
+    validation_error "Immutable underground release manifest not found: $UNDERGROUND_ASSET_MANIFEST"
 fi
 
 if [[ -x "$PUBLIC_TREE_VALIDATOR" ]]; then

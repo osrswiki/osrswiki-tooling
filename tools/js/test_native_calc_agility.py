@@ -178,6 +178,16 @@ class NativeCalcAgilityTests(unittest.TestCase):
         self.assertTrue("removeChild" in install or ".remove(" in install)
         self.assertIn("MutationObserver", install)
         self.assertIn("waiting: true", install)
+        wait_at = install.find("waiting: true")
+        form_at = install.find("var form =")
+        self.assertGreaterEqual(form_at, 0)
+        self.assertLess(
+            form_at,
+            wait_at,
+            "wait-for-selects must not skip install when jcConfig/form already exists",
+        )
+        self.assertIn("!form", install)
+        self.assertIn("!config", install)
 
 
 if __name__ == "__main__":

@@ -160,6 +160,7 @@ class NativeCalcAgilityTests(unittest.TestCase):
         self.assertIn("osrsWrapNativeCalcCalculatorBox", text)
         self.assertIn("collapsible-calculator", text)
         self.assertIn("osrsNativeCalcSetCollapsed", text)
+        self.assertIn("osrsNotifyNativeCalcCollapsed", text)
         self.assertIn("osrsWrapCollapsible", text)
         self.assertIn("osrsWrapWikitablesInRoot", text)
         collapsible = Path(__file__).resolve().parents[2] / "shared" / "js" / "collapsible_content.js"

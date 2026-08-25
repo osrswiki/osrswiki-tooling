@@ -31,6 +31,7 @@
       "ExpandedAppSmokeUITests",
       "NavigationAutomationTests",
       "osrsArticlePullToRefreshLayoutUITests",
+      "osrsArticleFirstResponderBlankUITests",
       "SavedPagesNavigationVerificationTest",
       "SavedPagesUICleanupTest",
       "SearchToMapNavigationTest",

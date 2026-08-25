@@ -145,7 +145,7 @@ blockquote {
     max-width: 100%;
     box-sizing: border-box;
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
     overflow-x: visible;
 }
 

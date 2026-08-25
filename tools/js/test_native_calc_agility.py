@@ -159,8 +159,15 @@ class NativeCalcAgilityTests(unittest.TestCase):
         text = runtime.read_text(encoding="utf-8")
         self.assertIn("osrsWrapNativeCalcCalculatorBox", text)
         self.assertIn("collapsible-calculator", text)
-        self.assertIn("data-osrs-disclosure-kind", text)
         self.assertIn("osrsNativeCalcSetCollapsed", text)
+        self.assertIn("osrsWrapCollapsible", text)
+        self.assertIn("osrsWrapWikitablesInRoot", text)
+        collapsible = Path(__file__).resolve().parents[2] / "shared" / "js" / "collapsible_content.js"
+        collapsible_text = collapsible.read_text(encoding="utf-8")
+        self.assertIn("window.osrsWrapCollapsible", collapsible_text)
+        self.assertIn("kind === 'calculator'", collapsible_text)
+        self.assertIn("allowInsideCalculator", collapsible_text)
+        self.assertIn("osrsDisclosureKind", collapsible_text)
         self.assertIn("overflow-x:auto", text.replace(" ", ""))
         install = text.split("window.osrsInstallNativeCalcSlot = function", 1)[1].split(
             "window.osrsNativeCalcSetSlotHeight", 1

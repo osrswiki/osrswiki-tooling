@@ -162,6 +162,22 @@ class NativeCalcAgilityTests(unittest.TestCase):
         self.assertIn("data-osrs-disclosure-kind", text)
         self.assertIn("osrsNativeCalcSetCollapsed", text)
         self.assertIn("overflow-x:auto", text.replace(" ", ""))
+        install = text.split("window.osrsInstallNativeCalcSlot = function", 1)[1].split(
+            "window.osrsNativeCalcSetSlotHeight", 1
+        )[0]
+        hide_root_at = install.find("var hideRoot")
+        select_query_at = install.find("hideRoot.querySelectorAll('select")
+        self.assertGreaterEqual(hide_root_at, 0)
+        self.assertGreaterEqual(select_query_at, 0)
+        self.assertLess(
+            hide_root_at,
+            select_query_at,
+            "hideRoot must be assigned before querying selects or Android keeps the HTML Method picker",
+        )
+        self.assertIn("disabled", install)
+        self.assertTrue("removeChild" in install or ".remove(" in install)
+        self.assertIn("MutationObserver", install)
+        self.assertIn("waiting: true", install)
 
 
 if __name__ == "__main__":

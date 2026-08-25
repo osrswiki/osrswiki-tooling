@@ -2218,6 +2218,12 @@ ul.tabbernav > li {
     display: inline !important;
 }
 
+.collapsible-container.collapsible-calculator:not(.collapsed) > .collapsible-content,
+.collapsible-container.collapsible-calculator:not(.collapsed) > .collapsible-content > .osrs-disclosure-body {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
 ul.gallery,
 ul.gallery > li,
 li.gallerybox {
@@ -2510,5 +2516,11 @@ table.infobox-bonuses [data-attr-param="slot"] a {
     white-space: normal !important;
     display: inline !important;
     width: auto !important;
+}
+
+.collapsible-container.collapsible-calculator:not(.collapsed) > .collapsible-content,
+.collapsible-container.collapsible-calculator:not(.collapsed) > .collapsible-content > .osrs-disclosure-body {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
 }
 

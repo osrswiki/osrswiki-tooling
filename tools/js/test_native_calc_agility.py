@@ -152,6 +152,17 @@ class NativeCalcAgilityTests(unittest.TestCase):
             )
         )
 
+    def test_runtime_wraps_slot_in_calculator_collapsible(self) -> None:
+        from pathlib import Path
+
+        runtime = Path(__file__).resolve().parents[2] / "shared" / "js" / "osrs_calculator_runtime.js"
+        text = runtime.read_text(encoding="utf-8")
+        self.assertIn("osrsWrapNativeCalcCalculatorBox", text)
+        self.assertIn("collapsible-calculator", text)
+        self.assertIn("data-osrs-disclosure-kind", text)
+        self.assertIn("osrsNativeCalcSetCollapsed", text)
+        self.assertIn("overflow-x:auto", text.replace(" ", ""))
+
 
 if __name__ == "__main__":
     unittest.main()

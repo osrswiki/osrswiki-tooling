@@ -1,0 +1,22 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- D: oval C and oval O, both affine 1.2 tall, O at 11°.
+       Same family: O 200×240 outer, 120×144 hole. -->
+  <path fill="#F2F2F7" fill-rule="evenodd" d="
+    M 777.91 196.90
+    A 378 453.60 0 1 0 777.91 827.10
+    A 60 72 0 0 0 691.59 727.07
+    A 258 309.60 0 1 1 691.59 296.93
+    A 60 72 0 0 0 777.91 196.90
+    Z
+  "/>
+  <path fill="#F2F2F7" fill-rule="evenodd" d="
+    M 949.44 464.68
+    A 200 240 0 1 0 549.44 464.68
+    A 200 240 0 1 0 949.44 464.68
+    Z
+    M 869.44 464.68
+    A 120 144 0 1 0 629.44 464.68
+    A 120 144 0 1 0 869.44 464.68
+    Z
+  "/>
+</svg>

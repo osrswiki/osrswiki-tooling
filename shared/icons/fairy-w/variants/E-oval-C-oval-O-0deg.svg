@@ -1,0 +1,22 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- E: oval C and oval O, both affine 1.2 tall, O at 3 o'clock.
+       Control: oval without the 11° lift. -->
+  <path fill="#F2F2F7" fill-rule="evenodd" d="
+    M 777.91 196.90
+    A 378 453.60 0 1 0 777.91 827.10
+    A 60 72 0 0 0 691.59 727.07
+    A 258 309.60 0 1 1 691.59 296.93
+    A 60 72 0 0 0 777.91 196.90
+    Z
+  "/>
+  <path fill="#F2F2F7" fill-rule="evenodd" d="
+    M 954.00 512.00
+    A 200 240 0 1 0 554.00 512.00
+    A 200 240 0 1 0 954.00 512.00
+    Z
+    M 874.00 512.00
+    A 120 144 0 1 0 634.00 512.00
+    A 120 144 0 1 0 874.00 512.00
+    Z
+  "/>
+</svg>

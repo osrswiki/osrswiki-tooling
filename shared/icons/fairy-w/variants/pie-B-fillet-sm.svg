@@ -1,0 +1,15 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pie-cut + circular-arc fillets r=16 outer / 12 inner.
+       Each patch is the fillet arc plus the corner P. -->
+  <path fill="#F2F2F7" fill-rule="evenodd" d="
+    M 819.33 258.27 A 378.00 453.60 0 1 0 872.30 623.99
+    L 756.01 588.44 A 258.00 309.60 0 1 1 719.86 338.82
+    L 819.33 258.27 Z"/>
+  <path fill="#F2F2F7" fill-rule="evenodd" d="
+    M 949.44 464.68 A 200 240 0 1 0 549.44 464.68 A 200 240 0 1 0 949.44 464.68 Z
+    M 869.44 464.68 A 120 144 0 1 0 629.44 464.68 A 120 144 0 1 0 869.44 464.68 Z"/>
+  <path fill="#F2F2F7" d="M 801.83 229.63 A 16.00 16.00 0 1 0 809.51 235.76 L 804.70 234.02 Z"/>
+  <path fill="#F2F2F7" d="M 861.21 667.12 A 16.00 16.00 0 1 1 866.08 659.64 L 862.56 662.61 Z"/>
+  <path fill="#F2F2F7" d="M 708.20 319.71 A 12.00 12.00 0 1 0 721.54 324.63 L 713.14 327.43 Z"/>
+  <path fill="#F2F2F7" d="M 748.79 616.72 A 12.00 12.00 0 1 1 759.13 608.21 L 751.10 608.67 Z"/>
+</svg>

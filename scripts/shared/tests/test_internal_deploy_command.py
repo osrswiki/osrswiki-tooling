@@ -25,6 +25,8 @@ class InternalDeployCommandTests(unittest.TestCase):
         self.assertIn("TestFlight", script)
         self.assertIn("--dry-run", script)
         self.assertIn("--validate-only", script)
+        self.assertIn("materialize-play-underground-assets.sh", script)
+        self.assertIn("-PosrsUndergroundAssetsDir=", script)
 
     def test_entrypoint_avoids_destructive_git_and_deployment_repo_operations(self):
         script = ENTRYPOINT.read_text(encoding="utf-8")

@@ -52,10 +52,13 @@ if [[ -z "${ANDROID_SERIAL:-}" ]]; then
     exit 2
 fi
 
+PLAY_UNDERGROUND_DIR="$("$REPO_ROOT/scripts/shared/materialize-play-underground-assets.sh")"
+echo "Play underground assets: $PLAY_UNDERGROUND_DIR"
+
 run_gradle() {
     local log_file="$1"
     shift
-    (cd "$ANDROID_DIR" && ./gradlew --no-daemon "$@") >"$log_file" 2>&1
+    (cd "$ANDROID_DIR" && ./gradlew --no-daemon "$@" -PosrsUndergroundAssetsDir="$PLAY_UNDERGROUND_DIR") >"$log_file" 2>&1
 }
 
 is_stale_build_failure() {
@@ -63,14 +66,14 @@ is_stale_build_failure() {
     grep -E 'parseDebugLocalResources|NullPointerException|resource|Type .* is defined multiple times| [0-9]+\.dex| [0-9]+\.xml' "$log_file" >/dev/null
 }
 
-if run_gradle "$EVIDENCE_DIR/gradle-assemble-install.log" :app:assembleDebug :app:installDebug; then
+if run_gradle "$EVIDENCE_DIR/gradle-assemble-install.log" :app:assemblePlayDebug :app:installPlayDebug; then
     echo "Build/install succeeded. Evidence: $EVIDENCE_DIR"
     exit 0
 fi
 
 if is_stale_build_failure "$EVIDENCE_DIR/gradle-assemble-install.log"; then
     echo "Initial build/install failed with a stale build-output signature; retrying with clean."
-    run_gradle "$EVIDENCE_DIR/gradle-clean-assemble-install.log" clean :app:assembleDebug :app:installDebug
+    run_gradle "$EVIDENCE_DIR/gradle-clean-assemble-install.log" clean :app:assemblePlayDebug :app:installPlayDebug
     echo "Clean retry succeeded. Evidence: $EVIDENCE_DIR"
     exit 0
 fi

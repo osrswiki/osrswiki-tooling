@@ -310,13 +310,18 @@ deploy_android_internal() {
         upload_cmd+=(--also-assign-track alpha)
     fi
 
+    local play_underground_dir
+    play_underground_dir="$("$REPO_ROOT/scripts/shared/materialize-play-underground-assets.sh")"
+    print_info "Play underground assets: $play_underground_dir"
+
     if [[ "$DRY_RUN" == true ]]; then
-        print_info "[dry-run] cd $ANDROID_PLATFORM_DIR && ./gradlew --no-daemon :app:bundlePlayRelease --console=plain"
+        print_info "[dry-run] cd $ANDROID_PLATFORM_DIR && ./gradlew --no-daemon :app:bundlePlayRelease --console=plain -PosrsUndergroundAssetsDir=$play_underground_dir"
         print_info "[dry-run] ${upload_cmd[*]} --dry-run"
     else
         (
             cd "$ANDROID_PLATFORM_DIR"
-            ./gradlew --no-daemon :app:bundlePlayRelease --console=plain
+            ./gradlew --no-daemon :app:bundlePlayRelease --console=plain \
+                -PosrsUndergroundAssetsDir="$play_underground_dir"
         )
         if [[ ! -f "$aab_path" ]]; then
             print_error "Expected AAB not found: $aab_path"

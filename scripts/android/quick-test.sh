@@ -14,8 +14,10 @@ fi
 
 echo "🔨 Quick build and test on device: $ANDROID_SERIAL"
 
-(cd platforms/android && ./gradlew assembleDebug)
-adb -s "$ANDROID_SERIAL" install -r platforms/android/app/build/outputs/apk/debug/app-debug.apk
+PLAY_UNDERGROUND_DIR="$(./scripts/shared/materialize-play-underground-assets.sh)"
+echo "Play underground assets: $PLAY_UNDERGROUND_DIR"
+(cd platforms/android && ./gradlew assemblePlayDebug -PosrsUndergroundAssetsDir="$PLAY_UNDERGROUND_DIR")
+adb -s "$ANDROID_SERIAL" install -r platforms/android/app/build/outputs/apk/play/debug/app-play-debug.apk
 MAIN=$(adb -s "$ANDROID_SERIAL" shell cmd package resolve-activity --brief \
     -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -p "$APPID" | tail -n1)
 adb -s "$ANDROID_SERIAL" shell am start -W -n "$MAIN"

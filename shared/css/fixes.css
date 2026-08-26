@@ -2234,6 +2234,23 @@ ul.tabbernav > li {
     display: inline !important;
 }
 
+.collapsible-container.collapsible-calculator {
+    box-sizing: border-box !important;
+    clear: both !important;
+    float: none !important;
+    margin-inline: 0 !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+.collapsible-container.collapsible-calculator .osrs-calculator-layout {
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
 .collapsible-container.collapsible-calculator:not(.collapsed) > .collapsible-content,
 .collapsible-container.collapsible-calculator:not(.collapsed) > .collapsible-content > .osrs-disclosure-body {
     overflow-x: auto !important;

@@ -6786,6 +6786,11 @@ MediaWiki:Gadget-calc.js
 */
 $(function () {
 	if ($('.jcConfig').length) {
+		if (document.documentElement &&
+			(document.documentElement.classList.contains('osrs-indoc-calc') ||
+				document.documentElement.classList.contains('osrs-native-calc-slot-active'))) {
+			return;
+		}
 		mw.loader.load( 'ext.gadget.calc-core' );
 	}
 })

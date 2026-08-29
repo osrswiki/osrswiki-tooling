@@ -804,6 +804,10 @@
     "docs/superpowers/specs/2026-08-24-native-calc-auto-sync-research.md": {
       "audience": "internal",
       "description": "Internal feasibility and design overview for native calculator UI with auto-synced wiki logic/data. Research only; not a product rewrite."
+    },
+    "docs/superpowers/specs/2026-08-29-native-calc-overlay-vs-indoc.md": {
+      "audience": "internal",
+      "description": "Internal architecture verdict for in-document calculator chrome versus native overlay, scoped to Agility and Combat level."
     }
   }
 }

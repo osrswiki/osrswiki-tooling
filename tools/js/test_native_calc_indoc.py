@@ -168,6 +168,58 @@ class NativeCalcIndocTests(unittest.TestCase):
         self.assertIn("lookupHiscores();", runtime)
         self.assertIn("input.type === 'hs' ? 'go' : 'done'", indoc)
 
+    def test_lookup_error_html_has_icon_and_strong_error(self) -> None:
+        result = eval_js(
+            'api.lookupErrorHtml(api.missingPlayerMessage("osamosis"))'
+        )
+        self.assertIn('class="osrs-indoc-calc-error"', result)
+        self.assertIn("osrs-indoc-calc-error-icon", result)
+        self.assertIn("<svg", result)
+        self.assertIn("osrs-indoc-calc-error-stop", result)
+        self.assertIn('<strong class="error">', result)
+        self.assertIn("The player &quot;osamosis&quot; does not exist", result)
+        self.assertNotIn("oo-ui-", result)
+
+    def test_lookup_start_and_success_clear_missing_player_output(self) -> None:
+        runtime = RUNTIME.read_text(encoding="utf-8")
+        lookup = runtime.split("function lookupHiscores() {", 1)[1].split(
+            "function fieldTypeFor(name)", 1
+        )[0]
+        self.assertGreaterEqual(lookup.count("clearLookupOutput()"), 2)
+        self.assertLess(
+            lookup.find("clearLookupOutput()"),
+            lookup.find("osrsIndocRequest("),
+            "lookup must clear result/status/banner before the hiscores request",
+        )
+        self.assertIn("showLookupError(player)", lookup)
+        self.assertIn("osrsNativeCalcSetResult(definition.ui.resultId, '')", runtime)
+        self.assertIn("osrsClearCalculatorPublishEcho()", runtime)
+        css = (ROOT / "shared" / "css" / "gadget_calc.css").read_text(encoding="utf-8")
+        self.assertIn(".osrs-indoc-calc-error-icon", css)
+        self.assertIn(".osrs-indoc-calc-error-stop", css)
+        self.assertIn("html.theme-osrs-dark .osrs-indoc-calc-error", css)
+
+    def test_publisher_cannot_rehydrate_stale_status_player_name(self) -> None:
+        runtime = RUNTIME.read_text(encoding="utf-8")
+        publish = runtime.split("function osrsPublishCalculatorResult() {", 1)[1].split(
+            "function osrsRevealCalculatorNode", 1
+        )[0]
+        self.assertNotIn("innerText", publish)
+        self.assertNotIn("document.body", publish)
+        self.assertNotIn('match(/The player', publish)
+        self.assertIn("osrsCalculatorResultSourceNode()", publish)
+        self.assertIn("osrsClearCalculatorPublishEcho()", publish)
+        source = runtime.split("function osrsCalculatorResultSourceNode() {", 1)[1].split(
+            "function osrsPublishCalculatorResult()", 1
+        )[0]
+        self.assertIn("osrs-calculator-status", source)
+        self.assertIn("continue", source)
+        fail = runtime.split("function showLookupError(player) {", 1)[1].split(
+            "function lookupHiscores()", 1
+        )[0]
+        self.assertIn("api.lookupErrorHtml(err)", fail)
+        self.assertIn("osrsNativeCalcSetResult", fail)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "marketing_version": "2.0.7",
+  "marketing_version": "2.0.8",
   "current_build_numbers": {
     "android": 38,
     "ios": 31

@@ -111,6 +111,18 @@ class NativeCalcIndocTests(unittest.TestCase):
         self.assertIn('aria-label="Player name"', result["html"])
         self.assertIn("osrs-indoc-field-attack", result["html"])
         self.assertNotIn("oo-ui-", result["html"])
+        self.assertRegex(
+            result["html"],
+            r'id="osrs-indoc-field-playername"[^>]*enterkeyhint="go"',
+        )
+        self.assertRegex(
+            result["html"],
+            r'id="osrs-indoc-field-attack"[^>]*enterkeyhint="done"',
+        )
+        self.assertNotRegex(
+            result["html"],
+            r'id="osrs-indoc-field-playername"[^>]*enterkeyhint="done"',
+        )
 
     def test_page_name_not_bare_title_is_allowlisted(self) -> None:
         self.assertFalse(eval_js('api.isAllowlisted("Agility")'))
@@ -136,7 +148,7 @@ class NativeCalcIndocTests(unittest.TestCase):
         )[0]
         self.assertNotIn(".osrs-calculator-layout input,", install)
         self.assertNotIn(".osrs-calculator-layout button,", install)
-        self.assertIn("#osrs-native-calc-slot input,", install)
+        self.assertIn("#osrs-native-calc-slot input", install)
         self.assertIn(".jcTable input,", install)
         css = (ROOT / "shared" / "css" / "gadget_calc.css").read_text(encoding="utf-8")
         self.assertIn(".osrs-indoc-calc-form", css)
@@ -145,7 +157,16 @@ class NativeCalcIndocTests(unittest.TestCase):
         core = (ROOT / "shared" / "js" / "mediawiki" / "gadget_calc_core.js").read_text(encoding="utf-8")
         self.assertIn("osrsIndocPageShouldSkipGadgetBoot", core)
         self.assertIn("names.push(window.RLCONF.wgPageName, window.RLCONF.wgTitle)", core)
-        self.assertIn("resolvePageTitle", RUNTIME.read_text(encoding="utf-8"))
+        self.assertIn("resolvePageTitle", runtime)
+
+    def test_hs_enterkeyhint_is_go_and_enter_looks_up(self) -> None:
+        runtime = RUNTIME.read_text(encoding="utf-8")
+        indoc = INDOC.read_text(encoding="utf-8")
+        self.assertIn("isIndocEnterKey", runtime)
+        self.assertIn("fieldTypeFor(target.name) === 'hs'", runtime)
+        self.assertIn("dismissIndocKeyboard", runtime)
+        self.assertIn("lookupHiscores();", runtime)
+        self.assertIn("input.type === 'hs' ? 'go' : 'done'", indoc)
 
 
 if __name__ == "__main__":

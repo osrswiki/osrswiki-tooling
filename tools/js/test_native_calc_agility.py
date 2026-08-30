@@ -54,7 +54,7 @@ class NativeCalcAgilityTests(unittest.TestCase):
         self.assertEqual(definition["invoke"]["template"], "Calculator:Skill calc/Template")
         self.assertEqual(definition["ui"]["form_id"], "AgilityCalc")
         self.assertEqual(definition["ui"]["result_id"], "AgilityResults")
-        self.assertEqual(definition["ui"]["autosubmit"], "enabled")
+        self.assertEqual(definition["ui"]["autosubmit"], "on")
         names = [item["name"] for item in definition["inputs"]]
         self.assertEqual(
             names,
@@ -126,7 +126,7 @@ class NativeCalcAgilityTests(unittest.TestCase):
         self.assertIn("|leagueMultiplier=8", wikitext)
         self.assertIn("|skill=Agility", wikitext)
 
-    def test_native_chrome_is_agility_only_and_falls_back_on_unknown_types(self) -> None:
+    def test_native_chrome_is_kit_not_title_and_falls_back_on_unknown_types(self) -> None:
         agility = parse_calc_definition(AGILITY_JCCONFIG, title="Calculator:Agility")
         cooking = parse_calc_definition(
             AGILITY_JCCONFIG.replace("Agility", "Cooking"),
@@ -134,7 +134,7 @@ class NativeCalcAgilityTests(unittest.TestCase):
         )
         unknown = parse_calc_definition(UNKNOWN_TYPE_CONFIG, title="Calculator:Agility")
         self.assertTrue(native_chrome_eligible(agility))
-        self.assertFalse(native_chrome_eligible(cooking))
+        self.assertTrue(native_chrome_eligible(cooking))
         self.assertFalse(native_chrome_eligible(unknown))
         self.assertFalse(native_chrome_eligible(None))
         self.assertFalse(native_chrome_eligible(parse_calc_definition("no config here")))

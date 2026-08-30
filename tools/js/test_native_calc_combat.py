@@ -79,11 +79,11 @@ class NativeCalcCombatTests(unittest.TestCase):
         self.assertNotIn("|skill=", wikitext)
         self.assertNotIn("|playername=", wikitext)
 
-    def test_combat_is_native_eligible_cooking_is_not(self) -> None:
+    def test_combat_and_cooking_share_the_kit_predicate(self) -> None:
         combat = parse_calc_definition(COMBAT_JCCONFIG, title="Calculator:Combat level")
         cooking = parse_calc_definition(COMBAT_JCCONFIG, title="Calculator:Cooking")
         self.assertTrue(native_chrome_eligible(combat))
-        self.assertFalse(native_chrome_eligible(cooking))
+        self.assertTrue(native_chrome_eligible(cooking))
 
     def test_combat_intro_copy_is_not_agility_methods_text(self) -> None:
         copy = intro_copy(COMBAT_JCCONFIG, title="Calculator:Combat level")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""In-document calc chrome: jcConfig parse, invoke, slot HTML, allowlist."""
+"""In-document calc chrome: jcConfig parse, invoke, slot HTML, config eligibility."""
 
 from __future__ import annotations
 
@@ -124,18 +124,41 @@ class NativeCalcIndocTests(unittest.TestCase):
             r'id="osrs-indoc-field-playername"[^>]*enterkeyhint="done"',
         )
 
-    def test_page_name_not_bare_title_is_allowlisted(self) -> None:
-        self.assertFalse(eval_js('api.isAllowlisted("Agility")'))
-        self.assertTrue(eval_js('api.isAllowlisted("Calculator:Agility")'))
-        self.assertTrue(eval_js('api.isAllowlisted("Calculator:Combat_level")'))
-
-    def test_cooking_is_not_allowlisted(self) -> None:
-        result = eval_js(
-            'api.isAllowlisted("Calculator:Cooking") || api.isEligible(api.parse('
-            + json.dumps(AGILITY.replace("Agility", "Cooking"))
-            + ', "Calculator:Cooking"))'
+    def test_page_eligibility_is_kit_and_single_config_not_title(self) -> None:
+        self.assertTrue(
+            eval_js("api.isPageEligible(" + json.dumps(AGILITY) + ', "Calculator:Agility")')
         )
-        self.assertFalse(result)
+        self.assertTrue(
+            eval_js("api.isPageEligible(" + json.dumps(COMBAT) + ', "Calculator:Combat level")')
+        )
+        cooking = AGILITY.replace("Agility", "Cooking")
+        self.assertTrue(
+            eval_js("api.isEligible(api.parse(" + json.dumps(cooking) + ', "Calculator:Cooking"))')
+        )
+        self.assertTrue(eval_js("api.isPageEligible(" + json.dumps(cooking) + ', "Calculator:Cooking")'))
+        self.assertEqual(eval_js("api.countJcConfigs(" + json.dumps(AGILITY) + ")"), 1)
+        self.assertFalse(eval_js("Object.prototype.hasOwnProperty.call(api, 'isAllowlisted')"))
+        self.assertFalse(eval_js("Object.prototype.hasOwnProperty.call(api, 'titles')"))
+
+    def test_autosubmit_tokens_normalize_to_on_or_off(self) -> None:
+        mapping = eval_js(
+            """({
+              off: api.normalizeAutosubmit('off'),
+              disabled: api.normalizeAutosubmit('disabled'),
+              enabled: api.normalizeAutosubmit('enabled'),
+              on: api.normalizeAutosubmit('on'),
+              trueToken: api.normalizeAutosubmit('true'),
+              empty: api.normalizeAutosubmit(''),
+            })"""
+        )
+        self.assertEqual(mapping["off"], "off")
+        self.assertEqual(mapping["disabled"], "off")
+        self.assertEqual(mapping["enabled"], "on")
+        self.assertEqual(mapping["on"], "on")
+        self.assertEqual(mapping["trueToken"], "on")
+        self.assertEqual(mapping["empty"], "off")
+        agility = eval_js("api.parse(" + json.dumps(AGILITY) + ', "Calculator:Agility")')
+        self.assertEqual(agility["ui"]["autosubmit"], "on")
 
     def test_runtime_boots_indoc_and_skips_gadget(self) -> None:
         runtime = RUNTIME.read_text(encoding="utf-8")
@@ -156,7 +179,17 @@ class NativeCalcIndocTests(unittest.TestCase):
         self.assertIn("overflow: visible !important", css)
         core = (ROOT / "shared" / "js" / "mediawiki" / "gadget_calc_core.js").read_text(encoding="utf-8")
         self.assertIn("osrsIndocPageShouldSkipGadgetBoot", core)
-        self.assertIn("names.push(window.RLCONF.wgPageName, window.RLCONF.wgTitle)", core)
+        self.assertIn("osrsIndocNativeSlotTakingOver", core)
+        self.assertIn("isPageEligible", core)
+        skip_boot = core.split("function osrsIndocPageShouldSkipGadgetBoot()", 1)[1].split(
+            "function osrsBootCalcCore()", 1
+        )[0]
+        self.assertNotIn("Calculator:Agility", skip_boot)
+        self.assertNotIn("Calculator:Combat level", skip_boot)
+        skip_init = core.split("function osrsIndocPageShouldSkipGadget()", 1)[1].split(
+            "function init()", 1
+        )[0]
+        self.assertNotIn("Calculator:Agility", skip_init)
         self.assertIn("resolvePageTitle", runtime)
 
     def test_hs_enterkeyhint_is_go_and_enter_looks_up(self) -> None:

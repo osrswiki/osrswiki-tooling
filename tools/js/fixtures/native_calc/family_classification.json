@@ -1,0 +1,1435 @@
+{
+  "schema_version": 1,
+  "source": "recorded parse HTML classification; not a live CI scrape",
+  "catalog_calculator_count": 139,
+  "page_count": 139,
+  "family_counts": {
+    "C": 9,
+    "A": 18,
+    "B": 43,
+    "D": 23,
+    "E": 45,
+    "multi": 1
+  },
+  "eligible_count": 84,
+  "errors": [],
+  "pages": [
+    {
+      "title": "Calculator:Abyssal pearls",
+      "family": "C",
+      "jcconfig_count": 1,
+      "unknown_types": [
+        "group"
+      ],
+      "invoke_kind": "template",
+      "template": "Calculator:Abyssal pearls/Template",
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Agility",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Agility/Agility arena tickets",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Agility/Agility arena tickets/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Ammo cost efficiency",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Ammo cost efficiency",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Arceuus library book",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Arceuus library book/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Armoury",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Slottable",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Bank standing money makers",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Barrows",
+      "family": "C",
+      "jcconfig_count": 1,
+      "unknown_types": [
+        "group"
+      ],
+      "invoke_kind": "template",
+      "template": "Calculator:Barrows/Template",
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Barrows item repair",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Barrows item repair/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Bestiary",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Bestiarytable",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Blackjack stun",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Blackjack stun/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Castle Wars tickets",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Castle Wars tickets/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Chambers of Xeric loot",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Chambers of Xeric/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Combat level",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Combat level/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Construction",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Construction/Flatpacks",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Construction/Materials",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Cooking",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Cooking/Brewing",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Cooking/Fish",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Cooking/Hunter meats",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Cooking/Pies",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Cooking/Pizza",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Template/Cooking/Pizza",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Cooking/Potatoes",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Coordinates",
+      "family": "multi",
+      "jcconfig_count": 2,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Coordinates/PlanarToGeo",
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Coordinates/GeoToPlanar",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Coordinates/PlanarToGeo",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Crafting",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Crafting/Battlestaves",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Crafting/Crushed gems",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Crafting/Crushed gems/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Crafting/Gem cutting",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Crafting/Glass",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Crafting/Jewellery",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Crafting/Magic armour",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Crafting/Tanned hides",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Crafting/Tanning hides",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Crafting/Untanned hides",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Cryptic clue quality calculator",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Cryptic_clue_quality_calculator/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Doom of Mokhaiotl Completions Calculator",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Doom of Mokhaiotl Completions",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Doom of Mokhaiotl loot",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Doom of Mokhaiotl loot",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Dry calc",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Dry calc",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Efficiency method comparison",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Efficiency method comparison/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Efficiency ratio",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Efficiency ratio/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Enchantment",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Farming",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Farming/Herbs",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Farming/Saplings",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Farming/Supercompost profit",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Farming/Supercompost profit/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Farming/Trees",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Firemaking",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Firemaking/Logs",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Firemaking/Wintertodt",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Wintertodt damage calculator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Fishing",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Fishing/Aerial fishing",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Fishing/Aerial fishing/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Fishing/Barbarian fishing",
+      "family": "C",
+      "jcconfig_count": 1,
+      "unknown_types": [
+        "group"
+      ],
+      "invoke_kind": "template",
+      "template": "Calculator:Fishing/Barbarian fishing/Template",
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Fishing/Clue bottles",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Fishing/Clue bottles/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Fishing/Molch pearls",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Fishing/Molch pearls/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Fletching",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Fletching/Ammo",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Fletching/Weapons",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Flipping",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Flipping/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Gauntlet resources",
+      "family": "C",
+      "jcconfig_count": 1,
+      "unknown_types": [
+        "group",
+        "group",
+        "group",
+        "group"
+      ],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Gauntlet Resources",
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Gear efficiency comparison",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Gear efficiency comparison/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Genie lamps and Books of knowledge",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Genie lamps and Books of knowledge/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Giants Foundry experience calculator",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Giants Foundry experience calculator/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Herblore",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Herblore cost",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Herblore_cost",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Herblore/Decanting",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Herblore/Herbs",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Herblore/Potions",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Herblore/Unfinished potions",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Unfinished potion creation calculator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Hunter",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Hunter/Herbiboar",
+      "family": "C",
+      "jcconfig_count": 1,
+      "unknown_types": [
+        "group"
+      ],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Herbiboar",
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Hunter/Rumours",
+      "family": "C",
+      "jcconfig_count": 1,
+      "unknown_types": [
+        "togglebuttongroup",
+        "group"
+      ],
+      "invoke_kind": "template",
+      "template": "Calculator:Hunter/Rumours/Template",
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Hunter/Rumours/Requirements",
+      "family": "C",
+      "jcconfig_count": 1,
+      "unknown_types": [
+        "togglebuttongroup",
+        "group"
+      ],
+      "invoke_kind": "template",
+      "template": "Calculator:Hunter/Rumours/Requirements/Template",
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Magic",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Magic/Enchant bolts",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Magic/Enchant jewellery",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Magic/Magic Dart",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Magic/Magic Dart/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Magic/Making tablets",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Magic/Powered staves",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Magic/Powered staves/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Mining",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Mining/Clue geodes",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Mining/Clue geodes/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Miscellania loot",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Miscellania loot/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Moonlight potion",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Moonlight potion/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Moons item repair",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Moons item repair/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Pharaohs sceptre calc",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Pharaohs sceptre calc",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Phoenix necklace",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Phoenix necklace/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Plank making",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:PlatinumToken",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:PlatinumToken/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Prayer",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Prayer/Blessed bone shards",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Prayer/Blessed Bone Shards",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Prayer/Bones",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Prayer/Ensouled heads",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Prayer/Holy wrench",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Prayer/Prayer drain",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Prayer/Prayer point cost",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Prayer/Prayer_point_cost/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Recursive Quest Requirements",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Runecraft",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Sailing",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Sailing/Cannon max hit",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Cannon_max_hit_calculator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Sailing/Giant clam reward",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Giant clam rewards",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Sailing/Giant clam rewards",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Giant clam rewards",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Sailing/Repair Kits",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Shop calculator",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Shop calculator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Shot put",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Shot put/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Skill pet chance",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill pet calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Skilling success rate",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Skilling success chart",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Slayer/Imbued heart",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Slayer/Imbued heart/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Slayer/Master comparison",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Slayer/Master comparison/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Slayer/Slayer task weight",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Slayer/Slayer task weight/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Smithing",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Smithing & High Alchemy Calculator",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Smithing/BarrowsRepair",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Smithing/Bars",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Smithing/Giants' Foundry",
+      "family": "C",
+      "jcconfig_count": 1,
+      "unknown_types": [
+        "group",
+        "group",
+        "group"
+      ],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Giants' Foundry Calculator",
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Smithing/Smelting",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Soul Wars rewards",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Teleportation jewellery",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Tempoross experience calculator",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Tempoross experience calculator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Tempoross reward pool",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Tempoross reward pool",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Theatre of Blood loot",
+      "family": "C",
+      "jcconfig_count": 1,
+      "unknown_types": [
+        "group",
+        "group",
+        "group"
+      ],
+      "invoke_kind": "template",
+      "template": "Calculator:Theatre of Blood/Template",
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Thieving",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Thieving/Dungeon door success",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Thieving/Dungeon door success/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Thieving/Master farmer special seed table",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Master farmer special seed calculator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Thieving/Master farmer success",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Thieving/Master farmer success/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Title generator",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Title generator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Tombs of Amascut loot",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Tombs of Amascut loot",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Training manuals",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Training manual calculator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Twisted bow",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Template/Others/Twistedbow",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Underwater Thieving",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Swimming/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Vale totems",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Vale totems calculator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Wilderness agility loot",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Wilderness agility calculator",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Wintertodt Reward Cart",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Wintertodt supply crate",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Woodcutting",
+      "family": "A",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Skill calc/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Woodcutting/Clue nests",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:Woodcutting/Clue nests/Template",
+      "module": null,
+      "eligible": true
+    },
+    {
+      "title": "Calculator:Woodcutting/Making Forester's rations",
+      "family": "E",
+      "jcconfig_count": 0,
+      "unknown_types": [],
+      "invoke_kind": null,
+      "template": null,
+      "module": null,
+      "eligible": false
+    },
+    {
+      "title": "Calculator:Yama rewards",
+      "family": "D",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "module",
+      "template": null,
+      "module": "Yama rewards",
+      "eligible": true
+    },
+    {
+      "title": "Calculator:ZMI",
+      "family": "B",
+      "jcconfig_count": 1,
+      "unknown_types": [],
+      "invoke_kind": "template",
+      "template": "Calculator:ZMI/Template",
+      "module": null,
+      "eligible": true
+    }
+  ]
+}

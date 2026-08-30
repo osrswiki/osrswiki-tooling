@@ -115,13 +115,6 @@ NATIVE_KIT_TYPES = frozenset(
         "semihidden",
     }
 )
-NATIVE_CHROME_TITLES = frozenset(
-    {
-        "Calculator:Agility",
-        "Calculator:Combat level",
-    }
-)
-SPIKE_NATIVE_TITLES = NATIVE_CHROME_TITLES
 _SKIP_EMPTY_ON_SUBMIT = frozenset({"hs", "rsn"})
 _ALWAYS_SUBMIT = frozenset({"hidden", "fixed"})
 _CONFIG_KEYS = frozenset(
@@ -243,7 +236,7 @@ def parse_calc_definition(
             elif key == "name":
                 ui["name"] = value or ui["name"]
             elif key == "autosubmit":
-                ui["autosubmit"] = value or "off"
+                ui["autosubmit"] = normalize_autosubmit(value)
             elif key == "template":
                 invoke["kind"] = "template"
                 invoke["template"] = value
@@ -310,8 +303,6 @@ def parse_calc_definition(
 def native_chrome_eligible(definition: dict | None) -> bool:
     if not definition:
         return False
-    if definition.get("id") not in NATIVE_CHROME_TITLES:
-        return False
     invoke = definition.get("invoke") or {}
     if invoke.get("kind") == "template" and not invoke.get("template"):
         return False
@@ -325,6 +316,51 @@ def native_chrome_eligible(definition: dict | None) -> bool:
     if not inputs:
         return False
     return all((item.get("type") or "") in NATIVE_KIT_TYPES for item in inputs)
+
+
+_JCCONFIG_OPEN_RE = re.compile(r'(?i)<pre[^>]*class="[^"]*jcConfig[^"]*"')
+
+
+def count_jcconfigs(html: str | None) -> int:
+    if not html:
+        return 0
+    return len(_JCCONFIG_OPEN_RE.findall(html))
+
+
+def page_native_chrome_eligible(html: str | None, title: str | None = None) -> bool:
+    if html is None or count_jcconfigs(html) != 1:
+        return False
+    return native_chrome_eligible(parse_calc_definition(html, title=title))
+
+
+def normalize_autosubmit(raw: str | None) -> str:
+    value = (raw or "off").strip().lower()
+    if not value or value in {"off", "disabled", "false"}:
+        return "off"
+    if value in {"enabled", "on", "true"}:
+        return "on"
+    return "on"
+
+
+def classify_calculator_family(html: str | None, definition: dict | None = None) -> str:
+    """Recorded-family letters from Fable: A/B/C/D/E, plus multi for >1 jcConfig."""
+    count = count_jcconfigs(html)
+    if count == 0:
+        return "E"
+    if count != 1:
+        return "multi"
+    definition = definition or parse_calc_definition(html or "")
+    if not definition:
+        return "E"
+    if definition.get("unknown_types"):
+        return "C"
+    invoke = definition.get("invoke") or {}
+    if invoke.get("kind") == "module":
+        return "D"
+    template = invoke.get("template") or ""
+    if template.startswith("Calculator:Skill calc/"):
+        return "A"
+    return "B"
 
 
 def _visible_input_names(definition: dict, values: dict[str, str]) -> set[str]:
@@ -466,6 +502,7 @@ def fetch_all_calculator_pages() -> list[dict]:
             "list": "allpages",
             "apnamespace": str(CALCULATOR_NAMESPACE),
             "aplimit": "500",
+            "apfilterredir": "nonredirects",
             "format": "json",
         }
         if continue_token:
@@ -502,7 +539,7 @@ def build_catalog(pages: list[dict]) -> dict:
         "wiki_origin": WIKI_ORIGIN,
         "namespace": CALCULATOR_NAMESPACE,
         "fetched_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "source": "api.php?action=query&list=allpages&apnamespace=116",
+        "source": "api.php?action=query&list=allpages&apnamespace=116&apfilterredir=nonredirects",
         "calculator_count": len(calculators),
         "excluded_count": len(excluded),
         "calculators": calculators,

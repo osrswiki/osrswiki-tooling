@@ -160,6 +160,109 @@ class NativeCalcIndocTests(unittest.TestCase):
         agility = eval_js("api.parse(" + json.dumps(AGILITY) + ', "Calculator:Agility")')
         self.assertEqual(agility["ui"]["autosubmit"], "on")
 
+    def test_should_autosubmit_honors_page_flag_and_field_type(self) -> None:
+        result = eval_js(
+            """(() => {
+              const on = api.parse(""" + json.dumps(AGILITY) + """, "Calculator:Agility");
+              const offHtml = """ + json.dumps(AGILITY.replace("autosubmit = enabled", "autosubmit = disabled")) + """;
+              const off = api.parse(offHtml, "Calculator:Agility");
+              const missing = api.parse(
+                """ + json.dumps(AGILITY.replace("autosubmit = enabled\n", "")) + """,
+                "Calculator:Agility"
+              );
+              return {
+                onBoot: api.shouldAutosubmit(on),
+                onInt: api.shouldAutosubmit(on, "int"),
+                onHs: api.shouldAutosubmit(on, "hs"),
+                offBoot: api.shouldAutosubmit(off),
+                offInt: api.shouldAutosubmit(off, "int"),
+                missingBoot: api.shouldAutosubmit(missing),
+                missingAutosubmit: missing.ui.autosubmit,
+              };
+            })()"""
+        )
+        self.assertTrue(result["onBoot"])
+        self.assertTrue(result["onInt"])
+        self.assertFalse(result["onHs"])
+        self.assertFalse(result["offBoot"])
+        self.assertFalse(result["offInt"])
+        self.assertEqual(result["missingAutosubmit"], "off")
+        self.assertFalse(result["missingBoot"])
+
+    def test_parse_result_classifies_parser_and_lua_errors(self) -> None:
+        expr = '<strong class="error">Expression error: Unexpected &lt; operator</strong>'
+        lua = '<p class="scribunto-error">Lua error in Module:Skill_calc at line 1</p>'
+        ok = '<table class="wikitable"><tr><td>12.4</td></tr></table>'
+        self.assertTrue(eval_js("api.parseResultIsError(" + json.dumps(expr) + ")"))
+        self.assertTrue(eval_js("api.parseResultIsError(" + json.dumps(lua) + ")"))
+        self.assertTrue(eval_js("api.parseResultIsError('')"))
+        self.assertFalse(eval_js("api.parseResultIsError(" + json.dumps(ok) + ")"))
+        self.assertFalse(
+            eval_js("api.parseResultIsError('<p>Your combat level is 3, balanced.</p>')")
+        )
+
+    def test_runtime_gates_automatic_submit_and_extracts_expression_error(self) -> None:
+        runtime = RUNTIME.read_text(encoding="utf-8")
+        boot = runtime.split("form.addEventListener('input'", 1)[1].split(
+            "window.osrsBootIndocCalc", 1
+        )[0]
+        self.assertIn("api.shouldAutosubmit(definition)", boot)
+        self.assertNotIn("bind();\n        submit();", runtime)
+        self.assertIn("if (api.shouldAutosubmit(definition)) submit();", runtime)
+        self.assertIn("if (api.shouldAutosubmit(definition, type)) submit();", runtime)
+        lookup = runtime.split("function lookupHiscores() {", 1)[1].split(
+            "function fieldTypeFor(name)", 1
+        )[0]
+        self.assertIn("submit();", lookup)
+        self.assertIn("/Expression error[^<]*/i", runtime)
+        self.assertIn("/Lua error[^<]*/i", runtime)
+        err_path = runtime.split("if (api.parseResultIsError(html)) {", 1)[1].split(
+            "window.osrsNativeCalcSetResult(definition.ui.resultId, html)", 1
+        )[0]
+        self.assertIn("osrsNativeCalcSetResult(definition.ui.resultId, '')", err_path)
+        form_submit = runtime.split("form.addEventListener('submit'", 1)[1].split(
+            "form.addEventListener('keydown'", 1
+        )[0]
+        self.assertIn("submit();", form_submit)
+        initialize = runtime.split("function initialize() {", 1)[1].split(
+            "if (document.readyState", 1
+        )[0]
+        self.assertNotIn("osrsWrapCollapsible", initialize)
+        prepare = runtime.split("function prepareCalculatorLayout(", 1)[1].split(
+            "function osrsReassertCalculatorThemeSheets(", 1
+        )[0]
+        self.assertIn("osrsWrapGadgetCalculatorLayout(existing)", prepare)
+        self.assertIn("osrsWrapGadgetCalculatorLayout(layout)", prepare)
+        self.assertIn("kind: 'calculator'", prepare)
+        self.assertIn("elementToWrap: layout", prepare)
+        self.assertIn("captionText: 'Calculator'", prepare)
+        self.assertNotIn("osrsWrapNativeCalcCalculatorBox", prepare)
+
+    def test_calculator_collapsible_overflow_owner_is_not_a_scrollport(self) -> None:
+        fixes = (ROOT / "shared" / "css" / "fixes.css").read_text(encoding="utf-8")
+        owner = (
+            ".collapsible-container.collapsible-calculator:not(.collapsed) > "
+            ".collapsible-content,"
+        )
+        self.assertEqual(fixes.count(owner), 1)
+        owner_block = fixes.split(owner, 1)[1].split("ul.gallery,", 1)[0]
+        self.assertIn("overflow-x: visible !important", owner_block)
+        self.assertNotIn("overflow-x: auto", owner_block)
+        self.assertNotIn("html.osrs-native-calc-slot-active", owner_block)
+        self.assertIn(
+            ".collapsible-container.collapsible-calculator .osrs-local-scroll-surface > table",
+            fixes,
+        )
+        runtime = RUNTIME.read_text(encoding="utf-8")
+        install = runtime.split("window.osrsInstallNativeCalcSlot = function", 1)[1].split(
+            "window.osrsNativeCalcSetSlotHeight", 1
+        )[0]
+        self.assertNotIn(
+            "html.osrs-native-calc-slot-active .collapsible-calculator:not(.collapsed) > .collapsible-content > .osrs-disclosure-body",
+            install,
+        )
+        self.assertIn("#osrs-native-calc-slot {", install)
+
     def test_runtime_boots_indoc_and_skips_gadget(self) -> None:
         runtime = RUNTIME.read_text(encoding="utf-8")
         self.assertIn("osrsBootIndocCalc", runtime)

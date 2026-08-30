@@ -133,6 +133,22 @@ class NativeCalcPredicateTests(unittest.TestCase):
                 ROOT / "shared" / "js" / "mediawiki" / "gadget_calc_core.js",
                 ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "js" / "mediawiki" / "gadget_calc_core.js",
             ),
+            (
+                ROOT / "shared" / "css" / "fixes.css",
+                ROOT / "platforms" / "android" / "app" / "src" / "main" / "assets" / "styles" / "fixes.css",
+            ),
+            (
+                ROOT / "shared" / "css" / "fixes.css",
+                ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "styles" / "fixes.css",
+            ),
+            (
+                ROOT / "shared" / "css" / "critical-article.min.css",
+                ROOT / "platforms" / "android" / "app" / "src" / "main" / "assets" / "styles" / "critical-article.min.css",
+            ),
+            (
+                ROOT / "shared" / "css" / "critical-article.min.css",
+                ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "styles" / "critical-article.min.css",
+            ),
         ]
         for shared, copy in pairs:
             self.assertEqual(shared.read_bytes(), copy.read_bytes(), f"{copy} drifted from {shared}")

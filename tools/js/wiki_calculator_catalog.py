@@ -442,6 +442,10 @@ def parse_result_is_error(html: str | None) -> bool:
         return True
     if "lua error" in lowered:
         return True
+    if 'class="error"' in lowered or "class='error'" in lowered:
+        return True
+    if "expression error" in lowered:
+        return True
     return False
 
 

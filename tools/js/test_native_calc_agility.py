@@ -151,6 +151,11 @@ class NativeCalcAgilityTests(unittest.TestCase):
                 '<table class="wikitable"><tr><td>Plank</td><td>1</td></tr></table>'
             )
         )
+        self.assertTrue(
+            parse_result_is_error(
+                '<strong class="error">Expression error: Unexpected &lt; operator</strong>'
+            )
+        )
 
     def test_runtime_wraps_slot_in_calculator_collapsible(self) -> None:
         from pathlib import Path

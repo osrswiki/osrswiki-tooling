@@ -37,14 +37,17 @@ class NativeCalcPredicateTests(unittest.TestCase):
         self.assertEqual(definition["invoke"]["module"], "Dry calc")
         self.assertEqual(definition["unknown_types"], [])
 
-    def test_barrows_group_stays_on_gadget(self) -> None:
+    def test_barrows_group_is_native_with_true_toggle_key(self) -> None:
         html = _html("barrows.html")
         definition = parse_calc_definition(html, title="Calculator:Barrows")
         self.assertEqual(count_jcconfigs(html), 1)
-        self.assertEqual(classify_calculator_family(html, definition), "C")
-        self.assertIn("group", definition["unknown_types"])
-        self.assertFalse(native_chrome_eligible(definition))
-        self.assertFalse(page_native_chrome_eligible(html, "Calculator:Barrows"))
+        self.assertEqual(classify_calculator_family(html, definition), "B")
+        self.assertEqual(definition["unknown_types"], [])
+        self.assertTrue(native_chrome_eligible(definition))
+        self.assertTrue(page_native_chrome_eligible(html, "Calculator:Barrows"))
+        toggle = next(item for item in definition["inputs"] if item["name"] == "toggleUnitKill")
+        self.assertIn("true", toggle["toggles"])
+        self.assertNotIn("false", toggle["toggles"])
 
     def test_coordinates_two_configs_are_not_eligible(self) -> None:
         html = _html("coordinates.html")
@@ -80,16 +83,21 @@ class NativeCalcPredicateTests(unittest.TestCase):
         self.assertEqual(counts, recorded["family_counts"])
         self.assertEqual(eligible, recorded["eligible_count"])
         self.assertEqual(counts["A"], 18)
-        self.assertEqual(counts["C"], 9)
+        self.assertEqual(counts.get("C", 0), 0)
         self.assertEqual(counts["multi"], 1)
         self.assertEqual(eligible, counts["A"] + counts["B"] + counts["D"])
         titles = {page["title"]: page for page in pages}
         self.assertEqual(titles["Calculator:Dry calc"]["family"], "D")
-        self.assertEqual(titles["Calculator:Barrows"]["family"], "C")
+        self.assertEqual(titles["Calculator:Barrows"]["family"], "B")
+        self.assertTrue(titles["Calculator:Barrows"]["eligible"])
         self.assertEqual(titles["Calculator:Coordinates"]["family"], "multi")
         self.assertEqual(titles["Calculator:Agility"]["family"], "A")
         self.assertEqual(titles["Calculator:Combat level"]["family"], "B")
         self.assertEqual(titles["Calculator:Prayer/Bones"]["family"], "E")
+        self.assertTrue(titles["Calculator:Hunter/Rumours"]["eligible"])
+        self.assertTrue(titles["Calculator:Recursive Quest Requirements"]["eligible"])
+        self.assertTrue(titles["Calculator:Prayer/Holy wrench"]["eligible"])
+        self.assertTrue(titles["Calculator:Farming/Herbs"]["eligible"])
 
     def test_catalog_drops_redirects_and_keeps_excluding_templates(self) -> None:
         catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
@@ -148,6 +156,14 @@ class NativeCalcPredicateTests(unittest.TestCase):
             (
                 ROOT / "shared" / "css" / "critical-article.min.css",
                 ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "styles" / "critical-article.min.css",
+            ),
+            (
+                ROOT / "shared" / "css" / "gadget_calc.css",
+                ROOT / "platforms" / "android" / "app" / "src" / "main" / "assets" / "styles" / "gadget_calc.css",
+            ),
+            (
+                ROOT / "shared" / "css" / "gadget_calc.css",
+                ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "styles" / "gadget_calc.css",
             ),
         ]
         for shared, copy in pairs:

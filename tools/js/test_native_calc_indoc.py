@@ -357,5 +357,100 @@ class NativeCalcIndocTests(unittest.TestCase):
         self.assertIn("osrsNativeCalcSetResult", fail)
 
 
+    def test_kit_carrier_unlocks_single_config_leftovers(self) -> None:
+        fixtures = ROOT / "tools" / "js" / "fixtures" / "native_calc"
+        barrows = (fixtures / "barrows.html").read_text(encoding="utf-8")
+        rumours = (fixtures / "hunter_rumours.html").read_text(encoding="utf-8")
+        quests = (fixtures / "recursive_quest.html").read_text(encoding="utf-8")
+        wrench = (fixtures / "holy_wrench.html").read_text(encoding="utf-8")
+        drain = (fixtures / "prayer_drain.html").read_text(encoding="utf-8")
+        herbs = (fixtures / "farming_herbs.html").read_text(encoding="utf-8")
+        coords = (fixtures / "coordinates.html").read_text(encoding="utf-8")
+        result = eval_js(
+            """(() => {
+              const barrows = api.parse(""" + json.dumps(barrows) + """, "Calculator:Barrows");
+              const rumours = api.parse(""" + json.dumps(rumours) + """, "Calculator:Hunter/Rumours");
+              const quests = api.parse(""" + json.dumps(quests) + """, "Calculator:Recursive Quest Requirements");
+              const wrench = api.parse(""" + json.dumps(wrench) + """, "Calculator:Prayer/Holy wrench");
+              const offInvoke = api.invokeWikitext(barrows);
+              const onInvoke = api.invokeWikitext(barrows, {toggleUnitKill: "true"});
+              const rumoursHtml = api.renderFormHtml(rumours);
+              const questHtml = api.renderFormHtml(quests);
+              const toggle = barrows.inputs.find((i) => i.name === "toggleUnitKill");
+              return {
+                barrowsEligible: api.isPageEligible(""" + json.dumps(barrows) + """, "Calculator:Barrows"),
+                rumoursEligible: api.isPageEligible(""" + json.dumps(rumours) + """, "Calculator:Hunter/Rumours"),
+                questsEligible: api.isPageEligible(""" + json.dumps(quests) + """, "Calculator:Recursive Quest Requirements"),
+                wrenchEligible: api.isPageEligible(""" + json.dumps(wrench) + """, "Calculator:Prayer/Holy wrench"),
+                drainEligible: api.isPageEligible(""" + json.dumps(drain) + """, "Calculator:Prayer/Prayer drain"),
+                herbsEligible: api.isPageEligible(""" + json.dumps(herbs) + """, "Calculator:Farming/Herbs"),
+                coordsCount: api.countJcConfigs(""" + json.dumps(coords) + """),
+                coordsEligible: api.isPageEligible(""" + json.dumps(coords) + """, "Calculator:Coordinates"),
+                toggleKeys: Object.keys(toggle.toggles),
+                offHasBloodworm: offInvoke.indexOf("|bloodworm=") >= 0,
+                offHasGroup: offInvoke.indexOf("|unitKill=") >= 0,
+                onHasBloodworm: onInvoke.indexOf("|bloodworm=") >= 0,
+                onHasGroup: onInvoke.indexOf("|unitKill=") >= 0,
+                rumoursHelp: rumoursHtml.indexOf("Karamja and Varlamore") >= 0,
+                rumoursTbg: rumoursHtml.indexOf('data-osrs-indoc-chip="togglebuttongroup"') >= 0,
+                questCombo: questHtml.indexOf('data-osrs-indoc-type="combobox"') >= 0,
+                questOptions: (quests.inputs.find((i) => i.type === "combobox") || {}).options.length,
+                wrenchAhrim: false,
+              };
+            })()"""
+        )
+        self.assertTrue(result["barrowsEligible"])
+        self.assertTrue(result["rumoursEligible"])
+        self.assertTrue(result["questsEligible"])
+        self.assertTrue(result["wrenchEligible"])
+        self.assertTrue(result["drainEligible"])
+        self.assertTrue(result["herbsEligible"])
+        self.assertEqual(result["coordsCount"], 2)
+        self.assertFalse(result["coordsEligible"])
+        self.assertEqual(result["toggleKeys"], ["true"])
+        self.assertFalse(result["offHasBloodworm"])
+        self.assertFalse(result["offHasGroup"])
+        self.assertTrue(result["onHasBloodworm"])
+        self.assertFalse(result["onHasGroup"])
+        self.assertTrue(result["rumoursHelp"])
+        self.assertTrue(result["rumoursTbg"])
+        self.assertTrue(result["questCombo"])
+        self.assertGreater(result["questOptions"], 50)
+
+    def test_div_config_survives_collapsed_paragraph_whitespace(self) -> None:
+        html = """
+        <div class="jcConfig" style="display: none;">
+        <p>template = Calculator:Prayer/Holy wrench/Template form = HWForm result = HWResult param = playername|Username||hs|PrayerLevel,6,1 param = PrayerLevel|Prayer level|99|int|1-99| param = PrayerPotions|Prayer potions (4)|5|int|0-50| autosubmit = enabled</p>
+        </div>
+        """
+        result = eval_js(
+            """(() => {
+              const html = """ + json.dumps(html) + """;
+              const def = api.parse(html, "Calculator:Prayer/Holy wrench");
+              return {
+                eligible: api.isPageEligible(html, "Calculator:Prayer/Holy wrench"),
+                types: def.inputs.map((i) => i.type),
+                names: def.inputs.map((i) => i.name),
+                template: def.invoke.template
+              };
+            })()"""
+        )
+        self.assertTrue(result["eligible"])
+        self.assertEqual(result["template"], "Calculator:Prayer/Holy wrench/Template")
+        self.assertEqual(result["names"], ["playername", "PrayerLevel", "PrayerPotions"])
+        self.assertEqual(result["types"], ["hs", "int", "int"])
+
+    def test_unknown_types_still_wrap_gadget(self) -> None:
+        html = """
+        <pre class="jcConfig">
+        template = Calculator:Agility/Template
+        param = voice|Voice of Seren|Amlodd|article|
+        param = skill|Skill|Agility|hidden
+        </pre>
+        """
+        self.assertFalse(eval_js("api.isPageEligible(" + json.dumps(html) + ', "Calculator:Agility")'))
+        self.assertFalse(eval_js("api.isEligible(api.parse(" + json.dumps(html) + ', "Calculator:Agility"))'))
+
+
 if __name__ == "__main__":
     unittest.main()

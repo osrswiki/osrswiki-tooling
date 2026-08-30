@@ -1,0 +1,27 @@
+<div class="mw-parser-output">
+<div class="jcConfig" style="display: none;">
+<p>template = Calculator:Prayer/Prayer_drain/Template
+form = PDForm
+result = PDResult
+param = playername|Name||hs|PrayerLevel_Input,6,1
+param = PrayerLevel_Input|Prayer Level|1|int|1-99|
+param = PrayerBonus_Input|Prayer Bonus|0|int|0-100|
+param = IsWrench|Holy Wrench|false|check|1,0|
+param = Prayer_Overhead|Overhead Prayer|None|select|None,Protect from Magic,Protect from Missiles,Protect from Melee,Retribution,Redemption,Smite
+param = Combat_Style|Combat Style|Melee|buttonselect|Melee,Ranged,Magic|Melee=Prayer_Defence,Prayer_Strength,Prayer_Attack;Ranged=Prayer_Ranged,Prayer_Defence;Magic=Prayer_Magic,Prayer_Defence
+param = Prayer_Combination|<i>OR</i> Combined Prayer|None|buttonselect|None,Chivalry,Piety,Rigour,Augury|None=Combat_Prayer_Group|These prayers combine stronger versions of combat boosting prayers, but cannot be used at the same time.
+param = Combat_Prayer_Group|Combat Boosting Prayers||group|Prayer_Defence,Prayer_Strength,Prayer_Attack,Prayer_Ranged,Prayer_Magic
+param = Prayer_Defence|Defence Boosting|None|buttonselect|None,Thick Skin,Rock Skin,Steel Skin||These prayers boost your defence level in calculations determining whether an attack against you hits, in ascending order of both potency and prayer drain.
+param = Prayer_Strength|Strength Boosting|None|buttonselect|None,Burst of Strength,Superhuman Strength,Ultimate Strength||These prayers boost your strength level in calculations determining your max melee hit, in ascending order of both potency and prayer drain.
+param = Prayer_Attack|Attack Boosting|None|buttonselect|None,Clarity of Thought,Improved Reflexes,Incredible Reflexes||These prayers boost your attack level in calculations determining your chance to hit with melee attacks, in ascending order of both potency and prayer drain.
+param = Prayer_Ranged|Ranged Boosting|None|buttonselect|None,Sharp Eye,Hawk Eye,Eagle Eye||These prayers boost your ranged level in calculations determining your max hit and chance to hit with ranged attacks, in ascending order of both potency and prayer drain.
+param = Prayer_Magic|Magic Boosting|None|buttonselect|None,Mystic Will,Mystic Lore,Mystic Might||These prayers boost your magic level in calculations determining your chance to hit with magic attacks, in ascending order of both potency and prayer drain. Also improves defence against magic attacks, as 1/3 of defence against magic attacks is determined by your magic level.
+param = Basic_Prayer_Group|Utility Prayers||group|IsPrayer_RapidRestore,IsPrayer_RapidHeal,IsPrayer_ProtectItem,IsPrayer_Preserve
+param = IsPrayer_RapidRestore|Rapid Restore|false|check|1,0|
+param = IsPrayer_RapidHeal|Rapid Heal|false|check|2,0|
+param = IsPrayer_ProtectItem|Protect Item|false|check|2,0|
+param = IsPrayer_Preserve|Preserve|false|check|2,0|
+autosubmit = enabled
+</p>
+</div>
+</div>

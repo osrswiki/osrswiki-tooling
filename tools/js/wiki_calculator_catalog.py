@@ -78,7 +78,7 @@ def catalog_entry(page: dict) -> dict:
 
 
 _JCCONFIG_RE = re.compile(
-    r"(?is)<pre[^>]*class=(['\"])[^'\"]*jcConfig[^'\"]*\1[^>]*>(.*?)</pre>"
+    r"(?is)<(pre|div)[^>]*class=(['\"])[^'\"]*jcConfig[^'\"]*\2[^>]*>(.*?)</\1>"
 )
 _TEMPLATE_RE = re.compile(
     r"(?i)\btemplate\s*=\s*(.+?)(?=\s+(?:form|result|param|name|autosubmit|module|modulefunc)\b|$)"
@@ -93,7 +93,7 @@ _PARAM_RE = re.compile(
     r"(?i)\bparam\s*=\s*([^|\n]+)\|([^|\n]*)\|([^|\n]*)\|([^|\n]*)"
 )
 _LOOSE_CONFIG_RE = re.compile(
-    r"(?is)(?:^|\n)\s*(?:template|module)\s*=.+?(?=\n\s*(?:\{\||----|<pre|$))"
+    r"(?is)(?:^|\n)\s*(?:template|module)\s*=.+?(?=\n\s*(?:\{\||----|<pre|<div|$))"
 )
 
 # Native kit for this spike. Unknown types force WebView fallback.
@@ -108,6 +108,9 @@ NATIVE_KIT_TYPES = frozenset(
         "check",
         "toggleswitch",
         "togglebutton",
+        "togglebuttongroup",
+        "combobox",
+        "group",
         "hs",
         "rsn",
         "hidden",
@@ -132,15 +135,57 @@ _CONFIG_KEYS = frozenset(
 )
 
 
+def _decode_entities(text: str) -> str:
+    return (
+        (text or "")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", '"')
+        .replace("&#39;", "'")
+        .replace("&amp;", "&")
+    )
+
+
+def _strip_tags(text: str) -> str:
+    stripped = re.sub(r"<[^>]+>", " ", text or "")
+    return re.sub(r"\s+", " ", _decode_entities(stripped)).strip()
+
+
+def _unwrap_div_config(inner: str) -> str:
+    match = re.match(r"(?is)^\s*<([a-z][a-z0-9]*)\b[^>]*>(.*)</\1>\s*$", inner or "")
+    if match:
+        return match.group(2)
+    return inner or ""
+
+
 def first_jcconfig(text: str) -> str | None:
     raw = text or ""
     match = _JCCONFIG_RE.search(raw)
     if match:
-        return match.group(2)
+        tag = (match.group(1) or "").lower()
+        inner = match.group(3) or ""
+        if tag == "pre":
+            return _decode_entities(inner)
+        return _unwrap_div_config(inner)
     loose = _LOOSE_CONFIG_RE.search(raw)
     if loose:
         return loose.group(0)
     return None
+
+
+def _config_lines(config: str) -> list[str]:
+    text = config or ""
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.I)
+    text = re.sub(r"</p>", "\n", text, flags=re.I)
+    text = re.sub(r"<p\b[^>]*>", "", text, flags=re.I)
+    text = _decode_entities(re.sub(r"<[^>]+>", " ", text))
+    text = re.sub(
+        r"\s+(?=(?:param|form|result|template|modulefunc|module|name|autosubmit|suggestns)\s*=)",
+        "\n",
+        text,
+        flags=re.I,
+    )
+    return text.splitlines()
 
 
 def _split_config_line(line: str) -> tuple[str, str] | None:
@@ -183,7 +228,7 @@ def _parse_toggles(raw: str, default_key: str) -> dict[str, dict[str, list[str]]
 
 
 def _options_for_type(kind: str, range_text: str) -> list[str]:
-    if kind in {"select", "buttonselect", "check"} and range_text:
+    if kind in {"select", "buttonselect", "check", "combobox", "togglebuttongroup"} and range_text:
         return [item.strip() for item in range_text.split(",") if item.strip()]
     return []
 
@@ -219,7 +264,7 @@ def parse_calc_definition(
     }
     inputs: list[dict] = []
     unknown_types: list[str] = []
-    for raw_line in config.splitlines():
+    for raw_line in _config_lines(config):
         parsed = _split_config_line(raw_line)
         if not parsed:
             continue
@@ -255,9 +300,18 @@ def parse_calc_definition(
             continue
         if kind and kind not in NATIVE_KIT_TYPES:
             unknown_types.append(kind)
-        toggle_default = default or ("true" if kind in {"toggleswitch", "togglebutton", "check"} else name)
+        if kind in {"toggleswitch", "togglebutton", "check"}:
+            toggle_default = "true"
+        else:
+            toggle_default = default or name
         if kind == "toggleswitch" and not default:
             default = "false"
+        help_text = ""
+        if len(fields) >= 7:
+            help_raw = "|".join(fields[6:]).strip()
+            if help_raw.lower().startswith("inline="):
+                help_raw = help_raw[7:]
+            help_text = _strip_tags(help_raw)
         inputs.append(
             {
                 "name": name,
@@ -277,6 +331,7 @@ def parse_calc_definition(
                     if key != "alltogs"
                 },
                 "int_range": _int_range(range_text) if kind in {"int", "number"} else {},
+                "help": help_text,
             }
         )
     if invoke["kind"] == "module" and not invoke["modulefunc"]:
@@ -318,7 +373,7 @@ def native_chrome_eligible(definition: dict | None) -> bool:
     return all((item.get("type") or "") in NATIVE_KIT_TYPES for item in inputs)
 
 
-_JCCONFIG_OPEN_RE = re.compile(r'(?i)<pre[^>]*class="[^"]*jcConfig[^"]*"')
+_JCCONFIG_OPEN_RE = re.compile(r'(?i)<(?:pre|div)[^>]*class="[^"]*jcConfig[^"]*"')
 
 
 def count_jcconfigs(html: str | None) -> int:
@@ -385,6 +440,13 @@ def _visible_input_names(definition: dict, values: dict[str, str]) -> set[str]:
                 mapped.update(names_on)
             for name in mapped:
                 visible.discard(name)
+    for item in definition.get("inputs") or []:
+        if item.get("type") != "group":
+            continue
+        if item["name"] in visible:
+            continue
+        for member in [part.strip() for part in (item.get("range") or "").split(",") if part.strip()]:
+            visible.discard(member)
     return visible
 
 
@@ -428,6 +490,13 @@ def invoke_wikitext(definition: dict | None, values: dict[str, str] | None = Non
                 value = "true"
             elif lowered in {"0", "false", "no", "off", ""}:
                 value = "false"
+        if kind == "check":
+            options = item.get("options") or []
+            if len(options) >= 2:
+                on = value == options[0]
+                value = options[0] if on else options[1]
+        if kind == "togglebuttongroup":
+            value = ",".join(part.strip() for part in str(value).split(",") if part.strip())
         parts.append(f"|{name}={value}")
     parts.append("}}")
     return "".join(parts)

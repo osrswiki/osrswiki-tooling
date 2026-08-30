@@ -4,27 +4,24 @@
   "catalog_calculator_count": 139,
   "page_count": 139,
   "family_counts": {
-    "C": 9,
+    "B": 52,
     "A": 18,
-    "B": 43,
-    "D": 23,
-    "E": 45,
+    "D": 27,
+    "E": 41,
     "multi": 1
   },
-  "eligible_count": 84,
+  "eligible_count": 97,
   "errors": [],
   "pages": [
     {
       "title": "Calculator:Abyssal pearls",
-      "family": "C",
+      "family": "B",
       "jcconfig_count": 1,
-      "unknown_types": [
-        "group"
-      ],
+      "unknown_types": [],
       "invoke_kind": "template",
       "template": "Calculator:Abyssal pearls/Template",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Agility",
@@ -88,15 +85,13 @@
     },
     {
       "title": "Calculator:Barrows",
-      "family": "C",
+      "family": "B",
       "jcconfig_count": 1,
-      "unknown_types": [
-        "group"
-      ],
+      "unknown_types": [],
       "invoke_kind": "template",
       "template": "Calculator:Barrows/Template",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Barrows item repair",
@@ -470,13 +465,13 @@
     },
     {
       "title": "Calculator:Farming/Herbs",
-      "family": "E",
-      "jcconfig_count": 0,
+      "family": "D",
+      "jcconfig_count": 1,
       "unknown_types": [],
-      "invoke_kind": null,
+      "invoke_kind": "module",
       "template": null,
-      "module": null,
-      "eligible": false
+      "module": "Herb Farming calculator",
+      "eligible": true
     },
     {
       "title": "Calculator:Farming/Saplings",
@@ -560,15 +555,13 @@
     },
     {
       "title": "Calculator:Fishing/Barbarian fishing",
-      "family": "C",
+      "family": "B",
       "jcconfig_count": 1,
-      "unknown_types": [
-        "group"
-      ],
+      "unknown_types": [],
       "invoke_kind": "template",
       "template": "Calculator:Fishing/Barbarian fishing/Template",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Fishing/Clue bottles",
@@ -632,18 +625,13 @@
     },
     {
       "title": "Calculator:Gauntlet resources",
-      "family": "C",
+      "family": "D",
       "jcconfig_count": 1,
-      "unknown_types": [
-        "group",
-        "group",
-        "group",
-        "group"
-      ],
+      "unknown_types": [],
       "invoke_kind": "module",
       "template": null,
       "module": "Gauntlet Resources",
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Gear efficiency comparison",
@@ -747,41 +735,33 @@
     },
     {
       "title": "Calculator:Hunter/Herbiboar",
-      "family": "C",
+      "family": "D",
       "jcconfig_count": 1,
-      "unknown_types": [
-        "group"
-      ],
+      "unknown_types": [],
       "invoke_kind": "module",
       "template": null,
       "module": "Herbiboar",
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Hunter/Rumours",
-      "family": "C",
+      "family": "B",
       "jcconfig_count": 1,
-      "unknown_types": [
-        "togglebuttongroup",
-        "group"
-      ],
+      "unknown_types": [],
       "invoke_kind": "template",
       "template": "Calculator:Hunter/Rumours/Template",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Hunter/Rumours/Requirements",
-      "family": "C",
+      "family": "B",
       "jcconfig_count": 1,
-      "unknown_types": [
-        "togglebuttongroup",
-        "group"
-      ],
+      "unknown_types": [],
       "invoke_kind": "template",
       "template": "Calculator:Hunter/Rumours/Requirements/Template",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Magic",
@@ -975,23 +955,23 @@
     },
     {
       "title": "Calculator:Prayer/Holy wrench",
-      "family": "E",
-      "jcconfig_count": 0,
+      "family": "B",
+      "jcconfig_count": 1,
       "unknown_types": [],
-      "invoke_kind": null,
-      "template": null,
+      "invoke_kind": "template",
+      "template": "Calculator:Prayer/Holy wrench/Template",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Prayer/Prayer drain",
-      "family": "E",
-      "jcconfig_count": 0,
+      "family": "B",
+      "jcconfig_count": 1,
       "unknown_types": [],
-      "invoke_kind": null,
-      "template": null,
+      "invoke_kind": "template",
+      "template": "Calculator:Prayer/Prayer_drain/Template",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Prayer/Prayer point cost",
@@ -1005,13 +985,13 @@
     },
     {
       "title": "Calculator:Recursive Quest Requirements",
-      "family": "E",
-      "jcconfig_count": 0,
+      "family": "B",
+      "jcconfig_count": 1,
       "unknown_types": [],
-      "invoke_kind": null,
-      "template": null,
+      "invoke_kind": "template",
+      "template": "Template:Recursive_Questreq",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Runecraft",
@@ -1185,17 +1165,13 @@
     },
     {
       "title": "Calculator:Smithing/Giants' Foundry",
-      "family": "C",
+      "family": "D",
       "jcconfig_count": 1,
-      "unknown_types": [
-        "group",
-        "group",
-        "group"
-      ],
+      "unknown_types": [],
       "invoke_kind": "module",
       "template": null,
       "module": "Giants' Foundry Calculator",
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Smithing/Smelting",
@@ -1249,17 +1225,13 @@
     },
     {
       "title": "Calculator:Theatre of Blood loot",
-      "family": "C",
+      "family": "B",
       "jcconfig_count": 1,
-      "unknown_types": [
-        "group",
-        "group",
-        "group"
-      ],
+      "unknown_types": [],
       "invoke_kind": "template",
       "template": "Calculator:Theatre of Blood/Template",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Thieving",

@@ -159,18 +159,28 @@ def _unwrap_div_config(inner: str) -> str:
 
 
 def first_jcconfig(text: str) -> str | None:
+    sources = each_jcconfig(text)
+    return sources[0] if sources else None
+
+
+def each_jcconfig(text: str) -> list[str]:
     raw = text or ""
-    match = _JCCONFIG_RE.search(raw)
-    if match:
+    sources: list[str] = []
+    for match in _JCCONFIG_RE.finditer(raw):
         tag = (match.group(1) or "").lower()
         inner = match.group(3) or ""
         if tag == "pre":
-            return _decode_entities(inner)
-        return _unwrap_div_config(inner)
+            sources.append(_decode_entities(inner))
+        else:
+            sources.append(_unwrap_div_config(inner))
+    if sources:
+        return sources
+    if re.search(r"(?i)\b(?:template|module|param)\s*=", raw) and not _JCCONFIG_OPEN_RE.search(raw):
+        return [raw]
     loose = _LOOSE_CONFIG_RE.search(raw)
     if loose:
-        return loose.group(0)
-    return None
+        return [loose.group(0)]
+    return []
 
 
 def _config_lines(config: str) -> list[str]:
@@ -383,9 +393,15 @@ def count_jcconfigs(html: str | None) -> int:
 
 
 def page_native_chrome_eligible(html: str | None, title: str | None = None) -> bool:
-    if html is None or count_jcconfigs(html) != 1:
+    if html is None:
         return False
-    return native_chrome_eligible(parse_calc_definition(html, title=title))
+    sources = each_jcconfig(html)
+    if not sources:
+        return False
+    return all(
+        native_chrome_eligible(parse_calc_definition(source, title=title))
+        for source in sources
+    )
 
 
 def normalize_autosubmit(raw: str | None) -> str:

@@ -10,7 +10,7 @@
     "E": 41,
     "multi": 1
   },
-  "eligible_count": 97,
+  "eligible_count": 98,
   "errors": [],
   "pages": [
     {
@@ -261,7 +261,7 @@
       "invoke_kind": "template",
       "template": "Calculator:Coordinates/PlanarToGeo",
       "module": null,
-      "eligible": false
+      "eligible": true
     },
     {
       "title": "Calculator:Coordinates/GeoToPlanar",

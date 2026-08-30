@@ -124,7 +124,7 @@ class NativeCalcIndocTests(unittest.TestCase):
             r'id="osrs-indoc-field-playername"[^>]*enterkeyhint="done"',
         )
 
-    def test_page_eligibility_is_kit_and_single_config_not_title(self) -> None:
+    def test_page_eligibility_is_kit_and_every_config_not_title(self) -> None:
         self.assertTrue(
             eval_js("api.isPageEligible(" + json.dumps(AGILITY) + ', "Calculator:Agility")')
         )
@@ -137,6 +137,18 @@ class NativeCalcIndocTests(unittest.TestCase):
         )
         self.assertTrue(eval_js("api.isPageEligible(" + json.dumps(cooking) + ', "Calculator:Cooking")'))
         self.assertEqual(eval_js("api.countJcConfigs(" + json.dumps(AGILITY) + ")"), 1)
+        coords = (ROOT / "tools" / "js" / "fixtures" / "native_calc" / "coordinates.html").read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(eval_js("api.countJcConfigs(" + json.dumps(coords) + ")"), 2)
+        self.assertTrue(
+            eval_js("api.isPageEligible(" + json.dumps(coords) + ', "Calculator:Coordinates")')
+        )
+        mixed = coords.replace("int | 0-180", "voiceofseren |")
+        self.assertFalse(
+            eval_js("api.isPageEligible(" + json.dumps(mixed) + ', "Calculator:Coordinates")')
+        )
+        self.assertFalse(eval_js("api.isPageEligible('<p>no calculator</p>', 'Calculator:None')"))
         self.assertFalse(eval_js("Object.prototype.hasOwnProperty.call(api, 'isAllowlisted')"))
         self.assertFalse(eval_js("Object.prototype.hasOwnProperty.call(api, 'titles')"))
 
@@ -261,7 +273,8 @@ class NativeCalcIndocTests(unittest.TestCase):
             "html.osrs-native-calc-slot-active .collapsible-calculator:not(.collapsed) > .collapsible-content > .osrs-disclosure-body",
             install,
         )
-        self.assertIn("#osrs-native-calc-slot {", install)
+        self.assertIn("#osrs-native-calc-slot", install)
+        self.assertIn("[data-osrs-native-calc-slot]", install)
 
     def test_runtime_boots_indoc_and_skips_gadget(self) -> None:
         runtime = RUNTIME.read_text(encoding="utf-8")
@@ -406,7 +419,7 @@ class NativeCalcIndocTests(unittest.TestCase):
         self.assertTrue(result["drainEligible"])
         self.assertTrue(result["herbsEligible"])
         self.assertEqual(result["coordsCount"], 2)
-        self.assertFalse(result["coordsEligible"])
+        self.assertTrue(result["coordsEligible"])
         self.assertEqual(result["toggleKeys"], ["true"])
         self.assertFalse(result["offHasBloodworm"])
         self.assertFalse(result["offHasGroup"])
@@ -439,6 +452,70 @@ class NativeCalcIndocTests(unittest.TestCase):
         self.assertEqual(result["template"], "Calculator:Prayer/Holy wrench/Template")
         self.assertEqual(result["names"], ["playername", "PrayerLevel", "PrayerPotions"])
         self.assertEqual(result["types"], ["hs", "int", "int"])
+
+    def test_render_form_html_prefixes_instance_ids(self) -> None:
+        coords = (ROOT / "tools" / "js" / "fixtures" / "native_calc" / "coordinates.html").read_text(
+            encoding="utf-8"
+        )
+        result = eval_js(
+            """(() => {
+              const sources = api.eachConfigSource(""" + json.dumps(coords) + """);
+              const first = api.parse(sources[0], "Calculator:Coordinates");
+              const second = api.parse(sources[1], "Calculator:Coordinates");
+              const html0 = api.renderFormHtml(first);
+              const html1 = api.renderFormHtml(second, {}, 1);
+              return {
+                names: [first.ui.name, second.ui.name],
+                formIds: [first.ui.formId, second.ui.formId],
+                resultIds: [first.ui.resultId, second.ui.resultId],
+                html0: html0,
+                html1: html1,
+              };
+            })()"""
+        )
+        self.assertEqual(result["names"], ["Planar to Geographic", "Geographic to Planar"])
+        self.assertEqual(result["formIds"], ["FormPtoG", "FormGtoP"])
+        self.assertEqual(result["resultIds"], ["ResultPtoG", "ResultGtoP"])
+        self.assertIn('id="osrs-indoc-calc-form"', result["html0"])
+        self.assertIn("osrs-indoc-field-x", result["html0"])
+        self.assertIn('id="osrs-indoc-calc-banner"', result["html0"])
+        self.assertIn('id="osrs-indoc-calc-status"', result["html0"])
+        self.assertIn('id="osrs-indoc-calc-form-1"', result["html1"])
+        self.assertIn("osrs-indoc-field-1-ndeg", result["html1"])
+        self.assertIn('id="osrs-indoc-calc-banner-1"', result["html1"])
+        self.assertIn('id="osrs-indoc-calc-status-1"', result["html1"])
+        self.assertNotIn('id="osrs-indoc-calc-form"', result["html1"])
+        self.assertIn("Submit", result["html0"])
+        self.assertIn("Submit", result["html1"])
+
+    def test_runtime_boots_one_slot_per_config_and_routes_results(self) -> None:
+        runtime = RUNTIME.read_text(encoding="utf-8")
+        boot = runtime.split("window.osrsBootIndocCalc = function", 1)[1].split(
+            "function osrsInstallCalculatorKeyboardGuards", 1
+        )[0]
+        self.assertNotIn("if (nodes.length !== 1)", boot)
+        self.assertIn("querySelectorAll(osrsJcConfigSelector())", boot)
+        self.assertIn("renderFormHtml(definition, values", boot)
+        self.assertIn("data-osrs-native-calc-slot", runtime)
+        self.assertIn("osrs-native-calc-slot-", runtime)
+        self.assertIn("[data-osrs-native-calc-slot]", runtime)
+        set_result = runtime.split("window.osrsNativeCalcSetResult = function", 1)[1].split(
+            "window.osrsUninstallNativeCalcSlot", 1
+        )[0]
+        self.assertIn("data-osrs-native-calc-slot", set_result)
+        self.assertIn("osrs-calculator-result", set_result)
+        self.assertIn("multi && !resultId", set_result)
+        self.assertIn("!multi", set_result)
+        collapse = runtime.split("window.osrsNativeCalcSetCollapsed = function", 1)[1].split(
+            "window.osrsNativeCalcIsCollapsed = function", 1
+        )[0]
+        self.assertNotIn("document.querySelector('.collapsible-calculator')", collapse)
+        is_collapsed = runtime.split("window.osrsNativeCalcIsCollapsed = function", 1)[1].split(
+            "return container;", 1
+        )[0]
+        self.assertNotIn("document.querySelector('.collapsible-calculator')", is_collapsed)
+        bind = runtime.split("function bind() {", 1)[1].split("form.addEventListener('submit'", 1)[0]
+        self.assertIn(".osrs-indoc-calc-form", bind)
 
     def test_unknown_types_still_wrap_gadget(self) -> None:
         html = """

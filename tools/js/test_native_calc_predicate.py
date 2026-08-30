@@ -49,13 +49,13 @@ class NativeCalcPredicateTests(unittest.TestCase):
         self.assertIn("true", toggle["toggles"])
         self.assertNotIn("false", toggle["toggles"])
 
-    def test_coordinates_two_configs_are_not_eligible(self) -> None:
+    def test_coordinates_two_kit_configs_are_page_eligible(self) -> None:
         html = _html("coordinates.html")
         definition = parse_calc_definition(html, title="Calculator:Coordinates")
         self.assertEqual(count_jcconfigs(html), 2)
         self.assertEqual(classify_calculator_family(html, definition), "multi")
         self.assertTrue(native_chrome_eligible(definition))
-        self.assertFalse(page_native_chrome_eligible(html, "Calculator:Coordinates"))
+        self.assertTrue(page_native_chrome_eligible(html, "Calculator:Coordinates"))
 
     def test_static_calculator_has_no_native_slot(self) -> None:
         html = _html("static_prayer_bones.html")
@@ -78,6 +78,12 @@ class NativeCalcPredicateTests(unittest.TestCase):
                 self.assertEqual(page["jcconfig_count"], 1, page["title"])
                 self.assertFalse(page["unknown_types"], page["title"])
                 self.assertTrue(page["eligible"], page["title"])
+            elif family == "multi":
+                self.assertGreater(page["jcconfig_count"], 1, page["title"])
+                if page["title"] == "Calculator:Coordinates":
+                    self.assertTrue(page["eligible"], page["title"])
+                else:
+                    self.assertFalse(page["eligible"], page["title"])
             else:
                 self.assertFalse(page["eligible"], page["title"])
         self.assertEqual(counts, recorded["family_counts"])
@@ -85,12 +91,14 @@ class NativeCalcPredicateTests(unittest.TestCase):
         self.assertEqual(counts["A"], 18)
         self.assertEqual(counts.get("C", 0), 0)
         self.assertEqual(counts["multi"], 1)
-        self.assertEqual(eligible, counts["A"] + counts["B"] + counts["D"])
+        multi_eligible = sum(1 for page in pages if page["family"] == "multi" and page["eligible"])
+        self.assertEqual(eligible, counts["A"] + counts["B"] + counts["D"] + multi_eligible)
         titles = {page["title"]: page for page in pages}
         self.assertEqual(titles["Calculator:Dry calc"]["family"], "D")
         self.assertEqual(titles["Calculator:Barrows"]["family"], "B")
         self.assertTrue(titles["Calculator:Barrows"]["eligible"])
         self.assertEqual(titles["Calculator:Coordinates"]["family"], "multi")
+        self.assertTrue(titles["Calculator:Coordinates"]["eligible"])
         self.assertEqual(titles["Calculator:Agility"]["family"], "A")
         self.assertEqual(titles["Calculator:Combat level"]["family"], "B")
         self.assertEqual(titles["Calculator:Prayer/Bones"]["family"], "E")

@@ -22,7 +22,8 @@
       "TablePreviewRendererTest",
       "TableRenderingTests",
       "ThemeCachingTest",
-      "WebKitCrashReproductionTest"
+      "WebKitCrashReproductionTest",
+      "osrsArticleWebViewLayoutTests"
     ],
     "osrswikiUITests": [
       "AgenticAccessibilityContractUITests",
@@ -35,7 +36,8 @@
       "SavedPagesNavigationVerificationTest",
       "SavedPagesUICleanupTest",
       "SearchToMapNavigationTest",
-      "SpecConformanceUITests"
+      "SpecConformanceUITests",
+      "osrsIPadEquivalenceUITests"
     ]
   },
   "forbiddenClasses": {

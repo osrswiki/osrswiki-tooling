@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 INTERNAL_DEPLOY_DIR="$REPO_ROOT/scripts/internal-deploy"
 CONFIG_DIR="${OSRSWIKI_CONFIG_DIR:-$HOME/.config/osrswiki}"
-HOME_HOST="${OSRSWIKI_HOME_HOST:-home}"
+HOME_HOST="${OSRSWIKI_HOME_HOST:-mini}"
 
 # Define print functions without requiring artifact root validation.
 # These are the same fallback implementations from common.sh.
@@ -34,8 +34,8 @@ Usage:
 Setup internal deployment credentials and configuration for this Mac.
 
 Options:
-  --pull-from-home  Copy ~/.config/osrswiki from the 'home' host over SSH (BatchMode).
-                    Requires Tailscale connection to home and SSH key auth.
+  --pull-from-home  Copy ~/.config/osrswiki from the 'mini' host over SSH (BatchMode).
+                    Requires Tailscale connection to mini and SSH key auth.
   --validate        Run deploy-internal.sh --validate-only after setup.
   -h, --help        Show this help message.
 
@@ -44,7 +44,7 @@ What this does:
   2. Copies committed template files if missing:
      - internal-deploy.env.example -> internal-deploy.env
      - android-signing.properties.example -> android-signing.properties
-  3. If --pull-from-home: copies entire ~/.config/osrswiki from home host
+  3. If --pull-from-home: copies entire ~/.config/osrswiki from mini host
   4. Creates Python venv with google-api-python-client and google-auth if needed
   5. If --validate: runs deploy-internal.sh --validate-only
 
@@ -128,11 +128,11 @@ fi
 
 # Step 3: Pull from home if requested
 if [[ "$PULL_FROM_HOME" == true ]]; then
-    print_phase "Pulling config from home host"
+    print_phase "Pulling config from mini host"
     
     CURRENT_HOST="$(hostname -s)"
     if [[ "$CURRENT_HOST" == "$HOME_HOST" ]]; then
-        print_warning "Already on home host, skipping pull"
+        print_warning "Already on mini host, skipping pull"
     else
         if ! command -v ssh >/dev/null 2>&1; then
             print_error "ssh command not found"
@@ -158,7 +158,7 @@ if [[ "$PULL_FROM_HOME" == true ]]; then
             
             mkdir -p "$CONFIG_DIR"
             # Use rsync for reliable directory copy with permissions
-            # Exclude storage.env: machine-local artifact root config must not be copied from home
+            # Exclude storage.env: machine-local artifact root config must not be copied from mini
             if command -v rsync >/dev/null 2>&1; then
                 rsync -az --delete --exclude='storage.env' "$HOME_HOST:~/.config/osrswiki/" "$CONFIG_DIR/"
                 print_success "Copied config from $HOME_HOST using rsync"

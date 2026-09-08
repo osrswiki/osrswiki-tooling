@@ -194,6 +194,14 @@ if target == "ios" and not app_store and "{{app_store_listing_url}}" in rendered
         "while app_store_listing_url is empty"
     )
 
+# Guard: empty Play closed-testing URL must not leave a raw placeholder.
+play_closed = (manifest.get("play_closed_testing_url") or "").strip()
+if target == "android" and not play_closed and "{{play_closed_testing_url}}" in rendered:
+    raise SystemExit(
+        "android install still contains raw {{play_closed_testing_url}} "
+        "while play_closed_testing_url is empty"
+    )
+
 sys.stdout.write(rendered)
 if not rendered.endswith("\n"):
     sys.stdout.write("\n")

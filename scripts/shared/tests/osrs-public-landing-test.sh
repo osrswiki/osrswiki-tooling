@@ -10,6 +10,24 @@ test -f "$TMP/android/README.md"
 test -f "$TMP/android/LICENSE"
 grep -q "GNU GENERAL PUBLIC LICENSE" "$TMP/android/LICENSE"
 grep -q "unofficial" "$TMP/android/README.md"
+PLAY_CLOSED='https://play.google.com/apps/testing/com.omiyawaki.osrswiki'
+PLAY_PRODUCTION='https://play.google.com/store/apps/details?id=com.omiyawaki.osrswiki'
+grep -q "$PLAY_CLOSED" "$TMP/android/README.md" || {
+  echo "FAIL: android README missing closed testing invite URL" >&2
+  exit 1
+}
+if grep -q "$PLAY_PRODUCTION" "$TMP/android/README.md"; then
+  echo "FAIL: android README must not present the production Play listing as available" >&2
+  exit 1
+fi
+grep -q "F-Droid:.*Coming soon" "$TMP/android/README.md" || {
+  echo "FAIL: android README must keep F-Droid as Coming soon" >&2
+  exit 1
+}
+grep -q "closed-tester gate" "$TMP/android/README.md" || {
+  echo "FAIL: android README must mention Google’s closed-tester gate" >&2
+  exit 1
+}
 # Public READMEs must not publish contact email
 if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/android/README.md"; then
   echo "FAIL: public android README contains email" >&2
@@ -46,6 +64,19 @@ fi
 "$HELPER" install --target ios --dest "$TMP/ios" --landing-root "$ROOT/docs/public-landing"
 if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/ios/README.md"; then
   echo "FAIL: public ios README contains email" >&2
+  exit 1
+fi
+APP_STORE='https://apps.apple.com/us/app/osrs-wiki/id6788651409'
+grep -q "$APP_STORE" "$TMP/ios/README.md" || {
+  echo "FAIL: ios README missing live App Store listing URL" >&2
+  exit 1
+}
+grep -q "]($APP_STORE)" "$TMP/ios/README.md" || {
+  echo "FAIL: ios README must wire platform badge or install CTA to app_store_listing_url" >&2
+  exit 1
+}
+if grep -A2 '^## Install' "$TMP/ios/README.md" | grep -q 'Coming soon'; then
+  echo "FAIL: ios Install must not say Coming soon while App Store is live" >&2
   exit 1
 fi
 "$HELPER" install --target org --dest "$TMP/org" --landing-root "$ROOT/docs/public-landing"

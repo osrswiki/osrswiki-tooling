@@ -12,10 +12,14 @@ grep -q "GNU GENERAL PUBLIC LICENSE" "$TMP/android/LICENSE"
 grep -q "unofficial" "$TMP/android/README.md"
 PLAY_CLOSED='https://play.google.com/apps/testing/com.omiyawaki.osrswiki'
 PLAY_PRODUCTION='https://play.google.com/store/apps/details?id=com.omiyawaki.osrswiki'
-grep -q "$PLAY_CLOSED" "$TMP/android/README.md" || {
-  echo "FAIL: android README missing closed testing invite URL" >&2
+grep -Fq -- "- **Google Play:** [Join early testing]($PLAY_CLOSED)" "$TMP/android/README.md" || {
+  echo "FAIL: android README must use Join early testing CTA with closed testing URL" >&2
   exit 1
 }
+if grep -q "Join closed testing to install Android now" "$TMP/android/README.md"; then
+  echo "FAIL: android README must not use the old closed-testing CTA wording" >&2
+  exit 1
+fi
 if grep -q "$PLAY_PRODUCTION" "$TMP/android/README.md"; then
   echo "FAIL: android README must not present the production Play listing as available" >&2
   exit 1

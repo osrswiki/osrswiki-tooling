@@ -24,10 +24,10 @@ grep -q "F-Droid:.*Coming soon" "$TMP/android/README.md" || {
   echo "FAIL: android README must keep F-Droid as Coming soon" >&2
   exit 1
 }
-grep -q "closed-tester gate" "$TMP/android/README.md" || {
-  echo "FAIL: android README must mention Google’s closed-tester gate" >&2
+if grep -q "closed-tester gate" "$TMP/android/README.md"; then
+  echo "FAIL: android README must not mention Google’s closed-tester gate" >&2
   exit 1
-}
+fi
 # Public READMEs must not publish contact email
 if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/android/README.md"; then
   echo "FAIL: public android README contains email" >&2
@@ -67,12 +67,25 @@ if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/ios/README.md"; then
   exit 1
 fi
 APP_STORE='https://apps.apple.com/us/app/osrs-wiki/id6788651409'
+IOS_BADGE='assets/download-on-the-app-store-black.svg'
 grep -q "$APP_STORE" "$TMP/ios/README.md" || {
   echo "FAIL: ios README missing live App Store listing URL" >&2
   exit 1
 }
 grep -q "]($APP_STORE)" "$TMP/ios/README.md" || {
   echo "FAIL: ios README must wire platform badge or install CTA to app_store_listing_url" >&2
+  exit 1
+}
+grep -Fq "[![Download on the App Store]($IOS_BADGE)]($APP_STORE)" "$TMP/ios/README.md" || {
+  echo "FAIL: ios Install must use official App Store badge markdown linking to listing URL" >&2
+  exit 1
+}
+test -f "$TMP/ios/$IOS_BADGE" || {
+  echo "FAIL: ios landing must copy App Store badge into dest/assets" >&2
+  exit 1
+}
+grep -q "Download_on_the_App_Store_Badge_US-UK_RGB_blk" "$TMP/ios/$IOS_BADGE" || {
+  echo "FAIL: ios App Store badge is not Apple’s official black English artwork" >&2
   exit 1
 }
 if grep -A2 '^## Install' "$TMP/ios/README.md" | grep -q 'Coming soon'; then

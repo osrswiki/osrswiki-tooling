@@ -219,8 +219,9 @@ case "$TARGET" in
     ;;
 esac
 
-# Assets: prefer --dest/assets/ when screenshots exist. Skip when manifest says none
-# or when the source assets directory is absent/empty.
+# Assets: copy screenshot files when the manifest enables them. iOS still copies
+# marketing badges (App Store CTA) when screenshots is none. Skip when the
+# source assets directory is absent/empty.
 SCREENSHOTS="$(
 python3 - "$MANIFEST" <<'PY'
 import re, sys
@@ -256,17 +257,23 @@ case "$SCREENSHOTS_LC" in
 esac
 
 ASSETS_SRC="$LANDING_ROOT/assets"
-if [[ "$copy_assets" == "yes" && -d "$ASSETS_SRC" ]]; then
-  # Only android|ios consume screenshot assets per brief.
-  case "$TARGET" in
-    android|ios)
-      if compgen -G "$ASSETS_SRC/*" > /dev/null; then
-        mkdir -p "$DEST/assets"
-        # Copy files (not nested dirs unless present); keep flat assets layout.
-        cp -R "$ASSETS_SRC/." "$DEST/assets/"
-      fi
-      ;;
-  esac
+# iOS marketing badges (App Store CTA) are copied even when screenshots: none.
+# Android still waits on the screenshot waiver.
+should_copy_assets="no"
+case "$TARGET" in
+  ios)
+    should_copy_assets="yes"
+    ;;
+  android)
+    should_copy_assets="$copy_assets"
+    ;;
+esac
+if [[ "$should_copy_assets" == "yes" && -d "$ASSETS_SRC" ]]; then
+  if compgen -G "$ASSETS_SRC/*" > /dev/null; then
+    mkdir -p "$DEST/assets"
+    # Copy files (not nested dirs unless present); keep flat assets layout.
+    cp -R "$ASSETS_SRC/." "$DEST/assets/"
+  fi
 fi
 
 echo "osrs-public-landing: installed $TARGET -> $DEST/README.md"

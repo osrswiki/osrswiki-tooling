@@ -32,6 +32,30 @@ if grep -q "closed-tester gate" "$TMP/android/README.md"; then
   echo "FAIL: android README must not mention Google’s closed-tester gate" >&2
   exit 1
 fi
+APP_STORE='https://apps.apple.com/us/app/osrs-wiki/id6788651409'
+IOS_REPO='https://github.com/osrswiki/osrswiki-ios'
+ANDROID_REPO='https://github.com/osrswiki/osrswiki-android'
+# Cross-link: Android must point iPhone visitors at the live App Store listing
+# and the iOS source tree, right under Install.
+grep -Fq -- "Also available on iOS: [Download on the App Store]($APP_STORE) · [Source]($IOS_REPO)" "$TMP/android/README.md" || {
+  echo "FAIL: android README must cross-link iOS (App Store + source) under Install" >&2
+  exit 1
+}
+grep -Fq -- "- [iOS app source]($IOS_REPO)" "$TMP/android/README.md" || {
+  echo "FAIL: android README Links must include iOS app source" >&2
+  exit 1
+}
+# Anti-slop: no manifesto headers, no buzzword one-liner.
+for slop in '^## Why' 'polished' 'in one place'; do
+  if grep -Eq -- "$slop" "$TMP/android/README.md"; then
+    echo "FAIL: android README contains slop pattern: $slop" >&2
+    exit 1
+  fi
+done
+if grep -Eq '\{\{[A-Za-z0-9_]+\}\}|\]\(\s*\)' "$TMP/android/README.md"; then
+  echo "FAIL: android README has unresolved placeholder or empty link target" >&2
+  exit 1
+fi
 # Public READMEs must not publish contact email
 if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/android/README.md"; then
   echo "FAIL: public android README contains email" >&2
@@ -70,7 +94,6 @@ if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/ios/README.md"; then
   echo "FAIL: public ios README contains email" >&2
   exit 1
 fi
-APP_STORE='https://apps.apple.com/us/app/osrs-wiki/id6788651409'
 IOS_BADGE='assets/download-on-the-app-store-black.svg'
 grep -q "$APP_STORE" "$TMP/ios/README.md" || {
   echo "FAIL: ios README missing live App Store listing URL" >&2
@@ -96,6 +119,46 @@ if grep -A2 '^## Install' "$TMP/ios/README.md" | grep -q 'Coming soon'; then
   echo "FAIL: ios Install must not say Coming soon while App Store is live" >&2
   exit 1
 fi
+# Cross-link: iOS must point Android visitors at the early-testing invite (the
+# current install path) and the Android source tree, right under Install.
+grep -Fq -- "Also available on Android: [Join early testing on Google Play]($PLAY_CLOSED) · [Source]($ANDROID_REPO)" "$TMP/ios/README.md" || {
+  echo "FAIL: ios README must cross-link Android (early testing + source) under Install" >&2
+  exit 1
+}
+grep -Fq -- "- [Android app source]($ANDROID_REPO)" "$TMP/ios/README.md" || {
+  echo "FAIL: ios README Links must include Android app source" >&2
+  exit 1
+}
+if grep -q "$PLAY_PRODUCTION" "$TMP/ios/README.md"; then
+  echo "FAIL: ios README must not present the production Play listing as available" >&2
+  exit 1
+fi
+for slop in '^## Why' 'polished' 'in one place'; do
+  if grep -Eq -- "$slop" "$TMP/ios/README.md"; then
+    echo "FAIL: ios README contains slop pattern: $slop" >&2
+    exit 1
+  fi
+done
+if grep -Eq '\{\{[A-Za-z0-9_]+\}\}|\]\(\s*\)' "$TMP/ios/README.md"; then
+  echo "FAIL: ios README has unresolved placeholder or empty link target" >&2
+  exit 1
+fi
+# Render must fail closed when a cross-linked URL is empty, on both platforms.
+for case in 'app_store_listing_url:android' 'play_closed_testing_url:ios'; do
+  key="${case%%:*}"
+  target="${case##*:}"
+  BROKEN="$TMP/landing-empty-$key"
+  cp -R "$ROOT/docs/public-landing" "$BROKEN"
+  sed -i.bak "s|^$key:.*|$key: \"\"|" "$BROKEN/manifest.yaml" && rm -f "$BROKEN/manifest.yaml.bak"
+  grep -q "^$key: \"\"" "$BROKEN/manifest.yaml" || {
+    echo "FAIL: test setup could not blank $key in temp manifest" >&2
+    exit 1
+  }
+  if "$HELPER" install --target "$target" --dest "$TMP/broken-$target" --landing-root "$BROKEN" 2>/dev/null; then
+    echo "FAIL: $target render must fail when $key is empty (would publish a dead cross-link)" >&2
+    exit 1
+  fi
+done
 "$HELPER" install --target org --dest "$TMP/org" --landing-root "$ROOT/docs/public-landing"
 if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/org/README.md"; then
   echo "FAIL: org README contains email" >&2

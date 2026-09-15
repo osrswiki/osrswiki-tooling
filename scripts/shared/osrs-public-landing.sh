@@ -186,20 +186,22 @@ template = template_path.read_text(encoding="utf-8")
 rendered = resolve_sponsors(template, manifest.get("sponsors_status", ""))
 rendered = substitute(rendered, manifest)
 
-# Guard: empty App Store URL must not leave a raw placeholder in iOS install.
-app_store = (manifest.get("app_store_listing_url") or "").strip()
-if target == "ios" and not app_store and "{{app_store_listing_url}}" in rendered:
+# Guard: no placeholder may survive rendering. Android and iOS cross-link each
+# other's store URL and source repo, so a key missing from the manifest would
+# otherwise leak a raw {{key}} into a published README.
+leftover = sorted(set(re.findall(r"\{\{([A-Za-z0-9_]+)\}\}", rendered)))
+if leftover:
     raise SystemExit(
-        "ios install still contains raw {{app_store_listing_url}} "
-        "while app_store_listing_url is empty"
+        f"{target} README still contains unresolved placeholders: "
+        + ", ".join("{{" + k + "}}" for k in leftover)
     )
 
-# Guard: empty Play closed-testing URL must not leave a raw placeholder.
-play_closed = (manifest.get("play_closed_testing_url") or "").strip()
-if target == "android" and not play_closed and "{{play_closed_testing_url}}" in rendered:
+# Guard: a key present but empty renders as a link with no target. Fail closed
+# rather than publish a dead Install or cross-platform CTA.
+if re.search(r"\]\(\s*\)", rendered):
     raise SystemExit(
-        "android install still contains raw {{play_closed_testing_url}} "
-        "while play_closed_testing_url is empty"
+        f"{target} README contains a link with an empty target; "
+        "check that every URL referenced by the template is set in the manifest"
     )
 
 sys.stdout.write(rendered)

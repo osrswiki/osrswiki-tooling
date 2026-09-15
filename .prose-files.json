@@ -65,6 +65,10 @@
       "audience": "internal",
       "description": "Internal guide for the expanded iOS QA environment, RC gate, deterministic tests, and simulator smokes."
     },
+    "docs/internal/ios-27-duo-adoption.md": {
+      "audience": "internal",
+      "description": "iOS 27 / iPhone Duo SDK adoption checklist, current Xcode settings, and Mac-only follow-ups for Xcode 27 and 27.1."
+    },
     "docs/internal/local-artifact-storage-policy.md": {
       "audience": "internal",
       "description": "Internal policy for routing OSRS Wiki worktrees, caches, and heavyweight QA artifacts outside File Provider with conservative retention and migration gates."

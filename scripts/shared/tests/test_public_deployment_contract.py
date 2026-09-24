@@ -16,9 +16,16 @@ class PublicDeploymentContractTests(unittest.TestCase):
             with self.subTest(script=name):
                 script = self.read_script(name)
                 self.assertIn("fetch-map-release-assets.sh", script)
+                self.assertIn("osrs_map_release_bundle.py", script)
                 self.assertIn("osrs-map-assets-v1.json", script)
                 self.assertIn("validate-public-deployment-tree.sh", script)
                 self.assertIn("OSRS_MAP_ASSET_SOURCE_DIR=", script)
+
+    def test_android_and_ios_do_not_hand_upload_map_bundle(self) -> None:
+        for name in ("deploy-android.sh", "deploy-ios.sh", "deploy-tooling.sh"):
+            with self.subTest(script=name):
+                script = self.read_script(name)
+                self.assertNotIn("gh release upload", script)
 
     def test_android_publishes_underground_fetch_recipe_without_materializing(self) -> None:
         script = self.read_script("deploy-android.sh")
@@ -50,6 +57,11 @@ class PublicDeploymentContractTests(unittest.TestCase):
         for name, repository in expected_repositories.items():
             with self.subTest(script=name):
                 self.assertIn(repository, self.read_script(name))
+
+    def test_pixi_exposes_publish_map_bundle(self) -> None:
+        pixi = (ROOT / "tools" / "pixi.toml").read_text(encoding="utf-8")
+        self.assertIn("publish-map-bundle", pixi)
+        self.assertIn("publish-map-release-bundle.sh", pixi)
 
 
 if __name__ == "__main__":

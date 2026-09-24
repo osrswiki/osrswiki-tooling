@@ -171,9 +171,12 @@ fi
 
 # Publish the immutable manifest and downloader while keeping the actual map
 # databases ignored. A verified host-local cache is the source for this deploy;
-# clean public clones use the same script to download the pinned release.
+# clean public clones download one map_floors.zip via the same fetch script.
+# Create or refresh that zip only with
+# scripts/shared/publish-map-release-bundle.sh (pixi task publish-map-bundle).
 mkdir -p scripts
 cp "$GIT_ROOT/scripts/shared/fetch-map-release-assets.sh" scripts/fetch-map-assets.sh
+cp "$GIT_ROOT/scripts/shared/osrs_map_release_bundle.py" scripts/osrs_map_release_bundle.py
 cp "$GIT_ROOT/shared/manifests/osrs-map-assets-v1.json" map-assets-manifest.json
 cp "$GIT_ROOT/docs/public/map-release-assets.md" MAP_ASSETS.md
 CACHE_BASE="$(get_cache_dir)"

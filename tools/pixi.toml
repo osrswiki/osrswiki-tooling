@@ -19,5 +19,6 @@ google-auth = "==2.40.3"
 [tasks]
 assets = "python $PIXI_PROJECT_ROOT/asset-updater.py --all"
 map-assets = "python $PIXI_PROJECT_ROOT/map/map-asset-generator.py"
+publish-map-bundle = "bash $PIXI_PROJECT_ROOT/../scripts/shared/publish-map-release-bundle.sh"
 check = "PYTHONDONTWRITEBYTECODE=1 python -c \"import google.oauth2.service_account, googleapiclient.discovery, numpy, requests; from PIL import Image; print('OSRS dependencies import ok')\""
 non-surface-tests = "PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s map/tests -p 'test_osrs_*.py'"

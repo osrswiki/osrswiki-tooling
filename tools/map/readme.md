@@ -183,6 +183,17 @@ floors plus `map-metadata.json` under
 copy only the curated platform assets and stamp the generated default-view
 sources.
 
+To publish those floors as the FOSS/F-Droid download (one `map_floors.zip` on
+the tooling GitHub Release), run the Fleet publisher. Do not `gh release
+upload` the zip by hand:
+
+```bash
+./scripts/shared/publish-map-release-bundle.sh --clobber
+```
+
+From this directory the Pixi alias is `pixi run publish-map-bundle --clobber`.
+`--dry-run` builds the zip and prints sha256 without uploading.
+
 ---
 
 ## Meta Asset Updater (Recommended)

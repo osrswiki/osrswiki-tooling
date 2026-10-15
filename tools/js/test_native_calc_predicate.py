@@ -142,14 +142,6 @@ class NativeCalcPredicateTests(unittest.TestCase):
                 ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "web" / "osrs_calculator_runtime.js",
             ),
             (
-                ROOT / "shared" / "js" / "mediawiki" / "gadget_calc_core.js",
-                ROOT / "platforms" / "android" / "app" / "src" / "main" / "assets" / "mediawiki" / "gadget_calc_core.js",
-            ),
-            (
-                ROOT / "shared" / "js" / "mediawiki" / "gadget_calc_core.js",
-                ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "js" / "mediawiki" / "gadget_calc_core.js",
-            ),
-            (
                 ROOT / "shared" / "css" / "fixes.css",
                 ROOT / "platforms" / "android" / "app" / "src" / "main" / "assets" / "styles" / "fixes.css",
             ),
@@ -166,12 +158,12 @@ class NativeCalcPredicateTests(unittest.TestCase):
                 ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "styles" / "critical-article.min.css",
             ),
             (
-                ROOT / "shared" / "css" / "gadget_calc.css",
-                ROOT / "platforms" / "android" / "app" / "src" / "main" / "assets" / "styles" / "gadget_calc.css",
+                ROOT / "shared" / "css" / "osrs_calculator.css",
+                ROOT / "platforms" / "android" / "app" / "src" / "main" / "assets" / "styles" / "osrs_calculator.css",
             ),
             (
-                ROOT / "shared" / "css" / "gadget_calc.css",
-                ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "styles" / "gadget_calc.css",
+                ROOT / "shared" / "css" / "osrs_calculator.css",
+                ROOT / "platforms" / "ios" / "osrswiki" / "Assets" / "styles" / "osrs_calculator.css",
             ),
         ]
         for shared, copy in pairs:

@@ -289,23 +289,11 @@ class NativeCalcIndocTests(unittest.TestCase):
         self.assertNotIn(".osrs-calculator-layout button,", install)
         self.assertIn("#osrs-native-calc-slot input", install)
         self.assertIn(".jcTable input,", install)
-        css = (ROOT / "shared" / "css" / "gadget_calc.css").read_text(encoding="utf-8")
+        css = (ROOT / "shared" / "css" / "osrs_calculator.css").read_text(encoding="utf-8")
         self.assertIn(".osrs-indoc-calc-form", css)
         self.assertIn("html.osrs-indoc-calc", css)
         self.assertIn("overflow: visible !important", css)
-        core = (ROOT / "shared" / "js" / "mediawiki" / "gadget_calc_core.js").read_text(encoding="utf-8")
-        self.assertIn("osrsIndocPageShouldSkipGadgetBoot", core)
-        self.assertIn("osrsIndocNativeSlotTakingOver", core)
-        self.assertIn("isPageEligible", core)
-        skip_boot = core.split("function osrsIndocPageShouldSkipGadgetBoot()", 1)[1].split(
-            "function osrsBootCalcCore()", 1
-        )[0]
-        self.assertNotIn("Calculator:Agility", skip_boot)
-        self.assertNotIn("Calculator:Combat level", skip_boot)
-        skip_init = core.split("function osrsIndocPageShouldSkipGadget()", 1)[1].split(
-            "function init()", 1
-        )[0]
-        self.assertNotIn("Calculator:Agility", skip_init)
+        self.assertFalse((ROOT / "shared" / "js" / "mediawiki" / "gadget_calc_core.js").exists())
         self.assertIn("resolvePageTitle", runtime)
 
     def test_hs_enterkeyhint_is_go_and_enter_looks_up(self) -> None:
@@ -343,7 +331,7 @@ class NativeCalcIndocTests(unittest.TestCase):
         self.assertIn("showLookupError(player)", lookup)
         self.assertIn("osrsNativeCalcSetResult(definition.ui.resultId, '')", runtime)
         self.assertIn("osrsClearCalculatorPublishEcho()", runtime)
-        css = (ROOT / "shared" / "css" / "gadget_calc.css").read_text(encoding="utf-8")
+        css = (ROOT / "shared" / "css" / "osrs_calculator.css").read_text(encoding="utf-8")
         self.assertIn(".osrs-indoc-calc-error-icon", css)
         self.assertIn(".osrs-indoc-calc-error-stop", css)
         self.assertIn("html.theme-osrs-dark .osrs-indoc-calc-error", css)
@@ -517,16 +505,30 @@ class NativeCalcIndocTests(unittest.TestCase):
         bind = runtime.split("function bind() {", 1)[1].split("form.addEventListener('submit'", 1)[0]
         self.assertIn(".osrs-indoc-calc-form", bind)
 
-    def test_unknown_types_still_wrap_gadget(self) -> None:
-        html = """
+    def test_article_type_is_plain_text_and_unknown_types_stay_ineligible(self) -> None:
+        article = """
         <pre class="jcConfig">
         template = Calculator:Agility/Template
-        param = voice|Voice of Seren|Amlodd|article|
+        param = page|Wiki page|Abyssal whip|article|
         param = skill|Skill|Agility|hidden
         </pre>
         """
-        self.assertFalse(eval_js("api.isPageEligible(" + json.dumps(html) + ', "Calculator:Agility")'))
-        self.assertFalse(eval_js("api.isEligible(api.parse(" + json.dumps(html) + ', "Calculator:Agility"))'))
+        parsed = eval_js("api.parse(" + json.dumps(article) + ', "Calculator:Agility")')
+        self.assertEqual(parsed["inputs"][0]["type"], "article")
+        self.assertTrue(eval_js("api.isEligible(api.parse(" + json.dumps(article) + ', "Calculator:Agility"))'))
+        html = eval_js("api.renderFormHtml(api.parse(" + json.dumps(article) + ', "Calculator:Agility"))')
+        self.assertIn('data-osrs-indoc-type="article"', html)
+        self.assertIn('type="text"', html)
+
+        unknown = """
+        <pre class="jcConfig">
+        template = Calculator:Agility/Template
+        param = voice|Voice of Seren|Amlodd|voiceofseren|
+        param = skill|Skill|Agility|hidden
+        </pre>
+        """
+        self.assertFalse(eval_js("api.isPageEligible(" + json.dumps(unknown) + ', "Calculator:Agility")'))
+        self.assertFalse(eval_js("api.isEligible(api.parse(" + json.dumps(unknown) + ', "Calculator:Agility"))'))
 
 
 if __name__ == "__main__":

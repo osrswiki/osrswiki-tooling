@@ -22,7 +22,7 @@ sources = [
     ("web/collapsible_sections.css", root / "platforms/android/app/src/main/assets/web/collapsible_sections.css"),
     ("web/switch_infobox_styles.css", root / "shared/js/switch_infobox_styles.css"),
     ("styles/fixes.css", root / "shared/css/fixes.css"),
-    ("styles/gadget_calc.css", root / "shared/css/gadget_calc.css"),
+    ("styles/osrs_calculator.css", root / "shared/css/osrs_calculator.css"),
 ]
 
 def minify(css: str) -> str:

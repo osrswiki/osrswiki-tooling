@@ -44,10 +44,12 @@
       "wiki_names": [
         "ext.gadget.tooltips"
       ],
-      "app_files": [],
-      "implementation_type": "curated",
+      "app_files": [
+        "web/osrs_article_tooltips.js"
+      ],
+      "implementation_type": "custom_curated",
       "implemented_date": "2025-08-15T04:00:28.063371+00:00",
-      "functionality": "Functionality for ext.gadget.tooltips"
+      "functionality": "Clickable in-article tooltips from wiki HTML markers"
     },
     "switch_infobox": {
       "wiki_names": [

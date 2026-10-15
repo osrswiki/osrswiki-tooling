@@ -34,14 +34,6 @@
           "description": "startup.js goes to assets root for direct access"
         },
         {
-          "source_files": [
-            "js/mediawiki/page_bootstrap.js",
-            "js/mediawiki/page_modules.js"
-          ],
-          "target_dir": "mediawiki",
-          "description": "Other MediaWiki modules go to mediawiki/ subdirectory"
-        },
-        {
           "source_pattern": "js/*.css",
           "target_dir": "web",
           "description": "CSS files mixed in JS directory go to web/ for WebView context"
@@ -64,7 +56,8 @@
             "js/live_article_asset_warm.js",
             "js/article_image_lazy.js",
             "js/first_viewport_assets.js",
-            "js/article_audio_player.js"
+            "js/article_audio_player.js",
+            "js/osrs_article_tooltips.js"
           ],
           "target_dir": "web",
           "description": "WebView-specific JavaScript files"
@@ -157,12 +150,11 @@
       "web/switch_infobox.js",
       "web/mobile_article_polish.js",
       "web/article_audio_player.js",
+      "web/osrs_article_tooltips.js",
       "web/switch_infobox_styles.css",
       "web/ge_charts_init.js",
       "web/chart.umd.min.js",
       "startup.js",
-      "mediawiki/page_bootstrap.js",
-      "mediawiki/page_modules.js",
       "map_floor_3.mbtiles"
     ]
   },
@@ -190,7 +182,7 @@
     "android": [
       "The Android app expects specific directory structures (styles/, js/, web/)",
       "WebView-related assets must be in web/ directory",
-      "MediaWiki modules go in mediawiki/ directory",
+      "MediaWiki ResourceLoader startup.js goes in assets root. Wiki gadgets are not copied.",
       "Map tiles must be in assets root for MapLibre access"
     ],
     "ios": [

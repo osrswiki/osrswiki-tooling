@@ -67,7 +67,7 @@
     },
     "docs/internal/ios-27-duo-adoption.md": {
       "audience": "internal",
-      "description": "iOS 27 / iPhone Duo SDK adoption checklist, current Xcode settings, and Mac-only follow-ups for Xcode 27 and 27.1."
+      "description": "iOS 27.1 SDK linkage, Duo vertical-bar API adoption sites, and Mac-only Xcode 27.1 verify notes."
     },
     "docs/internal/local-artifact-storage-policy.md": {
       "audience": "internal",

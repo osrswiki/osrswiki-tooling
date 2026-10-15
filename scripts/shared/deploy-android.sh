@@ -214,7 +214,7 @@ if [[ -d "$GIT_ROOT/shared" ]]; then
         for webjs in "collapsible_content.js" "horizontal_scroll_interceptor.js" "responsive_videos.js" \
                      "clipboard_bridge.js" "infobox_switcher_bootstrap.js" "switch_infobox.js" \
                      "ge_charts_init.js" "chart.umd.min.js" "first_viewport_assets.js" \
-                     "article_image_lazy.js"; do
+                     "article_image_lazy.js" "osrs_article_tooltips.js"; do
             if [[ -f "$GIT_ROOT/shared/js/$webjs" ]]; then
                 cp "$GIT_ROOT/shared/js/$webjs" "$ASSETS_DIR/web/"
             fi
@@ -237,13 +237,8 @@ if [[ -d "$GIT_ROOT/shared" ]]; then
             cp "$GIT_ROOT/shared/js/mediawiki/startup.js" "$ASSETS_DIR/"
         fi
         
-        # Other MediaWiki modules go to mediawiki/ subdirectory
-        for mwjs in "page_bootstrap.js" "page_modules.js"; do
-            if [[ -f "$GIT_ROOT/shared/js/mediawiki/$mwjs" ]]; then
-                cp "$GIT_ROOT/shared/js/mediawiki/$mwjs" "$ASSETS_DIR/mediawiki/"
-            fi
-        done
-        echo "    ✓ MediaWiki modules copied"
+        # Other MediaWiki modules are not copied. Wiki gadgets are not bundled.
+        echo "    ✓ MediaWiki startup.js copied"
     fi
     
     # Copy only small source-controlled shared assets. Release MBTiles are
@@ -265,7 +260,7 @@ if [[ -d "$GIT_ROOT/shared" ]]; then
     echo "  📁 Assets organized in proper Android structure:"
     echo "    • CSS files → styles/ (main) and styles/modules/ (modules)"
     echo "    • JavaScript → js/ (main) and web/ (WebView-specific)"
-    echo "    • MediaWiki → startup.js (root) and mediawiki/ (modules)"
+    echo "    • MediaWiki → startup.js (root). Wiki gadgets are not copied."
     echo "    • Assets → root (for direct access)"
     echo "    • Data → data/ (maintaining structure)"
 else

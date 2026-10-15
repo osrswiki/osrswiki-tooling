@@ -213,6 +213,7 @@ class MasterlistInitializer:
         module_to_files = {
             'ext.gadget.GECharts': ['web/ge_charts_init.js'],
             'ext.gadget.switch-infobox': ['web/switch_infobox.js'],
+            'ext.gadget.tooltips': ['web/osrs_article_tooltips.js'],
             'jquery.makeCollapsible': ['web/collapsible_content.js'],
             'ext.cite.ux-enhancements': ['web/mediawiki/page_modules.js']
         }

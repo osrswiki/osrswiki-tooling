@@ -96,8 +96,8 @@ _LOOSE_CONFIG_RE = re.compile(
     r"(?is)(?:^|\n)\s*(?:template|module)\s*=.+?(?=\n\s*(?:\{\||----|<pre|<div|$))"
 )
 
-# Native kit for this spike. Unknown types force WebView fallback.
-# Mirrors MediaWiki:Gadget-calc-core.js validParamTypes used on OSRS.
+# Native kit for in-document calculator chrome. Unknown types stay as
+# static wiki HTML because those fields have no original control yet.
 NATIVE_KIT_TYPES = frozenset(
     {
         "string",
@@ -113,6 +113,7 @@ NATIVE_KIT_TYPES = frozenset(
         "group",
         "hs",
         "rsn",
+        "article",
         "hidden",
         "fixed",
         "semihidden",

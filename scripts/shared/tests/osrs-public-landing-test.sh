@@ -11,11 +11,27 @@ test -f "$TMP/android/LICENSE"
 grep -q "GNU GENERAL PUBLIC LICENSE" "$TMP/android/LICENSE"
 grep -q "unofficial" "$TMP/android/README.md"
 PLAY_CLOSED='https://play.google.com/apps/testing/com.omiyawaki.osrswiki'
+PLAY_TESTERS_GROUP='https://groups.google.com/g/osrswiki-testers'
 PLAY_PRODUCTION='https://play.google.com/store/apps/details?id=com.omiyawaki.osrswiki'
-grep -Fq -- "- **Google Play:** [Join early testing]($PLAY_CLOSED)" "$TMP/android/README.md" || {
-  echo "FAIL: android README must use Join early testing CTA with closed testing URL" >&2
+FDROID='https://f-droid.org/packages/com.omiyawaki.osrswiki/'
+FDROID_SHIELD='https://img.shields.io/f-droid/v/com.omiyawaki.osrswiki'
+grep -Fxq "fdroid_listing_url: $FDROID" "$ROOT/docs/public-landing/manifest.yaml" || {
+  echo "FAIL: manifest fdroid_listing_url must be the live F-Droid package page and must not be empty" >&2
   exit 1
 }
+ANDROID_PLAY_INSTALL="- **Google Play:** Join the [osrswiki-testers]($PLAY_TESTERS_GROUP) Google Group, then [open the Play testing link]($PLAY_CLOSED) and tap Become a tester"
+grep -Fq -- "$ANDROID_PLAY_INSTALL" "$TMP/android/README.md" || {
+  echo "FAIL: android README must tell testers to join osrswiki-testers, then open the Play testing link and tap Become a tester" >&2
+  exit 1
+}
+grep -Fq -- "]($PLAY_CLOSED) · Join [osrswiki-testers]($PLAY_TESTERS_GROUP) first" "$TMP/android/README.md" || {
+  echo "FAIL: android platform badge must keep the Play testing URL and add the testers group step next to it" >&2
+  exit 1
+}
+if grep -q "Join early testing" "$TMP/android/README.md"; then
+  echo "FAIL: android README must not use the old Join early testing CTA" >&2
+  exit 1
+fi
 if grep -q "Join closed testing to install Android now" "$TMP/android/README.md"; then
   echo "FAIL: android README must not use the old closed-testing CTA wording" >&2
   exit 1
@@ -24,10 +40,19 @@ if grep -q "$PLAY_PRODUCTION" "$TMP/android/README.md"; then
   echo "FAIL: android README must not present the production Play listing as available" >&2
   exit 1
 fi
-grep -q "F-Droid:.*Coming soon" "$TMP/android/README.md" || {
-  echo "FAIL: android README must keep F-Droid as Coming soon" >&2
+ANDROID_FDROID_INSTALL="- **F-Droid:** [f-droid.org/packages/com.omiyawaki.osrswiki]($FDROID)"
+grep -Fq -- "$ANDROID_FDROID_INSTALL" "$TMP/android/README.md" || {
+  echo "FAIL: android README must link F-Droid to the live package page" >&2
   exit 1
 }
+grep -Fq -- "[![F-Droid]($FDROID_SHIELD)]($FDROID)" "$TMP/android/README.md" || {
+  echo "FAIL: android header must include a compact F-Droid badge linking to the package page" >&2
+  exit 1
+}
+if grep -Eiq 'F-Droid:.*Coming soon|Coming soon.*F-Droid' "$TMP/android/README.md"; then
+  echo "FAIL: android README must not say F-Droid is Coming soon" >&2
+  exit 1
+fi
 if grep -q "closed-tester gate" "$TMP/android/README.md"; then
   echo "FAIL: android README must not mention Google’s closed-tester gate" >&2
   exit 1
@@ -119,12 +144,17 @@ if grep -A2 '^## Install' "$TMP/ios/README.md" | grep -q 'Coming soon'; then
   echo "FAIL: ios Install must not say Coming soon while App Store is live" >&2
   exit 1
 fi
-# Cross-link: iOS must point Android visitors at the early-testing invite (the
-# current install path) and the Android source tree, right under Install.
-grep -Fq -- "Also available on Android: [Join early testing on Google Play]($PLAY_CLOSED) · [Source]($ANDROID_REPO)" "$TMP/ios/README.md" || {
-  echo "FAIL: ios README must cross-link Android (early testing + source) under Install" >&2
+# Cross-link: iOS must point Android visitors at the testers group, then the
+# Play testing invite, and the Android source tree, right under Install.
+IOS_ANDROID_CROSS="Also available on Android: Join the [osrswiki-testers]($PLAY_TESTERS_GROUP) Google Group, then [open the Play testing link]($PLAY_CLOSED) and tap Become a tester · [F-Droid]($FDROID) · [Source]($ANDROID_REPO)"
+grep -Fq -- "$IOS_ANDROID_CROSS" "$TMP/ios/README.md" || {
+  echo "FAIL: ios README must cross-link Android (testers group, Play testing, F-Droid, source) under Install" >&2
   exit 1
 }
+if grep -q "Join early testing" "$TMP/ios/README.md"; then
+  echo "FAIL: ios README must not use the old Join early testing CTA" >&2
+  exit 1
+fi
 grep -Fq -- "- [Android app source]($ANDROID_REPO)" "$TMP/ios/README.md" || {
   echo "FAIL: ios README Links must include Android app source" >&2
   exit 1
@@ -144,17 +174,17 @@ if grep -Eq '\{\{[A-Za-z0-9_]+\}\}|\]\(\s*\)' "$TMP/ios/README.md"; then
   exit 1
 fi
 # Render must fail closed when a cross-linked URL is empty, on both platforms.
-for case in 'app_store_listing_url:android' 'play_closed_testing_url:ios'; do
+for case in 'app_store_listing_url:android' 'play_closed_testing_url:ios' 'play_testers_group_url:android' 'play_testers_group_url:ios' 'fdroid_listing_url:android' 'fdroid_listing_url:ios' 'fdroid_listing_url:org'; do
   key="${case%%:*}"
   target="${case##*:}"
-  BROKEN="$TMP/landing-empty-$key"
+  BROKEN="$TMP/landing-empty-$key-$target"
   cp -R "$ROOT/docs/public-landing" "$BROKEN"
   sed -i.bak "s|^$key:.*|$key: \"\"|" "$BROKEN/manifest.yaml" && rm -f "$BROKEN/manifest.yaml.bak"
   grep -q "^$key: \"\"" "$BROKEN/manifest.yaml" || {
     echo "FAIL: test setup could not blank $key in temp manifest" >&2
     exit 1
   }
-  if "$HELPER" install --target "$target" --dest "$TMP/broken-$target" --landing-root "$BROKEN" 2>/dev/null; then
+  if "$HELPER" install --target "$target" --dest "$TMP/broken-$target-$key" --landing-root "$BROKEN" 2>/dev/null; then
     echo "FAIL: $target render must fail when $key is empty (would publish a dead cross-link)" >&2
     exit 1
   fi
@@ -162,6 +192,28 @@ done
 "$HELPER" install --target org --dest "$TMP/org" --landing-root "$ROOT/docs/public-landing"
 if grep -Eiq 'mailto:|@gmail\.com|contact\.omiyawaki' "$TMP/org/README.md"; then
   echo "FAIL: org README contains email" >&2
+  exit 1
+fi
+ORG_ANDROID_INSTALL="- **Android:** Join the [osrswiki-testers]($PLAY_TESTERS_GROUP) Google Group, then [open the Play testing link]($PLAY_CLOSED) and tap Become a tester"
+grep -Fq -- "$ORG_ANDROID_INSTALL" "$TMP/org/README.md" || {
+  echo "FAIL: org README must tell Android visitors to join osrswiki-testers, then open the Play testing link and tap Become a tester" >&2
+  exit 1
+}
+ORG_FDROID_INSTALL="- **F-Droid:** [f-droid.org/packages/com.omiyawaki.osrswiki]($FDROID)"
+grep -Fq -- "$ORG_FDROID_INSTALL" "$TMP/org/README.md" || {
+  echo "FAIL: org README must link F-Droid to the live package page" >&2
+  exit 1
+}
+if grep -Eiq 'F-Droid:.*Coming soon|Coming soon.*F-Droid' "$TMP/org/README.md"; then
+  echo "FAIL: org README must not say F-Droid is Coming soon" >&2
+  exit 1
+fi
+if grep -q "Join early testing" "$TMP/org/README.md"; then
+  echo "FAIL: org README must not use the old Join early testing CTA" >&2
+  exit 1
+fi
+if grep -q "$PLAY_PRODUCTION" "$TMP/org/README.md"; then
+  echo "FAIL: org README must not present the production Play listing as available" >&2
   exit 1
 fi
 echo "osrs-public-landing-test: PASS"

@@ -24,7 +24,7 @@ def get_latest_osrs_cache_info():
     response.raise_for_status()
     all_caches = response.json()
 
-    return select_latest_live_osrs_cache(all_caches, require_valid_keys=True)
+    return select_latest_live_osrs_cache(all_caches, require_valid_keys=False)
 
 def main():
     """

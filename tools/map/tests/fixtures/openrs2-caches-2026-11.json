@@ -1,0 +1,261 @@
+[
+  {
+    "id": 2772,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "builds": [
+      {
+        "major": 242,
+        "minor": null
+      }
+    ],
+    "timestamp": "2026-11-18T14:45:05.401534Z",
+    "valid_indexes": 25,
+    "indexes": 25,
+    "valid_groups": 121355,
+    "groups": 121355,
+    "valid_keys": 0,
+    "keys": 0,
+    "size": 213984386,
+    "blocks": 485351,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 2771,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "builds": [
+      {
+        "major": 242,
+        "minor": null
+      }
+    ],
+    "timestamp": "2026-11-18T11:45:05.662645Z",
+    "valid_indexes": 25,
+    "indexes": 25,
+    "valid_groups": 121355,
+    "groups": 121355,
+    "valid_keys": 0,
+    "keys": 0,
+    "size": 213984452,
+    "blocks": 485351,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 2762,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "builds": [
+      {
+        "major": 242,
+        "minor": null
+      }
+    ],
+    "timestamp": "2026-11-11T11:45:06.321160Z",
+    "valid_indexes": 25,
+    "indexes": 25,
+    "valid_groups": 120417,
+    "groups": 120417,
+    "valid_keys": 0,
+    "keys": 0,
+    "size": 213774828,
+    "blocks": 484434,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 2757,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "builds": [
+      {
+        "major": 242,
+        "minor": null
+      }
+    ],
+    "timestamp": "2026-11-03T10:00:06.309579Z",
+    "valid_indexes": 25,
+    "indexes": 25,
+    "valid_groups": 120374,
+    "groups": 120374,
+    "valid_keys": 0,
+    "keys": 0,
+    "size": 213756908,
+    "blocks": 484367,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 2615,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "builds": [
+      {
+        "major": 239,
+        "minor": null
+      }
+    ],
+    "timestamp": "2026-06-30T11:15:04.779183Z",
+    "valid_indexes": 25,
+    "indexes": 25,
+    "valid_groups": 116646,
+    "groups": 116646,
+    "valid_keys": 0,
+    "keys": 0,
+    "size": 188587538,
+    "blocks": 433088,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 2499,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "builds": [
+      {
+        "major": 236,
+        "minor": null
+      }
+    ],
+    "timestamp": "2026-03-18T11:45:07.375761Z",
+    "valid_indexes": 25,
+    "indexes": 25,
+    "valid_groups": 127002,
+    "groups": 127002,
+    "valid_keys": 2678,
+    "keys": 2868,
+    "size": 167910345,
+    "blocks": 402547,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 2504,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "builds": [
+      {
+        "major": 237,
+        "minor": null
+      }
+    ],
+    "timestamp": "2026-03-25T11:45:05.720179Z",
+    "valid_indexes": 25,
+    "indexes": 25,
+    "valid_groups": 112462,
+    "groups": 112462,
+    "valid_keys": 0,
+    "keys": 0,
+    "size": 167962906,
+    "blocks": 390464,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 1033,
+    "scope": "runescape",
+    "game": "runescape",
+    "environment": "live",
+    "language": "de",
+    "builds": [
+      {
+        "major": 496,
+        "minor": null
+      }
+    ],
+    "timestamp": "2008-04-24T00:00:00Z",
+    "valid_indexes": 24,
+    "indexes": 24,
+    "valid_groups": 49777,
+    "groups": 49790,
+    "valid_keys": 662,
+    "keys": 909,
+    "size": 41397754,
+    "blocks": 108159,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 1551,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "beta",
+    "language": "en",
+    "builds": [
+      {
+        "major": 217,
+        "minor": null
+      }
+    ],
+    "timestamp": "2023-09-21T00:00:00Z",
+    "valid_indexes": 22,
+    "indexes": 22,
+    "valid_groups": 87959,
+    "groups": 87959,
+    "valid_keys": 2199,
+    "keys": 2269,
+    "size": 107496726,
+    "blocks": 260315,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 879,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "builds": [
+      {
+        "major": 69,
+        "minor": null
+      }
+    ],
+    "timestamp": null,
+    "valid_indexes": 16,
+    "indexes": 16,
+    "valid_groups": 41921,
+    "groups": 41921,
+    "valid_keys": 861,
+    "keys": 863,
+    "size": 32330638,
+    "blocks": 86246,
+    "disk_store_valid": true,
+    "hidden": false
+  },
+  {
+    "id": 1423,
+    "scope": "runescape",
+    "game": "oldschool",
+    "environment": "live",
+    "language": "en",
+    "builds": [],
+    "timestamp": "2013-08-07T00:00:00Z",
+    "valid_indexes": 16,
+    "indexes": 16,
+    "valid_groups": 39801,
+    "groups": 39801,
+    "valid_keys": 481,
+    "keys": 808,
+    "size": 30430353,
+    "blocks": 81332,
+    "disk_store_valid": true,
+    "hidden": false
+  }
+]

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import stat
 import subprocess
 import tempfile
 import unittest
@@ -11,6 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "scripts" / "shared" / "fetch-underground-release-assets.sh"
+PUBLISH_SCRIPT = ROOT / "scripts" / "shared" / "publish-underground-release-assets.sh"
 PINNED_MANIFEST = ROOT / "shared" / "manifests" / "osrs-underground-assets-v1.json"
 
 
@@ -170,6 +172,37 @@ class UndergroundReleaseAssetsTests(unittest.TestCase):
             manifest.write_text(json.dumps(data), encoding="utf-8")
             result = self.run_script("validate-manifest", str(manifest))
             self.assertNotEqual(result.returncode, 0)
+
+    def test_publish_create_release_dry_run_does_not_call_gh(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest, source = self.make_fixture(root)
+            env = dict(os.environ)
+            env["PATH"] = f"{root / 'empty-bin'}{os.pathsep}{env['PATH']}"
+            (root / "empty-bin").mkdir()
+            gh = root / "empty-bin" / "gh"
+            gh.write_text(
+                "#!/bin/bash\necho 'gh should not run in dry-run' >&2\nexit 90\n"
+            )
+            gh.chmod(gh.stat().st_mode | stat.S_IEXEC)
+            result = subprocess.run(
+                [
+                    str(PUBLISH_SCRIPT),
+                    "--dry-run",
+                    "--create-release",
+                    "--manifest",
+                    str(manifest),
+                    "--source-dir",
+                    str(source),
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+                env=env,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("skipped GitHub Release upload", result.stdout)
+            self.assertNotIn("gh should not run", result.stderr)
 
 
 if __name__ == "__main__":

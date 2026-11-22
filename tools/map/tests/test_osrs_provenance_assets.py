@@ -270,6 +270,21 @@ class osrsProvenanceAssetTests(unittest.TestCase):
         with self.assertRaisesRegex(osrsPipelineError, "component_sum_matches"):
             osrs_special_region_accounting_report(records, components, 8)
 
+    def test_dropping_used_special_records_fails_conservation_with_counts(self):
+        region_a = _special_component(6, 18, 148, pixels=2684)
+        components = {0: (region_a,)}
+        records = []
+        osrs_add_special_region_records(records, components, [])
+        self.assertEqual(["cache-special-region:18-148"], [record["id"] for record in records])
+        with self.assertRaisesRegex(
+            osrsPipelineError,
+            r"one_manifest_record_per_used_cache_region, manifest_sum_matches_source_accounting"
+            r".*missing=1 extra=0"
+            r".*missing_ids=cache-special-region:18-148"
+            r".*manifest_sum=0 expected=2684",
+        ):
+            osrs_special_region_accounting_report([], components, 2684)
+
     def test_rendered_floor_is_not_confused_with_source_plane(self):
         source = np.zeros((1, 2, 3), dtype=np.uint8)
         source[0, 0] = (1, 2, 3)

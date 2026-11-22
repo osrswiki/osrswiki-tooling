@@ -18,6 +18,7 @@ from build_osrs_non_surface_realms import (  # noqa: E402
     _osrs_prior_asset_planes_by_realm,
     _osrs_validate_coverage_against_owner_and_ledger,
     osrs_build_release,
+    osrs_empty_unpublished_realm_exclusions,
 )
 from osrs_non_surface_realms import osrsPipelineError, osrsProjection  # noqa: E402
 from osrs_public_path_hygiene import (  # noqa: E402
@@ -84,6 +85,17 @@ class osrsReleasePathReproducibilityTests(unittest.TestCase):
         )
         self.assertFalse(
             _osrs_prior_allows_asset_plane(planes, "new-realm", 0)
+        )
+        self.assertTrue(
+            _osrs_prior_allows_asset_plane(
+                planes, "cache-special-region:18-148", 0
+            )
+        )
+        self.assertTrue(
+            _osrs_prior_allows_asset_plane(planes, "cache-world-map:vampyrium", 0)
+        )
+        self.assertTrue(
+            _osrs_prior_allows_asset_plane(planes, "surface-gielinor", 0)
         )
 
         with self.assertRaisesRegex(osrsPipelineError, "duplicate plane"):
@@ -721,6 +733,257 @@ output.write_text(json.dumps(value, sort_keys=True), encoding='utf-8')
             self.assertEqual(1, validation["cache_region_count"])
             self.assertEqual(1, validation["plane_zero_accounting_pixel_count"])
             self.assertTrue(validation["checks"]["all_record_invariants_hold"])
+
+            prior_output = Path(directory) / "release-runtime-prior"
+            prior_result = osrs_build_release(
+                argparse.Namespace(
+                    inventory=inventory,
+                    basemaps=basemaps,
+                    alignment=alignment,
+                    source_metadata=metadata,
+                    source_image_dir=source_dir,
+                    provenance_dir=provenance_dir,
+                    accounting_helper=helper,
+                    source_snapshots=snapshots,
+                    output=prior_output,
+                    candidate="002",
+                    planes=(0,),
+                    prior_manifest=output / "underground-realms.json",
+                    accounting_only=False,
+                )
+            )
+            self.assertEqual(0, prior_result["cache_special_realm_count"])
+            self.assertEqual(1, prior_result["source_accounting_cache_special_realm_count"])
+            prior_validation = json.loads(
+                (prior_output / "reports/realm-asset-validation.json").read_text()
+            )["cache_special_region_ownership"]
+            self.assertEqual(1, prior_validation["cache_region_count"])
+            self.assertEqual(1, prior_validation["plane_zero_accounting_pixel_count"])
+            self.assertTrue(prior_validation["checks"]["all_record_invariants_hold"])
+            self.assertTrue(
+                prior_validation["checks"]["one_manifest_record_per_used_cache_region"]
+            )
+            self.assertTrue(
+                prior_validation["checks"]["manifest_sum_matches_source_accounting"]
+            )
+
+    def test_zero_pixel_special_region_stays_in_accounting_without_publication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "fixture"
+            fixture.mkdir()
+            source_dir = fixture / "source"
+            provenance_dir = fixture / "provenance"
+            source_dir.mkdir()
+            provenance_dir.mkdir()
+
+            source = Image.fromarray(np.array([[[10, 20, 30]]], dtype=np.uint8))
+            source.save(source_dir / "img-0.png")
+            source.save(provenance_dir / "img-0.png")
+            Image.fromarray(np.array([[1]], dtype=np.uint16)).save(
+                provenance_dir / "img-0-provenance.png"
+            )
+            Image.fromarray(np.array([[255]], dtype=np.uint8)).save(
+                provenance_dir / "img-0-provenance-coverage.png"
+            )
+            surface_piece = _osrs_piece(0, (0, 0, 1, 1), (0, 0, 1, 1))
+            inventory = fixture / "inventory.json"
+            _osrs_write_json(
+                inventory,
+                {
+                    "definitions": [
+                        _osrs_definition(
+                            0, "main", "Gielinor Surface", True, surface_piece
+                        )
+                    ]
+                },
+            )
+            basemaps = fixture / "basemaps.json"
+            _osrs_write_json(
+                basemaps,
+                [
+                    {
+                        "mapId": 0,
+                        "name": "Gielinor Surface",
+                        "bounds": [[0, 0], [1, 1]],
+                        "center": [0, 0],
+                    }
+                ],
+            )
+            alignment = fixture / "alignment.json"
+            _osrs_write_json(alignment, {"intermap_links": []})
+            metadata = fixture / "metadata.json"
+            _osrs_write_json(
+                metadata,
+                {
+                    "gameBounds": {
+                        "minX": 0,
+                        "minY": 0,
+                        "maxX": 1,
+                        "maxY": 1,
+                    },
+                    "gameCoordScale": 1,
+                    "sourceImage": {"width": 1, "height": 1},
+                },
+            )
+            snapshots = fixture / "snapshots.json"
+            _osrs_write_json(snapshots, {"cache": {"cache_id": 123}})
+            _osrs_write_json(
+                provenance_dir / "img-0-provenance.json",
+                {
+                    "schema_version": 1,
+                    "generator": "test fixture",
+                    "encoding": {"mode": "uint16_last_writer"},
+                    "coverage_encoding": {
+                        "format": "png",
+                        "channel": "bitmap",
+                        "sample_type": "binary",
+                        "zero_code": 0,
+                        "write_code": 1,
+                        "nonzero_semantics": "actual_renderer_write",
+                    },
+                    "image": {"rendered_plane": 0},
+                    "coverage_image": {
+                        "path": "img-0-provenance-coverage.png",
+                        "width": 1,
+                        "height": 1,
+                        "rendered_plane": 0,
+                    },
+                    "projection": {"game_coord_scale": 1},
+                    "statistics": {
+                        "actual_write_count": 1,
+                        "actual_covered_pixel_count": 1,
+                        "cross_owner_overwrites": [],
+                    },
+                    "invariants": {"fixture": True},
+                    "codebook": [
+                        {
+                            "code": 1,
+                            "kind": "native_composite",
+                            "realm_file_id": 0,
+                            "source_region_id": None,
+                            "source_plane": 0,
+                            "source_to_display_dx": 0,
+                            "source_to_display_dy": 0,
+                        },
+                        {
+                            "code": 2,
+                            "kind": "cache_loaded_special_region",
+                            "realm_file_id": None,
+                            "source_region_id": (18 << 8) | 148,
+                            "source_plane": 0,
+                            "source_to_display_dx": 0,
+                            "source_to_display_dy": 0,
+                        },
+                    ],
+                },
+            )
+            helper = fixture / "accounting-helper.py"
+            helper.write_text(
+                """#!/usr/bin/env python3
+import json
+import sys
+from pathlib import Path
+
+output = Path(sys.argv[sys.argv.index('--output') + 1])
+value = {
+    'schema_version': 1,
+    'width': 1,
+    'height': 1,
+    'source_pixels': 1,
+    'content_bearing_pixels': 1,
+    'exact_black_pixels': 0,
+    'unresolved_content_bearing_pixels': 0,
+    'legitimate_unowned_exact_black_pixels': 0,
+    'owned_exact_black_pixels': 0,
+    'background_predicate': 'r == 0 and g == 0 and b == 0',
+    'near_black_tolerance': 0,
+    'owner_counts': [
+        {'code': 1, 'total_pixels': 1, 'content_bearing_pixels': 1, 'pixel_bounds': [0, 0, 1, 1]},
+        {'code': 2, 'total_pixels': 0, 'content_bearing_pixels': 0, 'pixel_bounds': [0, 0, 1, 1]},
+    ],
+    'checks': {
+        'category_sum_matches_source': True,
+        'zero_unresolved_content_bearing_pixels': True,
+        'release_ready': True,
+    },
+}
+output.write_text(json.dumps(value, sort_keys=True), encoding='utf-8')
+""",
+                encoding="utf-8",
+            )
+            helper.chmod(0o755)
+            output = Path(directory) / "release"
+            result = osrs_build_release(
+                argparse.Namespace(
+                    inventory=inventory,
+                    basemaps=basemaps,
+                    alignment=alignment,
+                    source_metadata=metadata,
+                    source_image_dir=source_dir,
+                    provenance_dir=provenance_dir,
+                    accounting_helper=helper,
+                    source_snapshots=snapshots,
+                    output=output,
+                    candidate="001",
+                    planes=(0,),
+                    prior_manifest=None,
+                    accounting_only=False,
+                )
+            )
+            self.assertEqual(0, result["cache_special_realm_count"])
+            self.assertEqual(1, result["source_accounting_cache_special_realm_count"])
+            manifest = json.loads((output / "underground-realms.json").read_text())
+            self.assertEqual(["surface-gielinor"], [realm["id"] for realm in manifest["realms"]])
+            policy = json.loads(
+                (output / "reports/runtime-publication-policy.json").read_text()
+            )
+            self.assertEqual(
+                ["cache-special-region:18-148"],
+                [record["id"] for record in policy["excluded_records"]],
+            )
+            self.assertEqual([], policy["excluded_records"][0]["asset_sha256"])
+            validation = json.loads(
+                (output / "reports/realm-asset-validation.json").read_text()
+            )["cache_special_region_ownership"]
+            self.assertEqual(1, validation["cache_region_count"])
+            self.assertEqual(0, validation["plane_zero_accounting_pixel_count"])
+            self.assertTrue(validation["checks"]["one_manifest_record_per_used_cache_region"])
+            self.assertTrue(validation["checks"]["manifest_sum_matches_source_accounting"])
+
+    def test_empty_cache_world_map_is_excluded_instead_of_failing(self):
+        records = [
+            {
+                "id": "surface-gielinor",
+                "canonical_name": "Gielinor Surface",
+                "group": "surface",
+                "is_surface": True,
+                "map_id": 0,
+            },
+            {
+                "id": "cache-world-map:vampyrium",
+                "canonical_name": "Vampyrium",
+                "group": "realms",
+                "is_surface": False,
+                "map_id": 9,
+            },
+        ]
+        assets = {
+            "surface-gielinor": [{"plane": 0}],
+            "cache-world-map:vampyrium": [],
+        }
+        blank, special, world_maps = osrs_empty_unpublished_realm_exclusions(
+            records, assets
+        )
+        self.assertEqual([], blank)
+        self.assertEqual([], special)
+        self.assertEqual(
+            ["cache-world-map:vampyrium"],
+            [row["id"] for row in world_maps],
+        )
+        self.assertEqual(
+            "no_generated_asset_for_cache_world_map",
+            world_maps[0]["reason"],
+        )
 
 
 if __name__ == "__main__":

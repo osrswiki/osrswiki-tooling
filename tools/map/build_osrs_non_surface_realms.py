@@ -67,6 +67,56 @@ from osrs_release_toolchain import (
 Image.MAX_IMAGE_PIXELS = None
 
 
+def osrs_empty_unpublished_realm_exclusions(records, assets_by_realm):
+    """Mark empty realms unpublished; keep them for source accounting.
+
+    Wiki views can be blank on floors 0-3, special regions can have no
+    generated asset, and new cache-world-map natives (for example
+    Vampyrium) can exist in inventory before they have any rendered
+    coverage. Those records stay in the accounting set so used cache
+    regions remain one-to-one with manifest owners. Publication skips
+    them instead of dropping conservation evidence.
+    """
+    excluded_blank_wiki_views = [
+        {
+            "id": str(record["id"]),
+            "map_id": int(record["map_id"]),
+            "canonical_name": str(record["canonical_name"]),
+            "reason": "no_content_bearing_pixels_on_rendered_floors_0_through_3",
+        }
+        for record in records
+        if record["group"] == "other_maps"
+        and record.get("map_id") is not None
+        and not assets_by_realm[str(record["id"])]
+    ]
+    excluded_empty_special_regions = [
+        {
+            "id": str(record["id"]),
+            "canonical_name": str(record.get("canonical_name") or record["id"]),
+            "reason": "no_generated_asset_for_cache_special_region",
+        }
+        for record in records
+        if str(record["id"]).startswith("cache-special-region:")
+        and not assets_by_realm[str(record["id"])]
+    ]
+    excluded_empty_cache_world_maps = [
+        {
+            "id": str(record["id"]),
+            "canonical_name": str(record.get("canonical_name") or record["id"]),
+            "reason": "no_generated_asset_for_cache_world_map",
+        }
+        for record in records
+        if str(record["id"]).startswith("cache-world-map:")
+        and not record.get("is_surface")
+        and not assets_by_realm[str(record["id"])]
+    ]
+    return (
+        excluded_blank_wiki_views,
+        excluded_empty_special_regions,
+        excluded_empty_cache_world_maps,
+    )
+
+
 def osrs_build_release(
     args: argparse.Namespace,
     *,
@@ -272,26 +322,28 @@ def osrs_build_release(
         str(plane): _osrs_plane_input_record(state, output)
         for plane, state in sorted(plane_states.items())
     }
-    excluded_blank_wiki_views = [
-        {
-            "id": str(record["id"]),
-            "map_id": int(record["map_id"]),
-            "canonical_name": str(record["canonical_name"]),
-            "reason": "no_content_bearing_pixels_on_rendered_floors_0_through_3",
-        }
-        for record in records
-        if record["group"] == "other_maps"
-        and record.get("map_id") is not None
-        and not assets_by_realm[str(record["id"])]
-    ]
-    excluded_ids = {value["id"] for value in excluded_blank_wiki_views}
-    if excluded_ids:
-        records = [record for record in records if str(record["id"]) not in excluded_ids]
+    excluded_blank_wiki_views, excluded_empty_special_regions, excluded_empty_cache_world_maps = (
+        osrs_empty_unpublished_realm_exclusions(records, assets_by_realm)
+    )
+    unpublished_ids = {value["id"] for value in excluded_blank_wiki_views}
+    unpublished_ids.update(value["id"] for value in excluded_empty_special_regions)
+    unpublished_ids.update(value["id"] for value in excluded_empty_cache_world_maps)
+    source_revisions = {
+        "cache_id": int(source_snapshots.get("cache", {}).get("cache_id", 2499)),
+        "world_map_inventory_sha256": inventory_sha,
+        "wiki_basemaps_sha256": basemaps_sha,
+        "alignment_sha256": alignment_sha,
+        "renderer_provenance_by_rendered_plane": provenance_revisions,
+    }
     for record in records:
         realm_id = str(record["id"])
         assets = sorted(
             assets_by_realm[realm_id], key=lambda value: value["plane"]
         )
+        if realm_id in unpublished_ids:
+            record["assets"] = []
+            record["source_revisions"] = source_revisions
+            continue
         if not assets:
             raise osrsPipelineError(f"published realm has no generated asset: {realm_id}")
         published_planes = [int(asset["plane"]) for asset in assets]
@@ -301,18 +353,13 @@ def osrs_build_release(
         record["planes"] = published_planes
         if record["default_plane"] not in published_planes:
             record["default_plane"] = published_planes[0]
-        record["source_revisions"] = {
-            "cache_id": int(source_snapshots.get("cache", {}).get("cache_id", 2499)),
-            "world_map_inventory_sha256": inventory_sha,
-            "wiki_basemaps_sha256": basemaps_sha,
-            "alignment_sha256": alignment_sha,
-            "renderer_provenance_by_rendered_plane": provenance_revisions,
-        }
+        record["source_revisions"] = source_revisions
 
     # Source conservation is intentionally broader than product publication. Validate every
     # authoritative cache owner and Wiki-defined source view before removing noncanonical runtime
     # records; the evidence remains available without shipping those 1,047 user-defined/special
-    # map entries or their raster payloads in either app.
+    # map entries or their raster payloads in either app. Empty special regions stay in this
+    # accounting set even when they have no generated asset.
     accounting_records = records
     validation = _osrs_asset_validation(
         accounting_records, accounting_json, components_by_plane
@@ -321,16 +368,24 @@ def osrs_build_release(
     validation_sha = osrs_write_json(validation_path, validation)
 
     excluded_runtime_records = [
-        record for record in accounting_records if record["group"] not in {"surface", "realms"}
+        record
+        for record in accounting_records
+        if record["group"] not in {"surface", "realms"}
+        or str(record["id"]) in unpublished_ids
     ]
     records = [
-        record for record in accounting_records if record["group"] in {"surface", "realms"}
+        record
+        for record in accounting_records
+        if record["group"] in {"surface", "realms"}
+        and str(record["id"]) not in unpublished_ids
     ]
     expected_runtime_realm_count = sum(
-        record["group"] in {"surface", "realms"} for record in accounting_records
+        record["group"] in {"surface", "realms"} and str(record["id"]) not in unpublished_ids
+        for record in accounting_records
     )
     expected_surface_count = sum(
-        record["group"] == "surface" for record in accounting_records
+        record["group"] == "surface" and str(record["id"]) not in unpublished_ids
+        for record in accounting_records
     )
     if (
         len(records) != expected_runtime_realm_count
@@ -1322,6 +1377,11 @@ def _osrs_prior_asset_planes_by_realm(
     return result
 
 
+def _osrs_cache_native_realm_id(realm_id: str) -> bool:
+    value = str(realm_id)
+    return value.startswith(("cache-special-region:", "cache-world-map:", "surface-"))
+
+
 def _osrs_prior_allows_asset_plane(
     prior_asset_planes: dict[str, set[int]] | None,
     realm_id: str,
@@ -1330,7 +1390,11 @@ def _osrs_prior_allows_asset_plane(
     if prior_asset_planes is None:
         return True
     planes = prior_asset_planes.get(str(realm_id))
-    return planes is not None and plane in planes
+    if planes is None:
+        # Runtime pins omit accounting-only specials and can omit new cache
+        # natives such as Vampyrium. Unknown wiki other-maps stay blocked.
+        return _osrs_cache_native_realm_id(realm_id)
+    return plane in planes
 
 
 def _osrs_read_json(path: Path | None) -> Any:

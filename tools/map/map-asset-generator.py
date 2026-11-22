@@ -25,7 +25,7 @@ from datetime import datetime
 from pathlib import Path
 
 from cache_paths import find_cache_base
-from openrs2_cache import parse_cache_timestamp, select_latest_live_osrs_cache
+from openrs2_cache import cache_build_major, parse_cache_timestamp, select_latest_live_osrs_cache
 
 # Import requests later in check_dependencies to provide better error message
 try:
@@ -152,11 +152,13 @@ class MapAssetGenerator:
             response.raise_for_status()
             all_caches = response.json()
             
-            latest_cache = select_latest_live_osrs_cache(all_caches, require_valid_keys=True)
+            latest_cache = select_latest_live_osrs_cache(all_caches, require_valid_keys=False)
             latest_timestamp = parse_cache_timestamp(latest_cache)
 
             self.log_success(
-                f"Latest map-usable cache: ID {latest_cache['id']} from {latest_timestamp.isoformat()} "
+                f"Latest map-usable cache: ID {latest_cache['id']} from "
+                f"{latest_timestamp.isoformat() if latest_timestamp else 'unknown'} "
+                f"build {cache_build_major(latest_cache)} "
                 f"with {latest_cache.get('valid_keys')}/{latest_cache.get('keys')} keys"
             )
             return latest_cache
@@ -248,24 +250,26 @@ class MapAssetGenerator:
         self.log(f"Command: {' '.join(cmd)}", Colors.BLUE)
         
         try:
+            timeout = int(os.environ.get("OSRS_MAP_COMMAND_TIMEOUT", "1800"))
+            stream_output = os.environ.get("OSRS_MAP_STREAM_OUTPUT", "") == "1"
             result = subprocess.run(
-                cmd, 
+                cmd,
                 cwd=cwd or self.script_dir,
-                capture_output=True, 
+                capture_output=not stream_output,
                 text=True,
-                timeout=1800  # 30 minutes timeout
+                timeout=timeout,
             )
             
             if result.returncode == 0:
                 self.log_success(f"Completed: {description}")
-                if result.stdout.strip():
+                if result.stdout and result.stdout.strip():
                     print(result.stdout)
                 return True
             else:
                 self.log_error(f"Failed: {description}")
-                if result.stderr.strip():
+                if result.stderr and result.stderr.strip():
                     print(f"Error output: {result.stderr}")
-                if result.stdout.strip():
+                if result.stdout and result.stdout.strip():
                     print(f"Standard output: {result.stdout}")
                 return False
                 
@@ -290,7 +294,7 @@ class MapAssetGenerator:
             "Updating XTEA keys"
         )
 
-    def step_dump_images(self, floors=None) -> bool:
+    def step_dump_images(self, floors=None, render_provenance: bool = False) -> bool:
         """Step 3: Dump complete map images with selective floor support"""
         # Make sure the script is executable
         dumper_script = self.script_dir / "run_dumper.sh"
@@ -298,6 +302,9 @@ class MapAssetGenerator:
         
         cmd = ["./run_dumper.sh"]
         description = "Dumping map images"
+        if render_provenance:
+            cmd.append("--render-provenance")
+            description += " with provenance"
         
         if floors:
             floors_str = ",".join(map(str, floors))
@@ -345,7 +352,7 @@ class MapAssetGenerator:
             
         return success
 
-    def run_full_workflow(self, force: bool = False, dry_run: bool = False) -> bool:
+    def run_full_workflow(self, force: bool = False, dry_run: bool = False, render_provenance: bool = False) -> bool:
         """Run the complete 4-step workflow"""
         self.log(f"{Colors.BOLD}🚀 Starting map asset generation workflow{Colors.END}")
         
@@ -368,8 +375,8 @@ class MapAssetGenerator:
         # Execute the workflow
         steps = [
             ("Setup Cache", self.step_setup_cache),
-            ("Update XTEAs", self.step_update_xteas), 
-            ("Dump Images", self.step_dump_images),
+            ("Update XTEAs", self.step_update_xteas),
+            ("Dump Images", lambda: self.step_dump_images(render_provenance=render_provenance)),
             ("Slice Tiles", self.step_slice_tiles)
         ]
         
@@ -506,6 +513,11 @@ def main():
         action="store_true",
         help="Only process floors that are missing mbtiles files"
     )
+    parser.add_argument(
+        "--render-provenance",
+        action="store_true",
+        help="Ask the map dumper to emit per-floor provenance rasters for underground rebuilds"
+    )
     
     args = parser.parse_args()
     
@@ -560,8 +572,9 @@ def main():
             else:
                 # Full workflow mode
                 success = generator.run_full_workflow(
-                    force=args.force, 
-                    dry_run=args.dry_run
+                    force=args.force,
+                    dry_run=args.dry_run,
+                    render_provenance=args.render_provenance,
                 )
             
             sys.exit(0 if success else 1)

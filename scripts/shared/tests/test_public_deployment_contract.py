@@ -63,6 +63,13 @@ class PublicDeploymentContractTests(unittest.TestCase):
         self.assertIn("publish-map-bundle", pixi)
         self.assertIn("publish-map-release-bundle.sh", pixi)
 
+    def test_pixi_exposes_map_auto_update(self) -> None:
+        pixi = (ROOT / "tools" / "pixi.toml").read_text(encoding="utf-8")
+        self.assertIn("map-auto-update", pixi)
+        self.assertIn("map-auto-update.sh", pixi)
+        self.assertIn("publish-underground-bundle", pixi)
+        self.assertIn("publish-underground-release-assets.sh", pixi)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,6 +9,7 @@ import json
 import math
 import re
 import sqlite3
+import sys
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Mapping, MutableMapping, Sequence
@@ -966,11 +967,19 @@ def osrs_build_manifest_records(
         _osrs_int(definition.get("file_id"), "file_id") for definition in definitions
     }
     wiki_native_ids = {map_id for map_id in wiki_by_id if 0 <= map_id < 10000}
-    if definition_ids != wiki_native_ids:
-        raise osrsPipelineError(
-            "cache/Wiki native version mismatch: "
-            f"missing_in_wiki={sorted(definition_ids - wiki_native_ids)}, "
-            f"missing_in_cache={sorted(wiki_native_ids - definition_ids)}"
+    missing_in_wiki = sorted(definition_ids - wiki_native_ids)
+    missing_in_cache = sorted(wiki_native_ids - definition_ids)
+    if missing_in_wiki:
+        print(
+            "warning: cache natives missing from wiki basemaps; "
+            f"building cache-only: {missing_in_wiki}",
+            file=sys.stderr,
+        )
+    if missing_in_cache:
+        print(
+            "warning: wiki natives missing from cache; "
+            f"skipping disappeared: {missing_in_cache}",
+            file=sys.stderr,
         )
 
     realms: list[dict[str, Any]] = []

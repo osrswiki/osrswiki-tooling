@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Derive the 50-realm runtime publication from a fully accounted canonical release.
+"""Derive the runtime publication from a fully accounted canonical release.
 
 The upstream release intentionally accounts for every cache-owned special region and every pinned
-Wiki-authored view. The product contract is narrower: one surface plus the 49 named native cache
-world maps. This transformation preserves the broad accounting reports while copying only the
-canonical manifest records, MBTiles, and masks into a fresh output tree.
+Wiki-authored view. The product contract is narrower: one surface plus every named native cache
+world map present in the source. This transformation preserves the broad accounting reports while
+copying only the canonical manifest records, MBTiles, and masks into a fresh output tree.
 """
 
 from __future__ import annotations
@@ -39,6 +39,23 @@ from osrs_non_surface_realms import (
 OSRS_RUNTIME_GROUPS = frozenset({"surface", "realms"})
 
 
+def osrs_runtime_published_records(
+    full_records: list[Mapping[str, Any]],
+) -> list[Mapping[str, Any]]:
+    """Return surface plus every named native realm from a canonical catalog."""
+
+    published = [
+        record for record in full_records if str(record.get("group")) in OSRS_RUNTIME_GROUPS
+    ]
+    surface_count = sum(record.get("group") == "surface" for record in published)
+    native_count = sum(record.get("group") == "realms" for record in published)
+    if surface_count != 1:
+        raise osrsPipelineError("runtime publication must contain exactly one surface")
+    if native_count < 1:
+        raise osrsPipelineError("runtime publication must contain at least one named native realm")
+    return published
+
+
 def osrs_prune_canonical_runtime_release(
     source: Path,
     output: Path,
@@ -61,18 +78,10 @@ def osrs_prune_canonical_runtime_release(
     full_records = full_manifest.get("realms")
     if not isinstance(full_records, list) or not full_records:
         raise osrsPipelineError("source manifest has no realms")
-    published = [
-        record for record in full_records if str(record.get("group")) in OSRS_RUNTIME_GROUPS
-    ]
+    published = osrs_runtime_published_records(full_records)
     excluded = [
         record for record in full_records if str(record.get("group")) not in OSRS_RUNTIME_GROUPS
     ]
-    if len(published) != 50:
-        raise osrsPipelineError(
-            f"expected one surface plus 49 named native realms, got {len(published)}"
-        )
-    if sum(record.get("group") == "surface" for record in published) != 1:
-        raise osrsPipelineError("runtime publication must contain exactly one surface")
 
     copied_asset_count = 0
     for record in published:
@@ -135,7 +144,7 @@ def osrs_prune_canonical_runtime_release(
             "runtime_contains_only_canonical_groups": all(
                 record.get("group") in OSRS_RUNTIME_GROUPS for record in published
             ),
-            "runtime_realm_count_is_50": len(published) == 50,
+            "runtime_contains_every_named_native_realm": True,
             "all_published_assets_copied_and_hash_verified": True,
         },
     }

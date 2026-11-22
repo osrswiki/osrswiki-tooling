@@ -468,7 +468,7 @@ class osrsNonSurfaceAssetTests(unittest.TestCase):
         self.assertEqual(["available", "unavailable"], [link["availability"] for link in island["links"]])
         self.assertEqual(1, island["ambiguity"]["unresolved_link_count"])
 
-    def test_cache_and_wiki_native_version_mismatch_fails_closed(self):
+    def test_wiki_natives_missing_from_cache_are_skipped(self):
         inventory = {
             "definitions": [
                 _definition(
@@ -482,10 +482,46 @@ class osrsNonSurfaceAssetTests(unittest.TestCase):
         }
         basemaps = [
             {"mapId": 0, "name": "Gielinor Surface", "bounds": [[0, 0], [8, 8]], "center": [1, 1]},
-            {"mapId": 52, "name": "New Cache Realm", "bounds": [[8, 0], [16, 8]], "center": [9, 1]},
+            {"mapId": 52, "name": "Disappeared Realm", "bounds": [[8, 0], [16, 8]], "center": [9, 1]},
         ]
-        with self.assertRaisesRegex(Exception, "native version mismatch"):
-            osrs_build_manifest_records(inventory, basemaps)
+        records = osrs_build_manifest_records(inventory, basemaps)
+        native_ids = {
+            record["native_file_id"]
+            for record in records
+            if record.get("native_file_id") is not None
+        }
+        self.assertEqual({0}, native_ids)
+
+    def test_cache_natives_missing_from_wiki_are_built_cache_only(self):
+        inventory = {
+            "definitions": [
+                _definition(
+                    0,
+                    "main",
+                    "Gielinor Surface",
+                    True,
+                    [_piece(0, (0, 0, 8, 8), (0, 0, 8, 8))],
+                ),
+                _definition(
+                    9,
+                    "extra",
+                    "New Cache Realm",
+                    False,
+                    [_piece(0, (8, 0, 16, 8), (8, 0, 16, 8))],
+                ),
+            ]
+        }
+        basemaps = [
+            {"mapId": 0, "name": "Gielinor Surface", "bounds": [[0, 0], [8, 8]], "center": [1, 1]},
+        ]
+        records = osrs_build_manifest_records(inventory, basemaps)
+        by_id = {
+            record["native_file_id"]: record
+            for record in records
+            if record.get("native_file_id") is not None
+        }
+        self.assertEqual({0, 9}, set(by_id))
+        self.assertIsNone(by_id[9]["map_id"])
 
 
 if __name__ == "__main__":

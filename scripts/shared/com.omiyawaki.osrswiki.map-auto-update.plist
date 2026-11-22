@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.omiyawaki.osrswiki.map-auto-update</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/miyawaki/.local/bin/osrswiki-map-auto-update</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/miyawaki/Developer/fleet-sync/git/osrswiki</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>/Users/miyawaki</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk/Contents/Home/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>JAVA_HOME</key>
+    <string>/opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk/Contents/Home</string>
+    <key>OSRS_LOCAL_ARTIFACT_ROOT</key>
+    <string>/Users/miyawaki/Developer/osrswiki-local-artifacts</string>
+    <key>OSRS_CACHE_ROOT</key>
+    <string>/Users/miyawaki/Developer/osrswiki-local-artifacts/cache</string>
+    <key>OSRS_FLEET_ROOT</key>
+    <string>/Users/miyawaki/Developer/fleet-sync/git/osrswiki</string>
+  </dict>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>3</integer>
+    <key>Hour</key>
+    <integer>14</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/Users/miyawaki/Library/Logs/osrswiki/map-auto-update/launchd.stdout.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/miyawaki/Library/Logs/osrswiki/map-auto-update/launchd.stderr.log</string>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

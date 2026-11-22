@@ -319,6 +319,7 @@ def create_mbtiles_for_floor(floor_num, native_zoom):
                         tile_data = f.read()
                     tiles_to_insert.append((int(zoom_str), int(x_str), int(os.path.splitext(y_filename)[0]), tile_data))
 
+    tiles_to_insert.sort(key=lambda item: (item[0], item[1], item[2]))
     log_time(f"Floor {floor_num}: Inserting {len(tiles_to_insert)} tiles into the database...")
     cursor.executemany('INSERT INTO tiles (zoom_level, tile_column, tile_row, tile_data) VALUES (?, ?, ?, ?)', tiles_to_insert)
     db.commit()

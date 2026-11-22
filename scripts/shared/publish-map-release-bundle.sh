@@ -12,18 +12,23 @@ BUNDLE_HELPER="$SCRIPT_DIR/osrs_map_release_bundle.py"
 usage() {
     cat >&2 <<'EOF'
 usage:
-  publish-map-release-bundle.sh [--dry-run] [--clobber]
+  publish-map-release-bundle.sh [--dry-run] [--clobber] [--create-release]
       [--manifest PATH] [--source-dir PATH] [--output PATH]
+      [--release-notes PATH]
 
 Builds a deterministic map_floors.zip from the four verified mbtiles, updates
 the fleet manifest bundle sha256/bytes, and uploads the zip to the tooling
 GitHub Release named by the manifest (osrswiki/osrswiki-tooling).
 
-  --dry-run     Build and pin locally; do not call gh / upload
-  --clobber     Rewrite manifest pins and replace a differing remote zip
-  --manifest    Default: <repo>/shared/manifests/osrs-map-assets-v1.json
-  --source-dir  Default: $OSRS_MAP_ASSET_SOURCE_DIR or the host mbtiles cache
-  --output      Optional path for the built zip (otherwise a temp file)
+  --dry-run         Build and pin locally; do not call gh / upload
+  --clobber         Rewrite manifest pins and replace a differing remote zip.
+                    Auto-update never passes this; old pins must stay downloadable.
+  --create-release  Create the manifest tag if it does not exist. Never deletes
+                    or clobbers a different existing release.
+  --manifest        Default: <repo>/shared/manifests/osrs-map-assets-v1.json
+  --source-dir      Default: $OSRS_MAP_ASSET_SOURCE_DIR or the host mbtiles cache
+  --output          Optional path for the built zip (otherwise a temp file)
+  --release-notes   Optional notes file used with --create-release
 
 Skip upload when the remote asset size already matches the local digest.
 Pass --clobber to replace a present-but-different remote zip.
@@ -105,9 +110,11 @@ remote_bundle_size() {
 
 dry_run=0
 clobber=0
+create_release=0
 manifest=""
 source_dir=""
 output=""
+release_notes=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -118,6 +125,15 @@ while [[ $# -gt 0 ]]; do
         --clobber)
             clobber=1
             shift
+            ;;
+        --create-release)
+            create_release=1
+            shift
+            ;;
+        --release-notes)
+            [[ $# -ge 2 ]] || usage
+            release_notes="$2"
+            shift 2
             ;;
         --manifest)
             [[ $# -ge 2 ]] || usage
@@ -152,6 +168,11 @@ if [[ ! -f "$BUNDLE_HELPER" ]]; then
     echo "ERROR: map bundle helper not found: $BUNDLE_HELPER" >&2
     exit 2
 fi
+if [[ "$clobber" -eq 1 && "$create_release" -eq 1 ]]; then
+    echo "ERROR: pass only one of --clobber or --create-release" >&2
+    exit 2
+fi
+
 require_command jq
 require_command python3
 
@@ -232,6 +253,23 @@ require_command gh
 repository="$(jq -r '.repository' "$manifest")"
 release_tag="$(jq -r '.release_tag' "$manifest")"
 bundle_name="$(jq -r '.bundle.name' "$manifest")"
+remote_view="$(gh release view "$release_tag" --repo "$repository" --json tagName,assets 2>/dev/null || true)"
+if [[ -z "$remote_view" ]]; then
+    if [[ "$create_release" -ne 1 ]]; then
+        echo "ERROR: tooling release $release_tag is missing; pass --create-release for a new versioned tag" >&2
+        exit 1
+    fi
+    create_args=(release create "$release_tag" --repo "$repository"
+        --title "OSRS surface map assets v1 (${release_tag#map-assets-v1-})")
+    if [[ -n "$release_notes" ]]; then
+        create_args+=(--notes-file "$release_notes")
+    else
+        create_args+=(--notes "Immutable surface map floors. Do not delete; older pins keep using this tag.")
+    fi
+    gh "${create_args[@]}"
+    echo "Created tooling release $release_tag"
+fi
+
 remote_size="$(remote_bundle_size "$repository" "$release_tag" "$bundle_name" | tail -n1 || true)"
 
 if [[ "$remote_size" == "$local_bytes" && "$clobber" -ne 1 ]]; then
@@ -241,7 +279,7 @@ fi
 
 if [[ -n "$remote_size" && "$remote_size" != "$local_bytes" && "$clobber" -ne 1 ]]; then
     echo "ERROR: remote $bundle_name size is $remote_size, local built zip is $local_bytes" >&2
-    echo "Re-run with --clobber to replace the GitHub Release asset." >&2
+    echo "Refusing to clobber an existing tooling release. Create a new versioned tag instead." >&2
     exit 1
 fi
 

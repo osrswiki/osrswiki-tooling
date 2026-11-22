@@ -13,6 +13,18 @@
       "audience": "internal",
       "description": "Internal map asset generation toolchain guide for cache selection, dumping, slicing, syncing, and verification."
     },
+    "docs/public/map-release-assets.md": {
+      "audience": "external",
+      "description": "Public recipe for pinning, fetching, and publishing the surface map_floors.zip tooling release, including weekly auto-update on mini."
+    },
+    "docs/public/underground-release-assets.md": {
+      "audience": "external",
+      "description": "Public recipe for pinning and fetching underground realm GitHub Release assets, including weekly auto-update on mini."
+    },
+    "docs/internal/underground-assets-foss-next-version.md": {
+      "audience": "internal",
+      "description": "Internal land note that underground catalog opt-in waits for a later FOSS / F-Droid version and that auto-update does not edit fdroiddata."
+    },
     "scripts/ios/XCTest-GUIDE.md": {
       "audience": "internal",
       "description": "iOS testing workflow guidance for LLM agents working on the OSRS Wiki app."

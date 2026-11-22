@@ -43,17 +43,37 @@ fi
 
 # Execute the gradle wrapper, pointing to the new cache directory.
 FLOORS_ARG=""
-if [ ! -z "$1" ]; then
-    FLOORS_ARG="--floors \"$1\""
-    echo "Running map dumper for floors: $1"
-else
+PROVENANCE_ARG=""
+DUMPER_MODE_ARG=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --render-provenance)
+            PROVENANCE_ARG="--render-provenance"
+            shift
+            ;;
+        --underground-alignment-only|--non-surface-inventory-only|--region-stats-only)
+            DUMPER_MODE_ARG="$1"
+            shift
+            ;;
+        *)
+            FLOORS_ARG="--floors $1"
+            echo "Running map dumper for floors: $1"
+            shift
+            ;;
+    esac
+done
+if [[ -z "$FLOORS_ARG" && -z "$DUMPER_MODE_ARG" ]]; then
     echo "Running map dumper for all floors..."
+fi
+if [[ -n "$PROVENANCE_ARG" ]]; then
+    echo "Provenance rasters enabled"
 fi
 
 echo "Output will be in $OUTPUT_DIR/"
 
 # Note the relative path to the cache from the dumper directory
-if ./gradlew run --args="--cachedir \"$CACHE_DIR\" --xteapath \"xtea.json\" --outputdir \"$OUTPUT_DIR\" $FLOORS_ARG"; then
+EXTRA_ARGS="$FLOORS_ARG $PROVENANCE_ARG $DUMPER_MODE_ARG"
+if ./gradlew run --args="--cachedir \"$CACHE_DIR\" --xteapath \"xtea.json\" --outputdir \"$OUTPUT_DIR\" $EXTRA_ARGS"; then
     echo "Map dumper finished successfully."
 else
     echo "Map dumper failed. Please check the output above for errors."

@@ -490,6 +490,21 @@ def osrs_special_region_accounting_report(
         preview = ", ".join(false_checks[:8])
         if len(false_checks) > 8:
             preview += f", ... ({len(false_checks)} total)"
+        missing_ids = sorted(expected_ids - set(special_records))
+        extra_ids = sorted(set(special_records) - expected_ids)
+        details: list[str] = []
+        if "one_manifest_record_per_used_cache_region" in false_checks:
+            details.append(f"missing={len(missing_ids)} extra={len(extra_ids)}")
+            if missing_ids:
+                details.append("missing_ids=" + ",".join(missing_ids[:12]))
+            if extra_ids:
+                details.append("extra_ids=" + ",".join(extra_ids[:12]))
+        if "manifest_sum_matches_source_accounting" in false_checks:
+            details.append(
+                f"manifest_sum={manifest_pixel_sum} expected={expected_plane_zero_pixels}"
+            )
+        if details:
+            preview += "; " + "; ".join(details)
         raise osrsPipelineError(f"special-region accounting validation failed: {preview}")
     return {
         "identity_model": "one_backing_owner_per_used_cache_source_region",

@@ -319,6 +319,45 @@ cp "$mapped" "$output"
             self.assertIn(expected_sha, result.stdout)
             self.assertNotIn("gh should not run", result.stderr)
 
+    def test_publish_create_release_dry_run_does_not_call_gh(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest, source = self.make_fixture(root)
+            env = dict(os.environ)
+            env["PATH"] = f"{root / 'empty-bin'}{os.pathsep}{env['PATH']}"
+            (root / "empty-bin").mkdir()
+            gh = root / "empty-bin" / "gh"
+            gh.write_text("#!/bin/bash\necho 'gh should not run in dry-run' >&2\nexit 90\n")
+            gh.chmod(gh.stat().st_mode | stat.S_IEXEC)
+            result = subprocess.run(
+                [
+                    str(PUBLISH_SCRIPT),
+                    "--dry-run",
+                    "--create-release",
+                    "--manifest",
+                    str(manifest),
+                    "--source-dir",
+                    str(source),
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+                env=env,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("skipped GitHub Release upload", result.stdout)
+            self.assertNotIn("gh should not run", result.stderr)
+
+    def test_publish_create_release_refuses_clobber_combination(self) -> None:
+        result = subprocess.run(
+            [str(PUBLISH_SCRIPT), "--clobber", "--create-release"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("only one of --clobber or --create-release", result.stderr)
+
     def test_committed_manifest_includes_the_zip_bundle_pin(self) -> None:
         result = self.run_script(
             "validate-manifest",

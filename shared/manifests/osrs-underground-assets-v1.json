@@ -1,876 +1,1035 @@
 {
-  "schema_version": 1,
-  "asset_set_id": "osrs-underground-realms-54a05b614edd",
-  "repository": "osrswiki/osrswiki-tooling",
-  "release_tag": "underground-assets-v1-54a05b614edd",
+  "asset_set_id": "osrs-underground-realms-be804fc271ca",
   "assets": [
     {
-      "path": "assets/cache-world-map-ancient-cavern/plane-0.mbtiles",
-      "name": "assets__cache-world-map-ancient-cavern__plane-0.mbtiles",
-      "sha256": "6c208e7ebb099921b1ad27e68012085d4ab8f32850b62fa6f58694dfea120e9c",
-      "bytes": 57344,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-ancient-cavern__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-ancient-cavern/plane-1.mbtiles",
-      "name": "assets__cache-world-map-ancient-cavern__plane-1.mbtiles",
-      "sha256": "56b56044baaa54a6bc6797aaed35eee0e34a8a512d8e02d93a7b6ffa0e86468f",
-      "bytes": 61440,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-ancient-cavern__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-ardent-ocean-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-ardent-ocean-underground__plane-0.mbtiles",
-      "sha256": "2d01ab49751899e1f50f15becb9e0752c1aee776dedf685ea69610f87bec4cef",
-      "bytes": 262144,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-ardent-ocean-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-ardent-ocean-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-ardent-ocean-underground__plane-1.mbtiles",
-      "sha256": "7c391e33470a477f37176f67a63a9b8a30cbf21710ca09553fb563364c3e7de8",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-ardent-ocean-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-ardent-ocean-underground/plane-2.mbtiles",
-      "name": "assets__cache-world-map-ardent-ocean-underground__plane-2.mbtiles",
-      "sha256": "a4148be39ca9dcb3153e08317737d9f9ccef18b08bc3136a9412d8b6ae4909f3",
-      "bytes": 32768,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-ardent-ocean-underground__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-ardougne-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-ardougne-underground__plane-0.mbtiles",
-      "sha256": "de8004d9f024ceb1ecaba22b7280d05f6ba3fb9a9f5fa3f83521c60e5e003bb5",
-      "bytes": 139264,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-ardougne-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-asgarnia-ice-dungeon/plane-0.mbtiles",
-      "name": "assets__cache-world-map-asgarnia-ice-dungeon__plane-0.mbtiles",
-      "sha256": "a9ad7c403464dbbb898eae7fbe03988662b5e2f319389f31e6314336f722f8d0",
-      "bytes": 126976,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-asgarnia-ice-dungeon__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-asgarnia-ice-dungeon/plane-1.mbtiles",
-      "name": "assets__cache-world-map-asgarnia-ice-dungeon__plane-1.mbtiles",
-      "sha256": "85412e317adfbc24ac87e76fbaa276dda3896ecad73473061247a94a7dfe349a",
-      "bytes": 24576,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-asgarnia-ice-dungeon__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-br-dark-varrock/plane-0.mbtiles",
-      "name": "assets__cache-world-map-br-dark-varrock__plane-0.mbtiles",
-      "sha256": "caa4bb91d2acf935e5f5d8732efa216e4b555cb61358d3b05e1dde7fa54b9d4b",
-      "bytes": 368640,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-br-dark-varrock__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-br-dark-varrock/plane-1.mbtiles",
-      "name": "assets__cache-world-map-br-dark-varrock__plane-1.mbtiles",
-      "sha256": "6b0de2cad2c3f2166131466f84641f1ac9ccd30a32cbe49c9056ca396d21c74d",
-      "bytes": 49152,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-br-dark-varrock__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-br-dark-varrock/plane-2.mbtiles",
-      "name": "assets__cache-world-map-br-dark-varrock__plane-2.mbtiles",
-      "sha256": "21a3e11b7235da628a927ede25b8ade8d95e16c67a046b1305751abe040e9b9a",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-br-dark-varrock__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-br-dark-varrock/plane-3.mbtiles",
-      "name": "assets__cache-world-map-br-dark-varrock__plane-3.mbtiles",
-      "sha256": "0df750db59583184b194df67c7ce5f3306dec49273e7335db38de4f5ddae39b5",
-      "bytes": 24576,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-br-dark-varrock__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-br-default/plane-0.mbtiles",
-      "name": "assets__cache-world-map-br-default__plane-0.mbtiles",
-      "sha256": "c51262e3d3f2248b6b6e52f0b569e01b8f494ac574ab08192b723e4dd803d34d",
-      "bytes": 204800,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-br-default__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-br-default/plane-1.mbtiles",
-      "name": "assets__cache-world-map-br-default__plane-1.mbtiles",
-      "sha256": "001a645ab87363f26a6a82494ba2fcf57ef9a9913622df853084966b97b268a3",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-br-default__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-braindeath-island/plane-0.mbtiles",
-      "name": "assets__cache-world-map-braindeath-island__plane-0.mbtiles",
-      "sha256": "c3eccc9f8a794ef09e576e1fdacdbba596b647b04c0256f923f3c1488c7ba91d",
-      "bytes": 122880,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-braindeath-island__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-braindeath-island/plane-1.mbtiles",
-      "name": "assets__cache-world-map-braindeath-island__plane-1.mbtiles",
-      "sha256": "3b3e6d092be5807824a82040493344bb32b221a3b15049df00b4d7c8c528e91f",
-      "bytes": 32768,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-braindeath-island__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-braindeath-island/plane-2.mbtiles",
-      "name": "assets__cache-world-map-braindeath-island__plane-2.mbtiles",
-      "sha256": "12d04264d06f5104d981064540deb86082559ce419a9e4c79eb2468936679741",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-braindeath-island__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-braindeath-island/plane-3.mbtiles",
-      "name": "assets__cache-world-map-braindeath-island__plane-3.mbtiles",
-      "sha256": "c32b70196beea8fa0bd3991d1247e4395eec219bdcf56a1b4c78dab309616bc9",
-      "bytes": 24576,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-braindeath-island__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-cam-torum/plane-0.mbtiles",
-      "name": "assets__cache-world-map-cam-torum__plane-0.mbtiles",
-      "sha256": "356a54be38dea4fe973d04acaf396cca67d703624fe211378990d7e079c09d1a",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-cam-torum__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-cam-torum/plane-1.mbtiles",
-      "name": "assets__cache-world-map-cam-torum__plane-1.mbtiles",
-      "sha256": "4b722f7cb7ea19279901133c036c99f578dc10746061e311d8ef235c1f3ad05b",
-      "bytes": 102400,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-cam-torum__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-cam-torum/plane-2.mbtiles",
-      "name": "assets__cache-world-map-cam-torum__plane-2.mbtiles",
-      "sha256": "d0c4e87762299efcdb8c24259afc02785d2884ff5136c23960331f544395097d",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-cam-torum__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-cam-torum/plane-3.mbtiles",
-      "name": "assets__cache-world-map-cam-torum__plane-3.mbtiles",
-      "sha256": "d57990a58b10761d1aaedde5377d2b7a11d562bb3b723e04c6a0ba9a128b4a85",
-      "bytes": 32768,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-cam-torum__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-camdozaal/plane-0.mbtiles",
-      "name": "assets__cache-world-map-camdozaal__plane-0.mbtiles",
-      "sha256": "ba18264b3b33258b53cf8b9483cf07a71032c865f82fba622d8694eb31cd00b2",
-      "bytes": 106496,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-camdozaal__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-camdozaal/plane-1.mbtiles",
-      "name": "assets__cache-world-map-camdozaal__plane-1.mbtiles",
-      "sha256": "d036c802a115549d95c53c8c2d910cc88991cc5ddbb4ee438bccc859707d8814",
-      "bytes": 24576,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-camdozaal__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-desert-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-desert-underground__plane-0.mbtiles",
-      "sha256": "69f47b3561ba020a56a8b7ae9088a718701272a901a3394b529c791ce4a797ae",
-      "bytes": 114688,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-desert-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-desert-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-desert-underground__plane-1.mbtiles",
-      "sha256": "c5475e731f940742399b6db46fe593c7c33f319ff37f59af0e053b688f32261a",
-      "bytes": 24576,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-desert-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-desert-underground/plane-2.mbtiles",
-      "name": "assets__cache-world-map-desert-underground__plane-2.mbtiles",
-      "sha256": "be21df7b63ec1a0b290aa6e957b59420e0f0ec142eeaf398a4afc18207441e36",
-      "bytes": 40960,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-desert-underground__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-dorgeshkaan/plane-0.mbtiles",
-      "name": "assets__cache-world-map-dorgeshkaan__plane-0.mbtiles",
-      "sha256": "473efee4087b5c944da3e56ce434b96ec7515d71fe8f272565fe263111da05eb",
-      "bytes": 86016,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-dorgeshkaan__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-dorgeshkaan/plane-1.mbtiles",
-      "name": "assets__cache-world-map-dorgeshkaan__plane-1.mbtiles",
-      "sha256": "f1c96cb98ffb317b4ac6dca8e1d0f280f6c3105b13c067fa08f227dc73773f30",
-      "bytes": 77824,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-dorgeshkaan__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-dorgeshkaan/plane-2.mbtiles",
-      "name": "assets__cache-world-map-dorgeshkaan__plane-2.mbtiles",
-      "sha256": "3690ec49109075dac18a4853d0e4e6804541f3aee8aeb18653f18e12696e3468",
-      "bytes": 49152,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-dorgeshkaan__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-dwarven-mines/plane-0.mbtiles",
-      "name": "assets__cache-world-map-dwarven-mines__plane-0.mbtiles",
-      "sha256": "2b5812067ba6aee7c6034b7c49d8245e3e06bca0bc9ccbc9f41afe985960f8c4",
-      "bytes": 155648,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-dwarven-mines__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-dwarven-mines/plane-1.mbtiles",
-      "name": "assets__cache-world-map-dwarven-mines__plane-1.mbtiles",
-      "sha256": "14035e597855454209d8328ac6236bef56f190e0691d80889eaa0cd53ee1a882",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-dwarven-mines__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-feldip-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-feldip-underground__plane-0.mbtiles",
-      "sha256": "10163e53f8724ed9cdf9fab8fd850552f9c8eb9ed20b84a7d8aad1309eadf404",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-feldip-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-feldip-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-feldip-underground__plane-1.mbtiles",
-      "sha256": "bc29b714a8cf6fba01864c434477e2de208f0915d6e84c89371fb4094eefb3ba",
-      "bytes": 114688,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-feldip-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-fossil-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-fossil-underground__plane-0.mbtiles",
-      "sha256": "68d5a68eb6a18a0583e7587afdfdf5e2d4f1fbf96f5417b9d4365ec6f09bd478",
-      "bytes": 98304,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-fossil-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-fossil-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-fossil-underground__plane-1.mbtiles",
-      "sha256": "8c50d63568e3cde29e0a51f066f0ff85aef1f3a60c92f000a1ca962f598acfa1",
-      "bytes": 86016,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-fossil-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-fossil-underground/plane-3.mbtiles",
-      "name": "assets__cache-world-map-fossil-underground__plane-3.mbtiles",
-      "sha256": "971e83285c3166e9fe36c7c7f95b666cbcdc51c85bd67e0f938831a30287b8f6",
-      "bytes": 32768,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-fossil-underground__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-ghorrock-prison/plane-2.mbtiles",
-      "name": "assets__cache-world-map-ghorrock-prison__plane-2.mbtiles",
-      "sha256": "70159543265a8690980bc4553a5d043665205d62aafd3ea70974d93ee68a341d",
-      "bytes": 65536,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-ghorrock-prison__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-godwars/plane-0.mbtiles",
-      "name": "assets__cache-world-map-godwars__plane-0.mbtiles",
-      "sha256": "7af8f62553d23e8ec84d46269274d307461f6c1d5f645bc6b4370580c1124939",
-      "bytes": 65536,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-godwars__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-godwars/plane-1.mbtiles",
-      "name": "assets__cache-world-map-godwars__plane-1.mbtiles",
-      "sha256": "03d338b96d6739c51197c06f66efc0988785b4f1a6fc439a2c34c3bab9f1f225",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-godwars__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-godwars/plane-2.mbtiles",
-      "name": "assets__cache-world-map-godwars__plane-2.mbtiles",
-      "sha256": "379e40fde8ceef6f201a74ac047f080c6644139e78919051f2b66fe5041b8b3d",
-      "bytes": 122880,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-godwars__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-grand-library/plane-0.mbtiles",
-      "name": "assets__cache-world-map-grand-library__plane-0.mbtiles",
-      "sha256": "f672fc31aa6dd875a01730b6d4755683f19073e382a44f679f5d8aa9d317447c",
-      "bytes": 61440,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-grand-library__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-grand-library/plane-1.mbtiles",
-      "name": "assets__cache-world-map-grand-library__plane-1.mbtiles",
-      "sha256": "4d1e3fe4e9faa8c5e6a0a3a433d7906532b8f9b5d9412b621cf1468d97ae0242",
-      "bytes": 61440,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-grand-library__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-grand-library/plane-2.mbtiles",
-      "name": "assets__cache-world-map-grand-library__plane-2.mbtiles",
-      "sha256": "85dd37151b0a86377f6bc753289ac7211dd69ed140ca7e44721bd191f2b3502c",
-      "bytes": 53248,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-grand-library__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-kebos-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-kebos-underground__plane-0.mbtiles",
-      "sha256": "250630d1548686cfae7e54bf7387a53b1e2af09c0ffe2be00d0964b50e92cdc6",
-      "bytes": 118784,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-kebos-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-kebos-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-kebos-underground__plane-1.mbtiles",
-      "sha256": "126a7525c067e3f77a3e0c3b1ad81a07fcb7187dd41d9a6cd52ae8215167a68f",
-      "bytes": 57344,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-kebos-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-kebos-underground/plane-2.mbtiles",
-      "name": "assets__cache-world-map-kebos-underground__plane-2.mbtiles",
-      "sha256": "3122461a732a9b168e0a21ab188b21fedc63141472435df933d93f22fc9f99f7",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-kebos-underground__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-keldagrim/plane-0.mbtiles",
-      "name": "assets__cache-world-map-keldagrim__plane-0.mbtiles",
-      "sha256": "ffa60a54d1db256dd4ffda8902d84809b459dea04e473ad360959e68dd9de9fb",
-      "bytes": 159744,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-keldagrim__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-keldagrim/plane-1.mbtiles",
-      "name": "assets__cache-world-map-keldagrim__plane-1.mbtiles",
-      "sha256": "f9013806f6710bd0fa6125f9a795030f1a496039b94185ee93d22ecf67b12407",
-      "bytes": 45056,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-keldagrim__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-keldagrim/plane-2.mbtiles",
-      "name": "assets__cache-world-map-keldagrim__plane-2.mbtiles",
-      "sha256": "d8b3429c7b02a03c545a6668d440d9574741670753779f463c849aeb5c4a704f",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-keldagrim__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-keldagrim/plane-3.mbtiles",
-      "name": "assets__cache-world-map-keldagrim__plane-3.mbtiles",
-      "sha256": "706a0282721be176d2e8104d745636304d6978721a5baf17b13d0fc03ba17964",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-keldagrim__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-kourend-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-kourend-underground__plane-0.mbtiles",
-      "sha256": "2c9d6305c540198215c27b884c280839ec94ed52c55d1ad1f39dc8da894a8adb",
-      "bytes": 442368,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-kourend-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-kourend-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-kourend-underground__plane-1.mbtiles",
-      "sha256": "b96439171e5edfaac143abe2c59adaec05886c5787ad71d090e0f1b80c54be49",
-      "bytes": 69632,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-kourend-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-kourend-underground/plane-2.mbtiles",
-      "name": "assets__cache-world-map-kourend-underground__plane-2.mbtiles",
-      "sha256": "f8eef339db5c12bb2817b5b5b19d6d4fb8c08693ccdaf8f72f1fb0ff291fca31",
-      "bytes": 53248,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-kourend-underground__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-kourend-underground/plane-3.mbtiles",
-      "name": "assets__cache-world-map-kourend-underground__plane-3.mbtiles",
-      "sha256": "10fa4563a69a78c17d7d08b0e3729395ff47fde7f189634c837777238a0f3e6e",
-      "bytes": 45056,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-kourend-underground__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-lassar-undercity/plane-0.mbtiles",
-      "name": "assets__cache-world-map-lassar-undercity__plane-0.mbtiles",
-      "sha256": "93cacab047edc52fe02c19c053e63aa09ba934b86c14a8996474feee9ada848e",
-      "bytes": 163840,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-lassar-undercity__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-lassar-undercity/plane-1.mbtiles",
-      "name": "assets__cache-world-map-lassar-undercity__plane-1.mbtiles",
-      "sha256": "873c648edf0ffb5b875bcda5a265aeaa3fe65b9b363562817a339275303a0c1e",
-      "bytes": 57344,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-lassar-undercity__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-lassar-undercity/plane-2.mbtiles",
-      "name": "assets__cache-world-map-lassar-undercity__plane-2.mbtiles",
-      "sha256": "d8845a1be315a3b35dc9ed6517bc2cba6e83b5c7c3078d04fd9ed17cc3983fe8",
-      "bytes": 40960,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-lassar-undercity__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-lassar-undercity/plane-3.mbtiles",
-      "name": "assets__cache-world-map-lassar-undercity__plane-3.mbtiles",
-      "sha256": "de1d968aa49785d875be669baabbf67aeac515c544ea985dd67b7f122bb6231d",
-      "bytes": 32768,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-lassar-undercity__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-misthalin-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-misthalin-underground__plane-0.mbtiles",
-      "sha256": "e1b85934e0d4fa1de2c0c129c500d4ab0d0a5c2ccfc930373154cac68041204e",
-      "bytes": 266240,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-misthalin-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-misthalin-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-misthalin-underground__plane-1.mbtiles",
-      "sha256": "30159f31880e5e9af06a132621ac84988e57776a1ad767a93552f93849325010",
-      "bytes": 24576,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-misthalin-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-misthalin-underground/plane-2.mbtiles",
-      "name": "assets__cache-world-map-misthalin-underground__plane-2.mbtiles",
-      "sha256": "1da76586c3fcc9ac4a8e4b54e62d09fc4e9858b0ff3a63ed36af80812bb37a9c",
-      "bytes": 40960,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-misthalin-underground__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-mole/plane-0.mbtiles",
-      "name": "assets__cache-world-map-mole__plane-0.mbtiles",
-      "sha256": "4ff405de7896a3496c40a11a4337c682fabca1232ff03eec23ff4ade8a7d747c",
-      "bytes": 73728,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-mole__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-mole/plane-1.mbtiles",
-      "name": "assets__cache-world-map-mole__plane-1.mbtiles",
-      "sha256": "ce78894d06fc2e55a0326e47d83d753eca4e7d505dafe492706c096d418d56fb",
-      "bytes": 40960,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-mole__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-mole/plane-2.mbtiles",
-      "name": "assets__cache-world-map-mole__plane-2.mbtiles",
-      "sha256": "6380825e9c750f1f4957a0482b8927b5c31395ede0b4c7a6abb7ab16b18b6a8a",
-      "bytes": 16384,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-mole__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-morytania-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-morytania-underground__plane-0.mbtiles",
-      "sha256": "907e72e1bed7808e19f8a006136dc883088c0f546268b375486ee89d8694c4ea",
-      "bytes": 270336,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-morytania-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-morytania-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-morytania-underground__plane-1.mbtiles",
-      "sha256": "320505a1c0c6f6cc5b54d9f23a0e94a5155075b049a93d612e7199f89a4ec1e6",
-      "bytes": 102400,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-morytania-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-morytania-underground/plane-2.mbtiles",
-      "name": "assets__cache-world-map-morytania-underground__plane-2.mbtiles",
-      "sha256": "bc1d662c6e284ec312622d316c7cb456c70b6662401636a81b0f793d7650bd78",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-morytania-underground__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-morytania-underground/plane-3.mbtiles",
-      "name": "assets__cache-world-map-morytania-underground__plane-3.mbtiles",
-      "sha256": "48481e757776167d7ca29d9710ea5084ab1b4ccb306709c8305828c492e60633",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-morytania-underground__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-mosleharmless-cave/plane-0.mbtiles",
-      "name": "assets__cache-world-map-mosleharmless-cave__plane-0.mbtiles",
-      "sha256": "ea3389ff72045698331ac35bc3913809dc77b403da522a2dde0a480bc504a019",
-      "bytes": 98304,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-mosleharmless-cave__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-neypotzli/plane-0.mbtiles",
-      "name": "assets__cache-world-map-neypotzli__plane-0.mbtiles",
-      "sha256": "e3adf2d73681413af729d9a0c35e55e57ad580c77b56000ae2c23e7020af58d8",
-      "bytes": 217088,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-neypotzli__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-neypotzli/plane-1.mbtiles",
-      "name": "assets__cache-world-map-neypotzli__plane-1.mbtiles",
-      "sha256": "2f882454b6f730004ff2d891a0f63df5dc262d4924e0133ab43c27470ae4b6b8",
-      "bytes": 77824,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-neypotzli__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-neypotzli/plane-2.mbtiles",
-      "name": "assets__cache-world-map-neypotzli__plane-2.mbtiles",
-      "sha256": "a1df475b7f876b101e7719266c68754ae3da05a716bd2d557a38909c7140d4b0",
-      "bytes": 16384,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-neypotzli__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-northern-ocean-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-northern-ocean-underground__plane-0.mbtiles",
-      "sha256": "8333fe66281ddae95e230a01bb3b270be901f51fe7db2486000432feff8fe046",
-      "bytes": 200704,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-northern-ocean-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-northern-ocean-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-northern-ocean-underground__plane-1.mbtiles",
-      "sha256": "20dc85aa9a319d69cfa31dedea8fb877e6b6c6792b3e617e1d8f3233330a6ace",
-      "bytes": 40960,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-northern-ocean-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-northern-ocean-underground/plane-2.mbtiles",
-      "name": "assets__cache-world-map-northern-ocean-underground__plane-2.mbtiles",
-      "sha256": "ac75e96e3f77419e0132ebb53827c6f7f08235fdf5ef66a775f0baaa5d8686c0",
-      "bytes": 45056,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-northern-ocean-underground__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-ourania/plane-0.mbtiles",
-      "name": "assets__cache-world-map-ourania__plane-0.mbtiles",
-      "sha256": "70dd86edba15819f6f501ff4290e726181d3cfc1ecf2eea8a405add52991b0d4",
-      "bytes": 65536,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-ourania__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-prifddinas-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-prifddinas-underground__plane-0.mbtiles",
-      "sha256": "12a5a81fba87d640cd5f2a3ac9552bc256a94039019ddef747be5b574163b7a0",
-      "bytes": 139264,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-prifddinas-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-prifddinas-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-prifddinas-underground__plane-1.mbtiles",
-      "sha256": "5aa70d30b6e7ab5557b5f7ecf061ea984ebd9820163eba533aef7b3bb61ed9d2",
-      "bytes": 24576,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-prifddinas-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-prifddinas/plane-0.mbtiles",
-      "name": "assets__cache-world-map-prifddinas__plane-0.mbtiles",
-      "sha256": "4f3542a5eaa8b3f2dda9350a8010ea00aa5bbc610e57eaeb2495e6f5b01f5737",
-      "bytes": 770048,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-prifddinas__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-prifddinas/plane-1.mbtiles",
-      "name": "assets__cache-world-map-prifddinas__plane-1.mbtiles",
-      "sha256": "d91ebaee755991a8e5c0b4ddf735d278d9ff86a3e9c556defc0d75ccfe587581",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-prifddinas__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-prifddinas/plane-2.mbtiles",
-      "name": "assets__cache-world-map-prifddinas__plane-2.mbtiles",
-      "sha256": "ab537115b5dc5e8e6c8cd962cc40d9eb04fcba6abbea3aca7c7ef7f7dc2f7abd",
-      "bytes": 57344,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-prifddinas__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-shrouded-ocean-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-shrouded-ocean-underground__plane-0.mbtiles",
-      "sha256": "3ee06050e7d1d67a5f7899b0788c0f3e3890dbf76e51ca84717aa733944a69b0",
-      "bytes": 122880,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-shrouded-ocean-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-slayer-cave/plane-0.mbtiles",
-      "name": "assets__cache-world-map-slayer-cave__plane-0.mbtiles",
-      "sha256": "5cc889574fb22500d247e7582240ca755eab726c3d92c5d174963819726afb8c",
-      "bytes": 106496,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-slayer-cave__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-slayer-cave/plane-1.mbtiles",
-      "name": "assets__cache-world-map-slayer-cave__plane-1.mbtiles",
-      "sha256": "f35501b03188d9e46435c6873a1f14b67effee70f4ba114823a5dafbb8598fb2",
-      "bytes": 24576,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-slayer-cave__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-sos/plane-0.mbtiles",
-      "name": "assets__cache-world-map-sos__plane-0.mbtiles",
-      "sha256": "28ea6eefc93df721180e6244e300eee8c11d7bcad7bf26a314868a0dbed42833",
-      "bytes": 163840,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-sos__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-stronghold-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-stronghold-underground__plane-0.mbtiles",
-      "sha256": "12f5ca0c82815d1e06f6671a2cdc65dcee94ad7ae0f970d952b0c9b0a286e7ab",
-      "bytes": 159744,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-stronghold-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-sunset-ocean-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-sunset-ocean-underground__plane-0.mbtiles",
-      "sha256": "977658e5e575ad05a3175c0a9ee09b4445d4c760f2f2338a67b3df1d07ec04a0",
-      "bytes": 53248,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-sunset-ocean-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-taverley-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-taverley-underground__plane-0.mbtiles",
-      "sha256": "ac9d3113ff7e6e12164a92a846ffddadf4b4cb76ccb0b17c7d16f59b3572efae",
-      "bytes": 241664,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-taverley-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-taverley-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-taverley-underground__plane-1.mbtiles",
-      "sha256": "813bdde3255557c792d3590e3825d6d154376c00f5c34188f478ea88ec5ecc1c",
-      "bytes": 40960,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-taverley-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-taverley-underground/plane-2.mbtiles",
-      "name": "assets__cache-world-map-taverley-underground__plane-2.mbtiles",
-      "sha256": "d7f54024359572bd047976bde116057d44f3c403ffc80cd49b1b3a9b946dd8d1",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-taverley-underground__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-the-abyss/plane-0.mbtiles",
-      "name": "assets__cache-world-map-the-abyss__plane-0.mbtiles",
-      "sha256": "6e9cf0f2f8bc86eabc580aab108cda44387f3dcdb5dd0501f9976b8b3e7a1751",
-      "bytes": 139264,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-the-abyss__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-tolna/plane-0.mbtiles",
-      "name": "assets__cache-world-map-tolna__plane-0.mbtiles",
-      "sha256": "0c68d629f001dc94ef478359fad0180f1401eb45a4fe9d4e3e818e4dfe38e126",
-      "bytes": 90112,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-tolna__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-troll-stronghold/plane-0.mbtiles",
-      "name": "assets__cache-world-map-troll-stronghold__plane-0.mbtiles",
-      "sha256": "574e83cb8b230680300cb382300d46b9b136a36a2942fd8588273c4b4886f260",
-      "bytes": 57344,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-troll-stronghold__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-troll-stronghold/plane-1.mbtiles",
-      "name": "assets__cache-world-map-troll-stronghold__plane-1.mbtiles",
-      "sha256": "c1ab14c9b83b739fd3c8af20dab335ebbe78569706fc99a2eabb654b96d54ad8",
-      "bytes": 53248,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-troll-stronghold__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-troll-stronghold/plane-2.mbtiles",
-      "name": "assets__cache-world-map-troll-stronghold__plane-2.mbtiles",
-      "sha256": "a30ba91da8739b80e6249fb3f72387cce3039df46e9780be28bf1931a0308291",
-      "bytes": 49152,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-troll-stronghold__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-tutorial-2/plane-0.mbtiles",
-      "name": "assets__cache-world-map-tutorial-2__plane-0.mbtiles",
-      "sha256": "9de760f2bc2c6be21665784242798047b6b65d34235ddd8170f19df8f5bf1e95",
-      "bytes": 135168,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-tutorial-2__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-tutorial-2/plane-1.mbtiles",
-      "name": "assets__cache-world-map-tutorial-2__plane-1.mbtiles",
-      "sha256": "8eaca3e5f064eb9418e0bce0f501abab0dbcd84cf273e73498e00fb12ff1840b",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-tutorial-2__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-tutorial-2/plane-2.mbtiles",
-      "name": "assets__cache-world-map-tutorial-2__plane-2.mbtiles",
-      "sha256": "0da5d5a560fe6caa023cdaa66499d192e355a1ec8553f186d53e89153c11bc4b",
-      "bytes": 32768,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-tutorial-2__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-tzhaar-area/plane-0.mbtiles",
-      "name": "assets__cache-world-map-tzhaar-area__plane-0.mbtiles",
-      "sha256": "fdba4bce1acb569ad96f72c8a5cf266fbe430de8c576b0f93d66d983a32dc106",
-      "bytes": 102400,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-tzhaar-area__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-undead-dungeon/plane-0.mbtiles",
-      "name": "assets__cache-world-map-undead-dungeon__plane-0.mbtiles",
-      "sha256": "ffa003fa35c7b3a8c956311481a233f9303a968172e1ec2e1e0fb1d6ca1e9c75",
-      "bytes": 45056,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-undead-dungeon__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-undead-dungeon/plane-1.mbtiles",
-      "name": "assets__cache-world-map-undead-dungeon__plane-1.mbtiles",
-      "sha256": "e1b381cabd6b951f73e1730982f9cadbb0624da20634d1cf3aed687124861965",
-      "bytes": 40960,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-undead-dungeon__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-undead-dungeon/plane-2.mbtiles",
-      "name": "assets__cache-world-map-undead-dungeon__plane-2.mbtiles",
-      "sha256": "340e5e8be1736c32a1b098d4343e3ab47c664541ce3b3bb588a8d7b8c09d31fc",
-      "bytes": 40960,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-undead-dungeon__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-unquiet-ocean-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-unquiet-ocean-underground__plane-0.mbtiles",
-      "sha256": "5565052a45fa4ed97e6f48095959bf0f91c6e3c5b20aeab9f5b83455615d6e65",
-      "bytes": 69632,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-unquiet-ocean-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-unquiet-ocean-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-unquiet-ocean-underground__plane-1.mbtiles",
-      "sha256": "c4266464a6a11223a71b571fc167f7ed1d4be7a7ad8761677544a539708f48f3",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-unquiet-ocean-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-varlamore-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-varlamore-underground__plane-0.mbtiles",
-      "sha256": "d348fb8b390837c7ed42e33046bc922079861bd777a004008e9199d17a458924",
-      "bytes": 249856,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-varlamore-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-varlamore-underground/plane-1.mbtiles",
-      "name": "assets__cache-world-map-varlamore-underground__plane-1.mbtiles",
-      "sha256": "06b00c29774c3339c52378c5437af678549bf8f4250ad547e08bbeb7df15de0e",
-      "bytes": 49152,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-varlamore-underground__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-waterbirth/plane-0.mbtiles",
-      "name": "assets__cache-world-map-waterbirth__plane-0.mbtiles",
-      "sha256": "28843110f4e4916abc2b7216ecb672175cc089133579bfe09d66bdedb5cc1f5a",
-      "bytes": 135168,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-waterbirth__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-waterbirth/plane-1.mbtiles",
-      "name": "assets__cache-world-map-waterbirth__plane-1.mbtiles",
-      "sha256": "7e1827b5bb3a0cec1306d1bf2b537c0c0c269dd02a169be3d1f2cb022c3735ea",
-      "bytes": 57344,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-waterbirth__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-waterbirth/plane-2.mbtiles",
-      "name": "assets__cache-world-map-waterbirth__plane-2.mbtiles",
-      "sha256": "8e5dc205e5d1bbd37351db96356f0a3842183bbf9230aef1d66dd177018d7077",
-      "bytes": 61440,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-waterbirth__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-waterbirth/plane-3.mbtiles",
-      "name": "assets__cache-world-map-waterbirth__plane-3.mbtiles",
-      "sha256": "b8dec63281a77d92c5909ade7dd8e64f08c2eb87e8d249e1eaaacfe7c8e971f1",
-      "bytes": 53248,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-waterbirth__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-western-ocean-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-western-ocean-underground__plane-0.mbtiles",
-      "sha256": "f7f06050a55b304b7708470606079bc936615c7b5dbf2736963f58d47725d26a",
-      "bytes": 94208,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-western-ocean-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-wilderness-dungeons/plane-0.mbtiles",
-      "name": "assets__cache-world-map-wilderness-dungeons__plane-0.mbtiles",
-      "sha256": "d8c7969c50dab61456f926c69afa080a599521cfcb38620b25a41318aec2a800",
-      "bytes": 348160,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-wilderness-dungeons__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-wilderness-dungeons/plane-1.mbtiles",
-      "name": "assets__cache-world-map-wilderness-dungeons__plane-1.mbtiles",
-      "sha256": "25dfc7f0163c7404eb554ffbb64e32b4bb15f13213a65f9c9c797bf991a0e4ef",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-wilderness-dungeons__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-wilderness-dungeons/plane-2.mbtiles",
-      "name": "assets__cache-world-map-wilderness-dungeons__plane-2.mbtiles",
-      "sha256": "71986011fcea2c671e0ceda8cab58ac90a0d7a843799dd5393dc92f2dfed9467",
-      "bytes": 36864,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-wilderness-dungeons__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-wilderness-dungeons/plane-3.mbtiles",
-      "name": "assets__cache-world-map-wilderness-dungeons__plane-3.mbtiles",
-      "sha256": "800b8c137c70eff5436d070ee1e118bd962a3421e5ae6315c35e22144fb60b17",
-      "bytes": 28672,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-wilderness-dungeons__plane-3.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-yanille-underground/plane-0.mbtiles",
-      "name": "assets__cache-world-map-yanille-underground__plane-0.mbtiles",
-      "sha256": "4ca16200d7e284155a894dfef45fd6acd0f4dbae17d9b71566d3767a502bc973",
-      "bytes": 94208,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-yanille-underground__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/cache-world-map-zanaris/plane-0.mbtiles",
-      "name": "assets__cache-world-map-zanaris__plane-0.mbtiles",
-      "sha256": "68664996fcbc671683fd601c18586fd9519499ddeac77e770354bef0ff62d332",
-      "bytes": 139264,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__cache-world-map-zanaris__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/surface-gielinor/plane-0.mbtiles",
-      "name": "assets__surface-gielinor__plane-0.mbtiles",
-      "sha256": "79fce700a6489d3297126e4f416bd636d1d2909f0529aa0c5989badef8ae7a8d",
-      "bytes": 27152384,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__surface-gielinor__plane-0.mbtiles"
-    },
-    {
-      "path": "assets/surface-gielinor/plane-1.mbtiles",
-      "name": "assets__surface-gielinor__plane-1.mbtiles",
-      "sha256": "e28690514b74abc2964c2baf7c7422481ff83fbe235a754a49fa1df3cd1cf1f7",
-      "bytes": 995328,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__surface-gielinor__plane-1.mbtiles"
-    },
-    {
-      "path": "assets/surface-gielinor/plane-2.mbtiles",
-      "name": "assets__surface-gielinor__plane-2.mbtiles",
-      "sha256": "335f484d7c3888731020175bf1371ee3839a16f1e0cd5b82ff307ffba393f1d9",
-      "bytes": 589824,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__surface-gielinor__plane-2.mbtiles"
-    },
-    {
-      "path": "assets/surface-gielinor/plane-3.mbtiles",
-      "name": "assets__surface-gielinor__plane-3.mbtiles",
-      "sha256": "e920383b48c1fab73fc57594296679f1502bc669f3650485e1c3839c70756314",
-      "bytes": 270336,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/assets__surface-gielinor__plane-3.mbtiles"
-    },
-    {
-      "path": "underground-realms.json",
+      "bytes": 2398869,
       "name": "underground-realms.json",
-      "sha256": "70d42ed4495511050f1dd3325572d3c0dec8f0155e46fbffcea4fa46ae79a143",
-      "bytes": 2314303,
-      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-54a05b614edd/underground-realms.json"
+      "path": "underground-realms.json",
+      "sha256": "ec88fe63c94832cb11cb09020dccf58ee0882dd54997ad4edcb8e720916f84ab",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/underground-realms.json"
+    },
+    {
+      "bytes": 57344,
+      "name": "assets__cache-world-map-ancient-cavern__plane-0.mbtiles",
+      "path": "assets/cache-world-map-ancient-cavern/plane-0.mbtiles",
+      "payload_sha256": "0872f5c959375efa8ec5b86411673a8263d3bd2468701c1be2e7ef903b708282",
+      "sha256": "04eaedcf2abf98d2f7b093affa06b82f2b92419cc6d64a62b0524929b7aa0f28",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-ancient-cavern__plane-0.mbtiles"
+    },
+    {
+      "bytes": 61440,
+      "name": "assets__cache-world-map-ancient-cavern__plane-1.mbtiles",
+      "path": "assets/cache-world-map-ancient-cavern/plane-1.mbtiles",
+      "payload_sha256": "18f63dec2f70d54c26b81a7d932e2aadf5db2698d2a225a2b13c60e1e201e5d5",
+      "sha256": "66b678524bdb89f656311dd7816a5f74051f9d6ffa47a12506ca0982708a3d79",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-ancient-cavern__plane-1.mbtiles"
+    },
+    {
+      "bytes": 262144,
+      "name": "assets__cache-world-map-ardent-ocean-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-ardent-ocean-underground/plane-0.mbtiles",
+      "payload_sha256": "927a2520238197316740ffc1422010afa696ba261d90462ae39c2ce8ae1f666e",
+      "sha256": "d4057b7cfdb6946a02d8916a2ffb2f79dc151ef03f3fe5ed92aeb8116f126f6f",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-ardent-ocean-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 36864,
+      "name": "assets__cache-world-map-ardent-ocean-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-ardent-ocean-underground/plane-1.mbtiles",
+      "payload_sha256": "74db714b0e0ef724d21cdb604e85d68e471905ed849f623e2256432d6c36225d",
+      "sha256": "7f8150322b2941a9266add87a2afc77dba6e30e5e358a776974363ef46f9c934",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-ardent-ocean-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 32768,
+      "name": "assets__cache-world-map-ardent-ocean-underground__plane-2.mbtiles",
+      "path": "assets/cache-world-map-ardent-ocean-underground/plane-2.mbtiles",
+      "payload_sha256": "055184670e47ea39e45b34a954bbf2adef562ceb0770f20e49615f802d10b1e2",
+      "sha256": "f9d0fd1bf8443fc9c9373a2c6678aa120953898fa1ed7e7a2f100ade4ed8f430",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-ardent-ocean-underground__plane-2.mbtiles"
+    },
+    {
+      "bytes": 139264,
+      "name": "assets__cache-world-map-ardougne-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-ardougne-underground/plane-0.mbtiles",
+      "payload_sha256": "5c25e59ee32ed60e2c5d405acbcfc375dadfb7d919341469a36ba4342c58c539",
+      "sha256": "09bf5aa2d6216d37441f87a0bb7c28685930c1d330ad084ad1450b6fd5d6df88",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-ardougne-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 126976,
+      "name": "assets__cache-world-map-asgarnia-ice-dungeon__plane-0.mbtiles",
+      "path": "assets/cache-world-map-asgarnia-ice-dungeon/plane-0.mbtiles",
+      "payload_sha256": "6d1893e5e709e3433dd10cc19ed876c307af2a03aa285bf54e4981df53400b59",
+      "sha256": "edcb663f72cbff9888110df448512479b6f378d6cb40963434a40fc80c02f703",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-asgarnia-ice-dungeon__plane-0.mbtiles"
+    },
+    {
+      "bytes": 24576,
+      "name": "assets__cache-world-map-asgarnia-ice-dungeon__plane-1.mbtiles",
+      "path": "assets/cache-world-map-asgarnia-ice-dungeon/plane-1.mbtiles",
+      "payload_sha256": "55cbfac415c7f69d67d22677324a4d77a016e0c3a473ead6ebba717ceb4ff311",
+      "sha256": "bcbdd8ea94877fe5eac8d0bdec82ed7b300631d322cb4e02f30d443e1c61927b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-asgarnia-ice-dungeon__plane-1.mbtiles"
+    },
+    {
+      "bytes": 368640,
+      "name": "assets__cache-world-map-br-dark-varrock__plane-0.mbtiles",
+      "path": "assets/cache-world-map-br-dark-varrock/plane-0.mbtiles",
+      "payload_sha256": "791569e63b5f56dbba46de22efc7033b178487b22b4f1df35e6110da2a8dabf9",
+      "sha256": "1ad946cc1e0109144df8284dfa2d2c7d69cfd4a9153679df24b613ee3594d590",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-br-dark-varrock__plane-0.mbtiles"
+    },
+    {
+      "bytes": 49152,
+      "name": "assets__cache-world-map-br-dark-varrock__plane-1.mbtiles",
+      "path": "assets/cache-world-map-br-dark-varrock/plane-1.mbtiles",
+      "payload_sha256": "ebef00b9fd74176e947ea0310e943552aabf836aea1d8e0b6defc132d2f006da",
+      "sha256": "8667ccf07b25d2360fcd2105da30022b27e88b8fa5c69019dbd4b451746df38b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-br-dark-varrock__plane-1.mbtiles"
+    },
+    {
+      "bytes": 36864,
+      "name": "assets__cache-world-map-br-dark-varrock__plane-2.mbtiles",
+      "path": "assets/cache-world-map-br-dark-varrock/plane-2.mbtiles",
+      "payload_sha256": "36941d405eea0c153c22d23e36f645fd5d08305ab4440aac1e8253f026227294",
+      "sha256": "f14f465cb19e5831bfe66ca3ce72d82a492662042651a628e13ec46dd3cd4aae",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-br-dark-varrock__plane-2.mbtiles"
+    },
+    {
+      "bytes": 24576,
+      "name": "assets__cache-world-map-br-dark-varrock__plane-3.mbtiles",
+      "path": "assets/cache-world-map-br-dark-varrock/plane-3.mbtiles",
+      "payload_sha256": "4be2c817c8022b42d4096a72badc22013e64674c0e5db6eb14eeb4d06c722e8c",
+      "sha256": "0df750db59583184b194df67c7ce5f3306dec49273e7335db38de4f5ddae39b5",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-br-dark-varrock__plane-3.mbtiles"
+    },
+    {
+      "bytes": 204800,
+      "name": "assets__cache-world-map-br-default__plane-0.mbtiles",
+      "path": "assets/cache-world-map-br-default/plane-0.mbtiles",
+      "payload_sha256": "1dac9b43118baae8c14d128fa5b79178f7c98d97019ba89ed18fbdbc62b8114d",
+      "sha256": "d624f2b717ae9df1773b2acd59bd4ad0aac6ac1213fab6658e88b758ec51ee8b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-br-default__plane-0.mbtiles"
+    },
+    {
+      "bytes": 36864,
+      "name": "assets__cache-world-map-br-default__plane-1.mbtiles",
+      "path": "assets/cache-world-map-br-default/plane-1.mbtiles",
+      "payload_sha256": "eb63867a522cc5ebca43f89ca754eaac936331f73792f61235aa56bf2a5b719f",
+      "sha256": "721e73bc0b9dd877a11942cea35117084c2526e7e22bd4f6f14ecd8c9a48448b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-br-default__plane-1.mbtiles"
+    },
+    {
+      "bytes": 122880,
+      "name": "assets__cache-world-map-braindeath-island__plane-0.mbtiles",
+      "path": "assets/cache-world-map-braindeath-island/plane-0.mbtiles",
+      "payload_sha256": "b6d55f101d7aded76a2570b798ed52c17a10caa83de7b9c3fea119d31672c09b",
+      "sha256": "9602f5b91ff415dc31cb179a51f396e54ac6308c7feeb83826e9e2038ee758a8",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-braindeath-island__plane-0.mbtiles"
+    },
+    {
+      "bytes": 32768,
+      "name": "assets__cache-world-map-braindeath-island__plane-1.mbtiles",
+      "path": "assets/cache-world-map-braindeath-island/plane-1.mbtiles",
+      "payload_sha256": "a1bc0c5e4bd5a25ff99345362677c133a5c0b1f59d80fe4cd767bb67fef3255d",
+      "sha256": "46bf8550233e5d96bfec2e7802709d568ff3896f2c01ab78bea3f6f59e93a943",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-braindeath-island__plane-1.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-braindeath-island__plane-2.mbtiles",
+      "path": "assets/cache-world-map-braindeath-island/plane-2.mbtiles",
+      "payload_sha256": "a2703d370f1bf5b2b6547ca77fed78feb0f53804e3b44e89f1c01cff9b9f2dd5",
+      "sha256": "12d04264d06f5104d981064540deb86082559ce419a9e4c79eb2468936679741",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-braindeath-island__plane-2.mbtiles"
+    },
+    {
+      "bytes": 24576,
+      "name": "assets__cache-world-map-braindeath-island__plane-3.mbtiles",
+      "path": "assets/cache-world-map-braindeath-island/plane-3.mbtiles",
+      "payload_sha256": "4565554594408f57502e9e2b167dae07970a4024eb8940f46e68b4f373200d5d",
+      "sha256": "c32b70196beea8fa0bd3991d1247e4395eec219bdcf56a1b4c78dab309616bc9",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-braindeath-island__plane-3.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-cam-torum__plane-0.mbtiles",
+      "path": "assets/cache-world-map-cam-torum/plane-0.mbtiles",
+      "payload_sha256": "98e973924456f5e15a932eabdb5717959a6d12f8ab0de15657dc29e62d6a3738",
+      "sha256": "356a54be38dea4fe973d04acaf396cca67d703624fe211378990d7e079c09d1a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-cam-torum__plane-0.mbtiles"
+    },
+    {
+      "bytes": 102400,
+      "name": "assets__cache-world-map-cam-torum__plane-1.mbtiles",
+      "path": "assets/cache-world-map-cam-torum/plane-1.mbtiles",
+      "payload_sha256": "080296025328cfae18e07bc351973972cc487d3fd37fb8df662b716b1fc593d8",
+      "sha256": "d65bede79f2940335b45ad8efd1de92173d8ea87110044d1bb21af07938bd9a5",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-cam-torum__plane-1.mbtiles"
+    },
+    {
+      "bytes": 36864,
+      "name": "assets__cache-world-map-cam-torum__plane-2.mbtiles",
+      "path": "assets/cache-world-map-cam-torum/plane-2.mbtiles",
+      "payload_sha256": "1edec52b7422fed77e73c840de70e7929e7b5d892a5dba069f2c74f3a16d1583",
+      "sha256": "d0c4e87762299efcdb8c24259afc02785d2884ff5136c23960331f544395097d",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-cam-torum__plane-2.mbtiles"
+    },
+    {
+      "bytes": 32768,
+      "name": "assets__cache-world-map-cam-torum__plane-3.mbtiles",
+      "path": "assets/cache-world-map-cam-torum/plane-3.mbtiles",
+      "payload_sha256": "da8df0fddf5e75971d5fb475ff687a015b83ecaa8de5ecce8fe030ee0d9be90d",
+      "sha256": "d57990a58b10761d1aaedde5377d2b7a11d562bb3b723e04c6a0ba9a128b4a85",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-cam-torum__plane-3.mbtiles"
+    },
+    {
+      "bytes": 106496,
+      "name": "assets__cache-world-map-camdozaal__plane-0.mbtiles",
+      "path": "assets/cache-world-map-camdozaal/plane-0.mbtiles",
+      "payload_sha256": "7b7265c6c1017a40b9057b67d56f0e61d68c16f01f13e6b0e8acedba39d4b598",
+      "sha256": "79d85b350d47e93d477ff76e36f122d6d94ee9f13fe4cb9f2289055f74ea7e30",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-camdozaal__plane-0.mbtiles"
+    },
+    {
+      "bytes": 24576,
+      "name": "assets__cache-world-map-camdozaal__plane-1.mbtiles",
+      "path": "assets/cache-world-map-camdozaal/plane-1.mbtiles",
+      "payload_sha256": "29d30e9f86ca0d6ab0e8b7451613ff072920d5351554720a71a4b0c7144b4a55",
+      "sha256": "d036c802a115549d95c53c8c2d910cc88991cc5ddbb4ee438bccc859707d8814",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-camdozaal__plane-1.mbtiles"
+    },
+    {
+      "bytes": 114688,
+      "name": "assets__cache-world-map-desert-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-desert-underground/plane-0.mbtiles",
+      "payload_sha256": "5a500714e41ff00c873cc3299bc3638abfaff16d03e43546fd73f6d66212fb83",
+      "sha256": "aae048d1e069e049ea27d94c6054d6512638da5a9e783d6e949709022c65d159",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-desert-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 24576,
+      "name": "assets__cache-world-map-desert-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-desert-underground/plane-1.mbtiles",
+      "payload_sha256": "5963358f0920678bd7b0acfff0f014baaf0b12f43a495c12b0d9536da953fb91",
+      "sha256": "05a87ffbcaec10cfb930f9700875e04912f53a111dc97aa74d06357074f6a72e",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-desert-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 40960,
+      "name": "assets__cache-world-map-desert-underground__plane-2.mbtiles",
+      "path": "assets/cache-world-map-desert-underground/plane-2.mbtiles",
+      "payload_sha256": "ef1e610af277f9ac3f8ef9208b69d379332c6b992dff7bb71d125e762093e44d",
+      "sha256": "22924e44b114657bcb086dde1faf69de6ffce02449632e49fdb32d56d15fe3af",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-desert-underground__plane-2.mbtiles"
+    },
+    {
+      "bytes": 86016,
+      "name": "assets__cache-world-map-dorgeshkaan__plane-0.mbtiles",
+      "path": "assets/cache-world-map-dorgeshkaan/plane-0.mbtiles",
+      "payload_sha256": "32572ddcce46549c36eb4599b85de0474734d6cc7d84d7b6c70bb59f5d383072",
+      "sha256": "96417a474dab021a897f46757bc6516a2da57efd761a2241617fb678418708d5",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-dorgeshkaan__plane-0.mbtiles"
+    },
+    {
+      "bytes": 77824,
+      "name": "assets__cache-world-map-dorgeshkaan__plane-1.mbtiles",
+      "path": "assets/cache-world-map-dorgeshkaan/plane-1.mbtiles",
+      "payload_sha256": "4e63d19d362019f2172bf76731ac18926cbcec92de184c76ea65b0a076a6e983",
+      "sha256": "488fc09dd91576eae2088892b29cecd2cf0ce7b6bbe907b81330151497cb3e6a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-dorgeshkaan__plane-1.mbtiles"
+    },
+    {
+      "bytes": 49152,
+      "name": "assets__cache-world-map-dorgeshkaan__plane-2.mbtiles",
+      "path": "assets/cache-world-map-dorgeshkaan/plane-2.mbtiles",
+      "payload_sha256": "030a201d4eb2fdccfe5322d8d90fefa1bcbae90881068d03a200cde937a48bad",
+      "sha256": "3690ec49109075dac18a4853d0e4e6804541f3aee8aeb18653f18e12696e3468",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-dorgeshkaan__plane-2.mbtiles"
+    },
+    {
+      "bytes": 155648,
+      "name": "assets__cache-world-map-dwarven-mines__plane-0.mbtiles",
+      "path": "assets/cache-world-map-dwarven-mines/plane-0.mbtiles",
+      "payload_sha256": "b727b211349b9d6a432d390099922f1698e2236281368333f24322f04902e4f5",
+      "sha256": "6eef042b47929508584a580ac9c41de64d3c36fef7f1adee9ce658773daec7a8",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-dwarven-mines__plane-0.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-dwarven-mines__plane-1.mbtiles",
+      "path": "assets/cache-world-map-dwarven-mines/plane-1.mbtiles",
+      "payload_sha256": "948daef5e1126cb830d8f3fd31c6fb26cd29db09ae9e943eb0939ad354f3645f",
+      "sha256": "14035e597855454209d8328ac6236bef56f190e0691d80889eaa0cd53ee1a882",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-dwarven-mines__plane-1.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-feldip-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-feldip-underground/plane-0.mbtiles",
+      "payload_sha256": "3e411abdde5116d2c946c64d0db05646de6f68b1805e21532c89f766c7382248",
+      "sha256": "ea3680e9062c8d8f4d487527ecd37cdd4cdc469d65b78b9168c84dcf39fe290d",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-feldip-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 114688,
+      "name": "assets__cache-world-map-feldip-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-feldip-underground/plane-1.mbtiles",
+      "payload_sha256": "0020f2bf221bbc74aaa7a8ce04a9fd477dd2bca614608aa3a82b3a67e53251f3",
+      "sha256": "a6b8ba2dc7f8f0290fcdafc2ed9192da7576292eeb5ea75d89ea98ba9d2c65bd",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-feldip-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 98304,
+      "name": "assets__cache-world-map-fossil-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-fossil-underground/plane-0.mbtiles",
+      "payload_sha256": "82d48b8707815396a96b6f7a149b843d66e0ebd98a54d42bbff1680c590da85f",
+      "sha256": "bc324e48e7df7fb49bf27ab1e0627d70db85483b9feaf75a7ce3643697b5e20b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-fossil-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 86016,
+      "name": "assets__cache-world-map-fossil-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-fossil-underground/plane-1.mbtiles",
+      "payload_sha256": "7cd9e6bb6ab6ff060f5fbfef97f16227a2d584b68607a5450f975cfe372a0c26",
+      "sha256": "99542bbd24dfa8d44efe8ab1bba61cf2c72a56fb174acb6cc97a204819888ea5",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-fossil-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 32768,
+      "name": "assets__cache-world-map-fossil-underground__plane-3.mbtiles",
+      "path": "assets/cache-world-map-fossil-underground/plane-3.mbtiles",
+      "payload_sha256": "d92a82dec2f6bd3e0e1a4ce181e6174f4783991388490ec82efe5f5b53a8997b",
+      "sha256": "a2c85431f6e215cdd73c4f23f1d2ca67bf01610fea5f911ac15eb7970b4c99a7",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-fossil-underground__plane-3.mbtiles"
+    },
+    {
+      "bytes": 65536,
+      "name": "assets__cache-world-map-ghorrock-prison__plane-2.mbtiles",
+      "path": "assets/cache-world-map-ghorrock-prison/plane-2.mbtiles",
+      "payload_sha256": "6dbb4c0dc4ba6fcd2c4df4b9d3d1d3f43e922ea942a12a77701743ae2ccae6f2",
+      "sha256": "70159543265a8690980bc4553a5d043665205d62aafd3ea70974d93ee68a341d",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-ghorrock-prison__plane-2.mbtiles"
+    },
+    {
+      "bytes": 65536,
+      "name": "assets__cache-world-map-godwars__plane-0.mbtiles",
+      "path": "assets/cache-world-map-godwars/plane-0.mbtiles",
+      "payload_sha256": "7703bd956cf752ac304981130f87132cd04d18c103d54adb82511514bfceece9",
+      "sha256": "3b2f54ca5025145d45a3cd3ab108db28a950537ad0f1ea9aef0ed27d25ab7cc1",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-godwars__plane-0.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-godwars__plane-1.mbtiles",
+      "path": "assets/cache-world-map-godwars/plane-1.mbtiles",
+      "payload_sha256": "364e6f38c1202d2d4d1dd6c1a6eabed930ad623d80637124142e9990129211ee",
+      "sha256": "ef25e50f41c120690eec8c443f70f44a9426e78336cecdfe8e8ca39b993d5929",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-godwars__plane-1.mbtiles"
+    },
+    {
+      "bytes": 122880,
+      "name": "assets__cache-world-map-godwars__plane-2.mbtiles",
+      "path": "assets/cache-world-map-godwars/plane-2.mbtiles",
+      "payload_sha256": "97fb53ef17eb3252fff36525bb4ca24f0d51c98c6de905a17e2083ce62335e9b",
+      "sha256": "d45f10d1e75d6d84e7211b93676b9f818d77d8432c99e49d05a468cf94d6370b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-godwars__plane-2.mbtiles"
+    },
+    {
+      "bytes": 61440,
+      "name": "assets__cache-world-map-grand-library__plane-0.mbtiles",
+      "path": "assets/cache-world-map-grand-library/plane-0.mbtiles",
+      "payload_sha256": "6ffdaab524c102d707926b01503ffe4369c6eacfd875ef2b713e39a75b21f093",
+      "sha256": "f672fc31aa6dd875a01730b6d4755683f19073e382a44f679f5d8aa9d317447c",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-grand-library__plane-0.mbtiles"
+    },
+    {
+      "bytes": 61440,
+      "name": "assets__cache-world-map-grand-library__plane-1.mbtiles",
+      "path": "assets/cache-world-map-grand-library/plane-1.mbtiles",
+      "payload_sha256": "c7a88bc921ff5bddde36097b9d491fdad891793eddef1464d7e7b25035944f5b",
+      "sha256": "cc83752c2faebe5c0b6306c7068a1ab82c4c333bff3889330b59aca7fd009059",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-grand-library__plane-1.mbtiles"
+    },
+    {
+      "bytes": 53248,
+      "name": "assets__cache-world-map-grand-library__plane-2.mbtiles",
+      "path": "assets/cache-world-map-grand-library/plane-2.mbtiles",
+      "payload_sha256": "c6ee17f73fc308c0c1356090397c41ec263dbbd1a34ac808831c14472b9323fc",
+      "sha256": "85dd37151b0a86377f6bc753289ac7211dd69ed140ca7e44721bd191f2b3502c",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-grand-library__plane-2.mbtiles"
+    },
+    {
+      "bytes": 118784,
+      "name": "assets__cache-world-map-kebos-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-kebos-underground/plane-0.mbtiles",
+      "payload_sha256": "00d572d817f53b9dc3c3d46a96c7b7a5542d5fc2256ff3c355a6974e79ae6c05",
+      "sha256": "bffd1cdbfd206d9ec3f7780d829f651502f9bd59efbd12a417955d24d948decb",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-kebos-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 57344,
+      "name": "assets__cache-world-map-kebos-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-kebos-underground/plane-1.mbtiles",
+      "payload_sha256": "a57a39fe114f13bfb92fc23a7a2191af1add794f8089dc18f66ed1ca84b959c3",
+      "sha256": "55414ca102482873c2adc59e71870a13a1407150a5a24d044e449be3b7e84ace",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-kebos-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 36864,
+      "name": "assets__cache-world-map-kebos-underground__plane-2.mbtiles",
+      "path": "assets/cache-world-map-kebos-underground/plane-2.mbtiles",
+      "payload_sha256": "f6695ffa01b90afb0a295423293169904c8d2f282cfe4c81bac61d710b07ab6e",
+      "sha256": "3122461a732a9b168e0a21ab188b21fedc63141472435df933d93f22fc9f99f7",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-kebos-underground__plane-2.mbtiles"
+    },
+    {
+      "bytes": 159744,
+      "name": "assets__cache-world-map-keldagrim__plane-0.mbtiles",
+      "path": "assets/cache-world-map-keldagrim/plane-0.mbtiles",
+      "payload_sha256": "653aaaab9ead3ece6121ecfca0331c5414b84d248f34135351befc7f68036683",
+      "sha256": "224884bc063150a96e1fd6a55de1e3fd0b2e0aa7f83c9fa975ae07a6c881272c",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-keldagrim__plane-0.mbtiles"
+    },
+    {
+      "bytes": 45056,
+      "name": "assets__cache-world-map-keldagrim__plane-1.mbtiles",
+      "path": "assets/cache-world-map-keldagrim/plane-1.mbtiles",
+      "payload_sha256": "73003068b34b570eab3e5c8d833cc53a0eb5643ff4939d264e6bd03ff6cf8078",
+      "sha256": "f35237d6406648398b75498c900b123ad3b245c5cd45830d8c715222732d9b06",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-keldagrim__plane-1.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-keldagrim__plane-2.mbtiles",
+      "path": "assets/cache-world-map-keldagrim/plane-2.mbtiles",
+      "payload_sha256": "6aa5639663dba36cbe0bdfd6511efb4c7c3c4c57f277bb44ba317c28aabcba74",
+      "sha256": "d8b3429c7b02a03c545a6668d440d9574741670753779f463c849aeb5c4a704f",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-keldagrim__plane-2.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-keldagrim__plane-3.mbtiles",
+      "path": "assets/cache-world-map-keldagrim/plane-3.mbtiles",
+      "payload_sha256": "8543f612da9baeb9262b41833310e7c9be11bd2ac451f9ef75db012f9c98b719",
+      "sha256": "706a0282721be176d2e8104d745636304d6978721a5baf17b13d0fc03ba17964",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-keldagrim__plane-3.mbtiles"
+    },
+    {
+      "bytes": 442368,
+      "name": "assets__cache-world-map-kourend-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-kourend-underground/plane-0.mbtiles",
+      "payload_sha256": "9d5f60e0193729b62473b4bde42a338009568490af76daf035234b139067a88a",
+      "sha256": "3bd5cc55996077f60e52f2f9d9b0cb2cb9280d3c5d555094f146a5e9e2ca29e6",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-kourend-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 69632,
+      "name": "assets__cache-world-map-kourend-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-kourend-underground/plane-1.mbtiles",
+      "payload_sha256": "dfa4b20c3e67e23adad1e07ef78c04aa4666160f09330a60ef27108ca002ee4a",
+      "sha256": "e19a208ba97ebe6c5ae731f3928a16527c3e1125c61404446afcb904eef526d5",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-kourend-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 53248,
+      "name": "assets__cache-world-map-kourend-underground__plane-2.mbtiles",
+      "path": "assets/cache-world-map-kourend-underground/plane-2.mbtiles",
+      "payload_sha256": "fef5b54d0445008bd5e128446b272dff59c7aea3314596693d9966458b176b94",
+      "sha256": "0aa868e5e901882b94ec395bf112a5026a3af26666b643403379db788683f77e",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-kourend-underground__plane-2.mbtiles"
+    },
+    {
+      "bytes": 45056,
+      "name": "assets__cache-world-map-kourend-underground__plane-3.mbtiles",
+      "path": "assets/cache-world-map-kourend-underground/plane-3.mbtiles",
+      "payload_sha256": "21489094156f8c4eda0cd0cc743263a86ba78abbb53911b3b3320ae2aebf2bb4",
+      "sha256": "d0d506d976863ea5357640e67346f109bb2f2ae07b13b1a5200928860cb43b53",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-kourend-underground__plane-3.mbtiles"
+    },
+    {
+      "bytes": 163840,
+      "name": "assets__cache-world-map-lassar-undercity__plane-0.mbtiles",
+      "path": "assets/cache-world-map-lassar-undercity/plane-0.mbtiles",
+      "payload_sha256": "bbfaadb63677d5aae9013ebca6f6c04c998387c2880797bec958944d10788900",
+      "sha256": "6838c9c7b9593449fb0a6b7eac8617edbaa08fa6ab90208b33202445a34bd721",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-lassar-undercity__plane-0.mbtiles"
+    },
+    {
+      "bytes": 57344,
+      "name": "assets__cache-world-map-lassar-undercity__plane-1.mbtiles",
+      "path": "assets/cache-world-map-lassar-undercity/plane-1.mbtiles",
+      "payload_sha256": "30dda7b4155e64b929a44a279f66cfc86f70fe75cc756d6c34331bd8314683e1",
+      "sha256": "433860aa755cac365496313ed0a3af0dc0ff1462d5e073b09cae943066ffbd4a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-lassar-undercity__plane-1.mbtiles"
+    },
+    {
+      "bytes": 40960,
+      "name": "assets__cache-world-map-lassar-undercity__plane-2.mbtiles",
+      "path": "assets/cache-world-map-lassar-undercity/plane-2.mbtiles",
+      "payload_sha256": "703610a6017c86f94cb9a7541ecd8c8b4c135b0545e353a751c7dc9c61e5a011",
+      "sha256": "75562ad78b654690700ac0dff8ed05fd0342e74c285f49001c9d5612f9e2cf21",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-lassar-undercity__plane-2.mbtiles"
+    },
+    {
+      "bytes": 32768,
+      "name": "assets__cache-world-map-lassar-undercity__plane-3.mbtiles",
+      "path": "assets/cache-world-map-lassar-undercity/plane-3.mbtiles",
+      "payload_sha256": "a44d7fd5784733c4ad27c85c5c8751d30b55300f2bb44ec74b62640c3559cfa5",
+      "sha256": "de1d968aa49785d875be669baabbf67aeac515c544ea985dd67b7f122bb6231d",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-lassar-undercity__plane-3.mbtiles"
+    },
+    {
+      "bytes": 73728,
+      "name": "assets__cache-world-map-leagues-yamas-lair__plane-0.mbtiles",
+      "path": "assets/cache-world-map-leagues-yamas-lair/plane-0.mbtiles",
+      "payload_sha256": "da5042cae6b52ec7ec9a13f90e23bd5a612f77116fe43919fcecd657fcd192e0",
+      "sha256": "76b958d5518475eaf023f9e8f35d7e4cba3e64edce7c63a22edc28f59737dd4f",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-leagues-yamas-lair__plane-0.mbtiles"
+    },
+    {
+      "bytes": 364544,
+      "name": "assets__cache-world-map-misthalin-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-misthalin-underground/plane-0.mbtiles",
+      "payload_sha256": "3279ee4457a80fea7e7f4c4d01cc318951d74e3f55ff5122027bd0c614fb9cee",
+      "sha256": "59e671f19505248820ba5995fa103b024b2ab5b09c30bea5838e66503c003912",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-misthalin-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 24576,
+      "name": "assets__cache-world-map-misthalin-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-misthalin-underground/plane-1.mbtiles",
+      "payload_sha256": "3f87d277005c9496e8343df43f383c2fdff0207d5dd9a54bb7035b1438d735ae",
+      "sha256": "f2b69f0437f3bc779cf93f33d519fc5e4954971974fb729a030270e2fd3f64c7",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-misthalin-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 45056,
+      "name": "assets__cache-world-map-misthalin-underground__plane-2.mbtiles",
+      "path": "assets/cache-world-map-misthalin-underground/plane-2.mbtiles",
+      "payload_sha256": "f030a94037a6a1f35983e57cc657467196f4dfe9350cb2402b8bb5cfe59feabc",
+      "sha256": "3be5c93b5c3401c42496b18a815e2bc091dd41548af503c2a0f7ed86a4e4b769",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-misthalin-underground__plane-2.mbtiles"
+    },
+    {
+      "bytes": 73728,
+      "name": "assets__cache-world-map-mole__plane-0.mbtiles",
+      "path": "assets/cache-world-map-mole/plane-0.mbtiles",
+      "payload_sha256": "fc59c4861cc92d6bd9ee5051f82e0493b0142ecf1706c6d8ee4b033193601bc5",
+      "sha256": "bf73f6c53c0cc16e1de9febd49a7db2b66174fdfd2a38ed952b010610f178482",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-mole__plane-0.mbtiles"
+    },
+    {
+      "bytes": 40960,
+      "name": "assets__cache-world-map-mole__plane-1.mbtiles",
+      "path": "assets/cache-world-map-mole/plane-1.mbtiles",
+      "payload_sha256": "47932340210ad852982802da4ab0b30033593b75b2eff7c8ea1b9d169e29e218",
+      "sha256": "ce78894d06fc2e55a0326e47d83d753eca4e7d505dafe492706c096d418d56fb",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-mole__plane-1.mbtiles"
+    },
+    {
+      "bytes": 16384,
+      "name": "assets__cache-world-map-mole__plane-2.mbtiles",
+      "path": "assets/cache-world-map-mole/plane-2.mbtiles",
+      "payload_sha256": "06b967ca9caeeffab13e4ec3dbf1314c694891d81291c23c2f0a5de9792c0d36",
+      "sha256": "6380825e9c750f1f4957a0482b8927b5c31395ede0b4c7a6abb7ab16b18b6a8a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-mole__plane-2.mbtiles"
+    },
+    {
+      "bytes": 270336,
+      "name": "assets__cache-world-map-morytania-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-morytania-underground/plane-0.mbtiles",
+      "payload_sha256": "4a5c9f63d6208479a15bcf1bbd8ee09ae8f51acc21795f3767b43542f9941efd",
+      "sha256": "72f08e4ee5335b94005986ad509560fea0e504f83e83ec8ee4624a546e821194",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-morytania-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 102400,
+      "name": "assets__cache-world-map-morytania-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-morytania-underground/plane-1.mbtiles",
+      "payload_sha256": "bcba28e490d518ad1b38a790b0a5a234a6c13e238e28080f6ae390eb0a7a97ab",
+      "sha256": "516f52841479fdee1eabf8d5f479111dc1e156c2db3091a4a89e4f03b3532456",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-morytania-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-morytania-underground__plane-2.mbtiles",
+      "path": "assets/cache-world-map-morytania-underground/plane-2.mbtiles",
+      "payload_sha256": "5ca7fd74ed8d91cf4b353e709ed07df629a9a2340aec3500108d5c7687f0f4fe",
+      "sha256": "bc1d662c6e284ec312622d316c7cb456c70b6662401636a81b0f793d7650bd78",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-morytania-underground__plane-2.mbtiles"
+    },
+    {
+      "bytes": 36864,
+      "name": "assets__cache-world-map-morytania-underground__plane-3.mbtiles",
+      "path": "assets/cache-world-map-morytania-underground/plane-3.mbtiles",
+      "payload_sha256": "61e22011465b337b49509dc2bc1dfcf82b306d4cccfc33c2a8df7ec092f5ef4c",
+      "sha256": "31bed6ddebbfe7d6e76e63a9cc4a29604cb70466f63d370ea92b3fd156c26649",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-morytania-underground__plane-3.mbtiles"
+    },
+    {
+      "bytes": 98304,
+      "name": "assets__cache-world-map-mosleharmless-cave__plane-0.mbtiles",
+      "path": "assets/cache-world-map-mosleharmless-cave/plane-0.mbtiles",
+      "payload_sha256": "f153d44a9423fc8435c591e86fd3c25a2c42808be33226d03ba45b50e1d4d120",
+      "sha256": "01b5ff636365b3223d74c04729a272b0631a37b73aaa84f8039fe015a4ef9fb8",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-mosleharmless-cave__plane-0.mbtiles"
+    },
+    {
+      "bytes": 217088,
+      "name": "assets__cache-world-map-neypotzli__plane-0.mbtiles",
+      "path": "assets/cache-world-map-neypotzli/plane-0.mbtiles",
+      "payload_sha256": "b66705eb28b9e2497f8edadc49c222640df7329bcb4496022bafa2d9925063b0",
+      "sha256": "7f99bf98eaace185a4ba49f15b1e1146859e29200a01643d0fa4cd2772975099",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-neypotzli__plane-0.mbtiles"
+    },
+    {
+      "bytes": 77824,
+      "name": "assets__cache-world-map-neypotzli__plane-1.mbtiles",
+      "path": "assets/cache-world-map-neypotzli/plane-1.mbtiles",
+      "payload_sha256": "e02ee26a80fe5b94c0cc3749759debb9b4775f7c6695d41cb6e4e8fda512280c",
+      "sha256": "eb32ecf673b41574ef2de5e2984b61933315175664f1cbe0c07ae7a051d9eaee",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-neypotzli__plane-1.mbtiles"
+    },
+    {
+      "bytes": 16384,
+      "name": "assets__cache-world-map-neypotzli__plane-2.mbtiles",
+      "path": "assets/cache-world-map-neypotzli/plane-2.mbtiles",
+      "payload_sha256": "bfe27a564e116b82b2686b13b597105369d90fdbc5ab4e7f788fd9d503df1170",
+      "sha256": "a1df475b7f876b101e7719266c68754ae3da05a716bd2d557a38909c7140d4b0",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-neypotzli__plane-2.mbtiles"
+    },
+    {
+      "bytes": 200704,
+      "name": "assets__cache-world-map-northern-ocean-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-northern-ocean-underground/plane-0.mbtiles",
+      "payload_sha256": "af6c60cabe7f213d79fb62a5c9a5a14266de8da3b41ac4bd8d3b0ce9fa81c69f",
+      "sha256": "091f07164b1f5277a37a06f7691c65cc9490957cfeb5abad97c05802faec9963",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-northern-ocean-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 40960,
+      "name": "assets__cache-world-map-northern-ocean-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-northern-ocean-underground/plane-1.mbtiles",
+      "payload_sha256": "806fe6ca45d5c63d2e51241d22c02355b8766744345531136dadbb308c023ffa",
+      "sha256": "2ce46365799e82cf583b37e680d5c16a76ff0b6f5e78264897b46becbb22b423",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-northern-ocean-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 45056,
+      "name": "assets__cache-world-map-northern-ocean-underground__plane-2.mbtiles",
+      "path": "assets/cache-world-map-northern-ocean-underground/plane-2.mbtiles",
+      "payload_sha256": "4d0144436f02c7aee92c569a7f3f06e5eef6d5fd2207e90f397540f787814b17",
+      "sha256": "b5759f08944a1933045f8d3173f4704e7c141098edca3b96968876993a4a1903",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-northern-ocean-underground__plane-2.mbtiles"
+    },
+    {
+      "bytes": 65536,
+      "name": "assets__cache-world-map-ourania__plane-0.mbtiles",
+      "path": "assets/cache-world-map-ourania/plane-0.mbtiles",
+      "payload_sha256": "3ff7f0b6ac44d3aa8d83264611ef7f44873215e8be1a08488a440cfe830c54eb",
+      "sha256": "ab8df04ca78228dedd07e1c340f43c7bd1dca565486c6be5c5eb3f545c680eaf",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-ourania__plane-0.mbtiles"
+    },
+    {
+      "bytes": 770048,
+      "name": "assets__cache-world-map-prifddinas__plane-0.mbtiles",
+      "path": "assets/cache-world-map-prifddinas/plane-0.mbtiles",
+      "payload_sha256": "159ab9001baa8d2d2aeb15a16d66603fed00417dbae15b1827defaebc0923b90",
+      "sha256": "1e69c1892b0edc089074f4790fed95471646632dbf9844c1ee7f07dac8873e48",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-prifddinas__plane-0.mbtiles"
+    },
+    {
+      "bytes": 36864,
+      "name": "assets__cache-world-map-prifddinas__plane-1.mbtiles",
+      "path": "assets/cache-world-map-prifddinas/plane-1.mbtiles",
+      "payload_sha256": "36a92ce8b29b33eb84fdd23a8de71997e5922ea966a34e1a6ee961717c1c6355",
+      "sha256": "8f11f5d62c123970ca276f187b4468bf9e05438110594668024798601d5d0ce8",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-prifddinas__plane-1.mbtiles"
+    },
+    {
+      "bytes": 57344,
+      "name": "assets__cache-world-map-prifddinas__plane-2.mbtiles",
+      "path": "assets/cache-world-map-prifddinas/plane-2.mbtiles",
+      "payload_sha256": "5dc57630d9857b539a50cbaebf30975433bf2339d752060686155b30fcfa5914",
+      "sha256": "6615f5cad06a211f01d3377ca00dc692226f5b09d2a1054d8e902a53e1931a18",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-prifddinas__plane-2.mbtiles"
+    },
+    {
+      "bytes": 139264,
+      "name": "assets__cache-world-map-prifddinas-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-prifddinas-underground/plane-0.mbtiles",
+      "payload_sha256": "76a359ec4f813ade46a6c4c001b286df8061e81f22dbc604c096b7f80374c86d",
+      "sha256": "0f18c5255b152b389f554712890875b0dd71d89c9d2165a12ee6735f6cf89dc4",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-prifddinas-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 24576,
+      "name": "assets__cache-world-map-prifddinas-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-prifddinas-underground/plane-1.mbtiles",
+      "payload_sha256": "27654ee643d9254abdf6ddc2d1507700f4f44ebf2000865ab9e245d0a61e4ba8",
+      "sha256": "a38786ee541e74e285382190fca4121baeee9e341f5ff2815b4e43578a36eed1",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-prifddinas-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 122880,
+      "name": "assets__cache-world-map-shrouded-ocean-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-shrouded-ocean-underground/plane-0.mbtiles",
+      "payload_sha256": "33c33ec2d9bdddd49c06dbea79673ce8ed4718797cd9d319c0013b4f86174de0",
+      "sha256": "11f9786a5e2aa364163fd873467d88b5fccebc9ec4a8a35c90ff380bf73d50d4",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-shrouded-ocean-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 110592,
+      "name": "assets__cache-world-map-slayer-cave__plane-0.mbtiles",
+      "path": "assets/cache-world-map-slayer-cave/plane-0.mbtiles",
+      "payload_sha256": "c8b495752ede10308af982dc009597d14983921a8b0d998cb3bf3f9f92568e48",
+      "sha256": "7480c1ad2cb80bf9d12db2cf2f8d1a2ac33b10c9dd0441071311a771801da655",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-slayer-cave__plane-0.mbtiles"
+    },
+    {
+      "bytes": 24576,
+      "name": "assets__cache-world-map-slayer-cave__plane-1.mbtiles",
+      "path": "assets/cache-world-map-slayer-cave/plane-1.mbtiles",
+      "payload_sha256": "6c003ef8d204db983b2e730412b8edc9dc6bcca5c9dc8e1bf230138e0c327c41",
+      "sha256": "f35501b03188d9e46435c6873a1f14b67effee70f4ba114823a5dafbb8598fb2",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-slayer-cave__plane-1.mbtiles"
+    },
+    {
+      "bytes": 167936,
+      "name": "assets__cache-world-map-sos__plane-0.mbtiles",
+      "path": "assets/cache-world-map-sos/plane-0.mbtiles",
+      "payload_sha256": "70cda3c688a481aa805b7fed33888dc61450acf2ae495d147b5577eb631c4e3a",
+      "sha256": "27bd5de222a4fdd05f8063ccafc9b3037cb5435a2bb323915be3b77a582fe634",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-sos__plane-0.mbtiles"
+    },
+    {
+      "bytes": 159744,
+      "name": "assets__cache-world-map-stronghold-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-stronghold-underground/plane-0.mbtiles",
+      "payload_sha256": "abd806bc6adf5af0c4e9405056ab9b18bcdc19e981e9b515e4d9f684e6c88034",
+      "sha256": "65999ff3ed67e364846f1db352e6ba87e0eaf1b9decdf9e33fe77ca3c5b7999e",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-stronghold-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 53248,
+      "name": "assets__cache-world-map-sunset-ocean-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-sunset-ocean-underground/plane-0.mbtiles",
+      "payload_sha256": "6d67c8bb956dfc51da3cd20a7fd2e2a3e62378d6b808f2d88e1eb05b1065ba1c",
+      "sha256": "acab8674b2c5c1b1d6fb57352a36a09a11b2f722000fe8f42710173a399f65d7",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-sunset-ocean-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 241664,
+      "name": "assets__cache-world-map-taverley-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-taverley-underground/plane-0.mbtiles",
+      "payload_sha256": "e7ff84d5a40d62e3e6f151e590dc265b7002cfff98928cc63344bdb2f4088feb",
+      "sha256": "6db811dc94456f3d83c04e1f885d8e284b6ae721800767e5355255c9dba8a6b0",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-taverley-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 40960,
+      "name": "assets__cache-world-map-taverley-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-taverley-underground/plane-1.mbtiles",
+      "payload_sha256": "a4cb7c701533408dc5226ff3071cd0bd8b2bdd8ef5239ddd520322ae5cb68098",
+      "sha256": "f18cfe18ad4cd5af802252864c5ca3caa392e6d5bd7e4730e939b0b207f2ae17",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-taverley-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-taverley-underground__plane-2.mbtiles",
+      "path": "assets/cache-world-map-taverley-underground/plane-2.mbtiles",
+      "payload_sha256": "91b289aeb20deee4f0028f13678548a0b31dee580b649d55b14463f1bbbd49c7",
+      "sha256": "d7f54024359572bd047976bde116057d44f3c403ffc80cd49b1b3a9b946dd8d1",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-taverley-underground__plane-2.mbtiles"
+    },
+    {
+      "bytes": 139264,
+      "name": "assets__cache-world-map-the-abyss__plane-0.mbtiles",
+      "path": "assets/cache-world-map-the-abyss/plane-0.mbtiles",
+      "payload_sha256": "867cb6cc03d0adf6574fdba81105b4fe8ae3caff074f8ba6a366480aa7bce40e",
+      "sha256": "c9a70b3c5e5e2b14cf96e339beabf5d6e2941d16fe88dde0d2de0db9a565388b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-the-abyss__plane-0.mbtiles"
+    },
+    {
+      "bytes": 90112,
+      "name": "assets__cache-world-map-tolna__plane-0.mbtiles",
+      "path": "assets/cache-world-map-tolna/plane-0.mbtiles",
+      "payload_sha256": "a5c77562a5701f53d2116fc8b047dbb1f151051d86711438c124f7eba7636b1a",
+      "sha256": "8d70e6308a189f8615bec2c678ebfb13af4e9910de010651ce24ed0e67345d90",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-tolna__plane-0.mbtiles"
+    },
+    {
+      "bytes": 57344,
+      "name": "assets__cache-world-map-troll-stronghold__plane-0.mbtiles",
+      "path": "assets/cache-world-map-troll-stronghold/plane-0.mbtiles",
+      "payload_sha256": "20b6b3b02c39976ba17d1a382318082538da12e15b318c433b073319814b2ce9",
+      "sha256": "98d355d6e69e2d95579aea072d159031ecf4b67d8006a0bf5c42c229c9218bf4",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-troll-stronghold__plane-0.mbtiles"
+    },
+    {
+      "bytes": 53248,
+      "name": "assets__cache-world-map-troll-stronghold__plane-1.mbtiles",
+      "path": "assets/cache-world-map-troll-stronghold/plane-1.mbtiles",
+      "payload_sha256": "d09546b0795f188a40e0409b3c2c0d746b456bd0b775d8f43b15f1c638f0533f",
+      "sha256": "5def930c192863b68aa717de3d33b06f1d200e177b9debf0158a42c5d0404c1a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-troll-stronghold__plane-1.mbtiles"
+    },
+    {
+      "bytes": 49152,
+      "name": "assets__cache-world-map-troll-stronghold__plane-2.mbtiles",
+      "path": "assets/cache-world-map-troll-stronghold/plane-2.mbtiles",
+      "payload_sha256": "c18e7b28e8bc293d67747feb28fa1af5848b702c13e5b6d2f18a5c4b94a8e7ef",
+      "sha256": "66c8bc55b89a5bebca30aa85a53de5a661eb12834da1e9033262814e464b88fe",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-troll-stronghold__plane-2.mbtiles"
+    },
+    {
+      "bytes": 135168,
+      "name": "assets__cache-world-map-tutorial-2__plane-0.mbtiles",
+      "path": "assets/cache-world-map-tutorial-2/plane-0.mbtiles",
+      "payload_sha256": "2c224c480212a94b40be30d3c04a022e4ec434919eaf37f34e8398f2ab533e43",
+      "sha256": "9605e3295604787abb7d035d88a05f55bda42bc5ec48311efc42c1d12ae463c9",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-tutorial-2__plane-0.mbtiles"
+    },
+    {
+      "bytes": 36864,
+      "name": "assets__cache-world-map-tutorial-2__plane-1.mbtiles",
+      "path": "assets/cache-world-map-tutorial-2/plane-1.mbtiles",
+      "payload_sha256": "5cc597b5df199b5816d440d27b82b91713560d90e5943e092364dc53926fd193",
+      "sha256": "8eaca3e5f064eb9418e0bce0f501abab0dbcd84cf273e73498e00fb12ff1840b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-tutorial-2__plane-1.mbtiles"
+    },
+    {
+      "bytes": 32768,
+      "name": "assets__cache-world-map-tutorial-2__plane-2.mbtiles",
+      "path": "assets/cache-world-map-tutorial-2/plane-2.mbtiles",
+      "payload_sha256": "15ffce5d544ea331c4a0ece1aa1e08d78c09bc12972901d60eca315b3ffdb576",
+      "sha256": "0da5d5a560fe6caa023cdaa66499d192e355a1ec8553f186d53e89153c11bc4b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-tutorial-2__plane-2.mbtiles"
+    },
+    {
+      "bytes": 102400,
+      "name": "assets__cache-world-map-tzhaar-area__plane-0.mbtiles",
+      "path": "assets/cache-world-map-tzhaar-area/plane-0.mbtiles",
+      "payload_sha256": "0320d585653fcf9b0dfc7e91632181c57f8a572da7a239e7d378a204188585b6",
+      "sha256": "0312b1366b5837fc8dc8d33fcf01d6f91d9067b6f2226445cf3e55a25aa14ac4",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-tzhaar-area__plane-0.mbtiles"
+    },
+    {
+      "bytes": 45056,
+      "name": "assets__cache-world-map-undead-dungeon__plane-0.mbtiles",
+      "path": "assets/cache-world-map-undead-dungeon/plane-0.mbtiles",
+      "payload_sha256": "916421de77dd6d05bff81df0be067932590d9c947d1df7f88f756f0bdca7d4b6",
+      "sha256": "9923625d4705caae43ba68bbfd1de4ecb6a5e12a30fd3537e4e16447009690e5",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-undead-dungeon__plane-0.mbtiles"
+    },
+    {
+      "bytes": 40960,
+      "name": "assets__cache-world-map-undead-dungeon__plane-1.mbtiles",
+      "path": "assets/cache-world-map-undead-dungeon/plane-1.mbtiles",
+      "payload_sha256": "ed17b64bc26b33c4833ba9c58f1d300f8dd850a12ff5e58010f93b3a66221172",
+      "sha256": "e1b381cabd6b951f73e1730982f9cadbb0624da20634d1cf3aed687124861965",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-undead-dungeon__plane-1.mbtiles"
+    },
+    {
+      "bytes": 40960,
+      "name": "assets__cache-world-map-undead-dungeon__plane-2.mbtiles",
+      "path": "assets/cache-world-map-undead-dungeon/plane-2.mbtiles",
+      "payload_sha256": "371caf1d88ae178596f70b6c7fe22c92312b0773de48539c80563b380fffbd4c",
+      "sha256": "340e5e8be1736c32a1b098d4343e3ab47c664541ce3b3bb588a8d7b8c09d31fc",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-undead-dungeon__plane-2.mbtiles"
+    },
+    {
+      "bytes": 98304,
+      "name": "assets__cache-world-map-unquiet-ocean-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-unquiet-ocean-underground/plane-0.mbtiles",
+      "payload_sha256": "f4c196f1c24f052ab9bd6c7a6d59af3567ee2ec1fba94a88fbaf62c910f45ec0",
+      "sha256": "ad304ec3238992014acdbe3c565401ae5a0423a4d06236d3a6652787d0cd72fc",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-unquiet-ocean-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 32768,
+      "name": "assets__cache-world-map-unquiet-ocean-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-unquiet-ocean-underground/plane-1.mbtiles",
+      "payload_sha256": "22867c80116029a45379988db984e8ca3ea984b8b17513cb6ea20ba4546618d5",
+      "sha256": "cc6c77c8137a47d309efbc861ed7051e2311ed2f49a4aa24b494e96456ce9406",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-unquiet-ocean-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 868352,
+      "name": "assets__cache-world-map-vampyrium__plane-0.mbtiles",
+      "path": "assets/cache-world-map-vampyrium/plane-0.mbtiles",
+      "payload_sha256": "6adbf22bfe15c01c9b441e538b715e48e67ce1cb95a9aa8a33c1cb9d8fac1886",
+      "sha256": "91f166625e7a27d481c22ce3eeaffe474ce2618bf7953513c8028e46644ada52",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-vampyrium__plane-0.mbtiles"
+    },
+    {
+      "bytes": 40960,
+      "name": "assets__cache-world-map-vampyrium__plane-1.mbtiles",
+      "path": "assets/cache-world-map-vampyrium/plane-1.mbtiles",
+      "payload_sha256": "4bb8f33743e40da2a3bebf7f7aa708f02caba9e1e46e0ac1859fb42cfb2e27b3",
+      "sha256": "b9f21cbca134978e3cf1f5a1b93abd369c31c289e653b03731447bc59d38303a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-vampyrium__plane-1.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-vampyrium__plane-3.mbtiles",
+      "path": "assets/cache-world-map-vampyrium/plane-3.mbtiles",
+      "payload_sha256": "0fbc010b48b86cd13647c2838369e15a9947d0a82096545821227ca6d5dfbbd9",
+      "sha256": "e4e0944226881a9ccb8afc5a6fc4d02127a393fca1cb58e092feb3c1e36573af",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-vampyrium__plane-3.mbtiles"
+    },
+    {
+      "bytes": 249856,
+      "name": "assets__cache-world-map-varlamore-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-varlamore-underground/plane-0.mbtiles",
+      "payload_sha256": "9cd5fb5d43cd77a7c64f9c8bdf467ba80e50754ab8186eea4b080a4cfcbf90c4",
+      "sha256": "04471881f052c6d46f6f54855f6d7e9b14cb301f2d86c40b5c23143ed0ca8a01",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-varlamore-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 49152,
+      "name": "assets__cache-world-map-varlamore-underground__plane-1.mbtiles",
+      "path": "assets/cache-world-map-varlamore-underground/plane-1.mbtiles",
+      "payload_sha256": "44f768afd61856b7c676671188b351da2ce110e830d224ae678a9229d51c806d",
+      "sha256": "abfc2906cc1482bdaa0f8973784cdde88e5345c592bbff400c897bf1764cff2a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-varlamore-underground__plane-1.mbtiles"
+    },
+    {
+      "bytes": 135168,
+      "name": "assets__cache-world-map-waterbirth__plane-0.mbtiles",
+      "path": "assets/cache-world-map-waterbirth/plane-0.mbtiles",
+      "payload_sha256": "fc6507c738445adda3edfcbe9c1f8564a8be8741678304aedb1cbb40032725cf",
+      "sha256": "5514606dc2c02abbaf3c505daa04f224114e8d87822768b15788d5c85357e18c",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-waterbirth__plane-0.mbtiles"
+    },
+    {
+      "bytes": 57344,
+      "name": "assets__cache-world-map-waterbirth__plane-1.mbtiles",
+      "path": "assets/cache-world-map-waterbirth/plane-1.mbtiles",
+      "payload_sha256": "52d679b3abccf87d2bc436a1cd983a3ad723c8328932af12aa5912fee1880ec9",
+      "sha256": "cf18864d74af9348ea56b296f50d7b9ac0ff0e55263661482253f606c634f5ae",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-waterbirth__plane-1.mbtiles"
+    },
+    {
+      "bytes": 61440,
+      "name": "assets__cache-world-map-waterbirth__plane-2.mbtiles",
+      "path": "assets/cache-world-map-waterbirth/plane-2.mbtiles",
+      "payload_sha256": "a20a43471b2addc678a6289a205c6bd08d0c2410f36f55e9654ca7883f6f42c9",
+      "sha256": "adbc685394a1fa4c7c93379946d3e1b8828e4ec1ede82db21d678b7d1b0a3550",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-waterbirth__plane-2.mbtiles"
+    },
+    {
+      "bytes": 53248,
+      "name": "assets__cache-world-map-waterbirth__plane-3.mbtiles",
+      "path": "assets/cache-world-map-waterbirth/plane-3.mbtiles",
+      "payload_sha256": "be6ba041e679dbf95629cc6f3ef43ef2d90c2541d0ef2d3f90445027c31d81eb",
+      "sha256": "fd0a3d89a088725f095e51599146498abbea89e9f758283deb51226fa768618a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-waterbirth__plane-3.mbtiles"
+    },
+    {
+      "bytes": 94208,
+      "name": "assets__cache-world-map-western-ocean-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-western-ocean-underground/plane-0.mbtiles",
+      "payload_sha256": "4487794622b00ab382f77d16e93a16c551a10a9292bbc7edd7862dce03860959",
+      "sha256": "02edd838db85afb084f57ff38527fbac18993a739238894bc5fde67ece1f673b",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-western-ocean-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 348160,
+      "name": "assets__cache-world-map-wilderness-dungeons__plane-0.mbtiles",
+      "path": "assets/cache-world-map-wilderness-dungeons/plane-0.mbtiles",
+      "payload_sha256": "12c939a1eccb5db23eb96f750a92f85deb64fed8359d848d338aa9b1294275ad",
+      "sha256": "016dc56a96785e4b43178fadc570fca638b463e708b66ed35c3306af2face554",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-wilderness-dungeons__plane-0.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-wilderness-dungeons__plane-1.mbtiles",
+      "path": "assets/cache-world-map-wilderness-dungeons/plane-1.mbtiles",
+      "payload_sha256": "7d4ee0704960e011d5af70f35b5ad4aa4b64bd9dafe477f649de099d608c795a",
+      "sha256": "6eebbac0414d494acec48369a0663c95183de15cd01f13929a1092ca2d04256a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-wilderness-dungeons__plane-1.mbtiles"
+    },
+    {
+      "bytes": 36864,
+      "name": "assets__cache-world-map-wilderness-dungeons__plane-2.mbtiles",
+      "path": "assets/cache-world-map-wilderness-dungeons/plane-2.mbtiles",
+      "payload_sha256": "58015e57bd89f740289efb41bda34c1a48ab7d4f450d774129fcc659eacca80d",
+      "sha256": "28146fa885297af667546ee3f51e481c1a8f3e3ad960f93050093866e5a3f750",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-wilderness-dungeons__plane-2.mbtiles"
+    },
+    {
+      "bytes": 28672,
+      "name": "assets__cache-world-map-wilderness-dungeons__plane-3.mbtiles",
+      "path": "assets/cache-world-map-wilderness-dungeons/plane-3.mbtiles",
+      "payload_sha256": "86be7dbf0a9809ce957db2824efbbf4d08b917042ce1af1c894cf1e42a359727",
+      "sha256": "d6d036e1ca4adf9386bd24c68c43cf0738610482fb5e86a4bc4e62e58cc18f6a",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-wilderness-dungeons__plane-3.mbtiles"
+    },
+    {
+      "bytes": 94208,
+      "name": "assets__cache-world-map-yanille-underground__plane-0.mbtiles",
+      "path": "assets/cache-world-map-yanille-underground/plane-0.mbtiles",
+      "payload_sha256": "2ed9986564e6365ce24d96daece6e5b75a707309e1f2059c192459ecad23e9af",
+      "sha256": "39ef70faad00289c7815aafd93fceaeccafd1c891c40f09867508ba509b1cfa6",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-yanille-underground__plane-0.mbtiles"
+    },
+    {
+      "bytes": 139264,
+      "name": "assets__cache-world-map-zanaris__plane-0.mbtiles",
+      "path": "assets/cache-world-map-zanaris/plane-0.mbtiles",
+      "payload_sha256": "809bfd7cc783805130a90bbbeb49404a6e9e96f49f76b3145a15270645156230",
+      "sha256": "f746ff2afa585433f6f2ce278324e153856963a9b29868547f5a0a03783148a0",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__cache-world-map-zanaris__plane-0.mbtiles"
+    },
+    {
+      "bytes": 28307456,
+      "name": "assets__surface-gielinor__plane-0.mbtiles",
+      "path": "assets/surface-gielinor/plane-0.mbtiles",
+      "payload_sha256": "73643c20510852ab04b97717cbb9901b3ce456aaa77cde212cd87bb31ca2b281",
+      "sha256": "874997671a915ba1f43d5916b6e22caf395ea45d1c22f104d0102ef978bf4a88",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__surface-gielinor__plane-0.mbtiles"
+    },
+    {
+      "bytes": 1015808,
+      "name": "assets__surface-gielinor__plane-1.mbtiles",
+      "path": "assets/surface-gielinor/plane-1.mbtiles",
+      "payload_sha256": "f11030d922b4c92887d550074281ff2ccf76cd7c8f5337a55f6154d66ad12778",
+      "sha256": "64164d5b4e5c07c1cf92eec149c4b7722f7c6bafa4e1410fbbdbe08da449b560",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__surface-gielinor__plane-1.mbtiles"
+    },
+    {
+      "bytes": 589824,
+      "name": "assets__surface-gielinor__plane-2.mbtiles",
+      "path": "assets/surface-gielinor/plane-2.mbtiles",
+      "payload_sha256": "0a06afb785e4e8e7d5cecfd26492d8bfc3f4c8342f9380fc2ac7bb519f2b94be",
+      "sha256": "ab23e158b9956d6d15659093a7c176cb1eb86bf9c3fa99fe81916d92617c5da5",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__surface-gielinor__plane-2.mbtiles"
+    },
+    {
+      "bytes": 270336,
+      "name": "assets__surface-gielinor__plane-3.mbtiles",
+      "path": "assets/surface-gielinor/plane-3.mbtiles",
+      "payload_sha256": "255cf2489162ce218aad5929c439f2cc6568e8f618424fc841261de515b5244c",
+      "sha256": "828de71ca9e6a380795ed36958c39b27639ad74d8b8fa84a3c481e3e2b060205",
+      "url": "https://github.com/osrswiki/osrswiki-tooling/releases/download/underground-assets-v1-be804fc271ca/assets__surface-gielinor__plane-3.mbtiles"
     }
   ],
   "provenance": {
-    "source_authority": "https://github.com/omiyawaki/osrswiki-fleet.git#main",
-    "generator": "host-local underground-realms cache (candidate 010)",
-    "candidate": "010",
     "artifact_class": "immutable-reproducible-release",
-    "generated_intermediates": "host-local-only"
-  }
+    "candidate": "010",
+    "generated_intermediates": "host-local-only",
+    "generator": "scripts/shared/map-auto-update.sh",
+    "openrs2_cache_build": 242,
+    "openrs2_cache_id": 2772,
+    "openrs2_cache_scope": "runescape",
+    "openrs2_cache_timestamp": "2026-11-18T14:45:05.401534Z",
+    "openrs2_xtea_cache_id": 2499,
+    "source_authority": "https://github.com/omiyawaki/osrswiki-fleet.git#main"
+  },
+  "release_tag": "underground-assets-v1-be804fc271ca",
+  "repository": "osrswiki/osrswiki-tooling",
+  "schema_version": 1
 }

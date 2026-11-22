@@ -188,11 +188,16 @@ the tooling GitHub Release), run the Fleet publisher. Do not `gh release
 upload` the zip by hand:
 
 ```bash
-./scripts/shared/publish-map-release-bundle.sh --clobber
+./scripts/shared/publish-map-release-bundle.sh --create-release
 ```
 
-From this directory the Pixi alias is `pixi run publish-map-bundle --clobber`.
-`--dry-run` builds the zip and prints sha256 without uploading.
+From this directory the Pixi alias is `pixi run publish-map-bundle --create-release`.
+`--dry-run` builds the zip and prints sha256 without uploading. Weekly
+auto-update on mini is `pixi run map-auto-update`; it regenerates from
+OpenRS2, compares content to the current pins, and only then creates a
+**new** versioned tooling release plus a pin-bump PR. It never clobbers a
+tag that a shipped build still downloads. See
+`docs/public/map-release-assets.md`.
 
 ---
 

@@ -5,7 +5,8 @@ set -euo pipefail
 # Checks OpenRS2, regenerates surface + underground assets, compares bytes
 # against the current pins, and (unless --dry-run) publishes NEW versioned
 # tooling releases and opens a pin-bump PR. Never clobbers or deletes an
-# existing release.
+# existing release. Never assembles or uploads the FOSS APK; that path is
+# scripts/shared/publish-foss-apk.sh.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HELPER="$SCRIPT_DIR/osrs_map_auto_update.py"

@@ -70,6 +70,25 @@ class PublicDeploymentContractTests(unittest.TestCase):
         self.assertIn("publish-underground-bundle", pixi)
         self.assertIn("publish-underground-release-assets.sh", pixi)
 
+    def test_pixi_exposes_publish_foss_apk(self) -> None:
+        pixi = (ROOT / "tools" / "pixi.toml").read_text(encoding="utf-8")
+        self.assertIn("publish-foss-apk", pixi)
+        self.assertIn("publish-foss-apk.sh", pixi)
+
+    def test_foss_publish_never_uses_deploy_checkout_or_underground_opt_in(self) -> None:
+        script = self.read_script("publish-foss-apk.sh")
+        self.assertIn("https://github.com/osrswiki/osrswiki-android.git", script)
+        self.assertIn("unzip -o -j", script)
+        self.assertIn("foss_apk_preflight.py", script)
+        self.assertIn("sign_apk_v2_only.py", script)
+        self.assertIn("apksigcopier", script)
+        self.assertNotIn("fetch-underground-release-assets.sh", script)
+        self.assertNotIn("-PosrsUndergroundAssetsDir=", script)
+        self.assertNotIn("apksigner sign", script)
+        auto_update = self.read_script("map-auto-update.sh")
+        self.assertNotIn("assembleFossRelease", auto_update)
+        self.assertNotIn("app-foss-release.apk", auto_update)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -121,12 +121,32 @@ verify_assets() {
     done < <(jq -r '.assets[] | [.path, .sha256, (.bytes | tostring)] | @tsv' "$manifest")
 }
 
+is_app_main_assets_destination() {
+    local destination_dir="$1"
+    local normalized="${destination_dir%/}"
+    case "$normalized" in
+        */app/src/main/assets|app/src/main/assets|*/app/src/main/assets/*|app/src/main/assets/*)
+            return 0
+            ;;
+    esac
+    return 1
+}
+
+refuse_app_main_assets_destination() {
+    local destination_dir="$1"
+    if is_app_main_assets_destination "$destination_dir"; then
+        echo "ERROR: refusing to materialize underground assets into app/src/main/assets (FOSS/F-Droid uses the fixture stub; dest must be underground-realms-release)" >&2
+        return 1
+    fi
+}
+
 copy_verified_assets() {
     local manifest="$1"
     local source_dir="$2"
     local destination_dir="$3"
     local path parent temporary_file
 
+    refuse_app_main_assets_destination "$destination_dir"
     verify_assets "$manifest" "$source_dir"
     mkdir -p "$destination_dir"
     while IFS= read -r path; do
@@ -146,6 +166,7 @@ download_assets() {
     local destination_dir="$2"
     local path name download_url parent
 
+    refuse_app_main_assets_destination "$destination_dir"
     require_command curl
     mkdir -p "$destination_dir"
 
@@ -167,6 +188,7 @@ materialize_assets() {
     local destination_dir="$2"
     local temporary_dir
 
+    refuse_app_main_assets_destination "$destination_dir"
     validate_manifest "$manifest"
     if [[ -n "${OSRS_UNDERGROUND_ASSET_SOURCE_DIR:-}" ]]; then
         copy_verified_assets "$manifest" "$OSRS_UNDERGROUND_ASSET_SOURCE_DIR" "$destination_dir"

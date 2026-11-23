@@ -83,6 +83,20 @@ class UndergroundReleaseAssetsTests(unittest.TestCase):
             self.assertEqual(asset["name"], asset["path"].replace("/", "__"))
             self.assertTrue(asset["url"].endswith("/" + asset["name"]))
 
+    def test_materialize_refuses_app_src_main_assets(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest, source = self.make_fixture(root)
+            destination = root / "app" / "src" / "main" / "assets"
+            env = dict(os.environ)
+            env["OSRS_UNDERGROUND_ASSET_SOURCE_DIR"] = str(source)
+            result = self.run_script(
+                "materialize", str(manifest), str(destination), env=env
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("app/src/main/assets", result.stderr)
+            self.assertFalse((destination / "underground-realms.json").exists())
+
     def test_materialize_from_verified_source(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
